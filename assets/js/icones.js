@@ -81,7 +81,10 @@
     /* Aviso de ingrediente que causa alergia grave. Triângulo,
        porque é a forma que o mundo inteiro lê como atenção — não
        dá para inventar linguagem nova num aviso desses. */
-    alerta: '<path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
+    alerta: '<path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+
+    busca: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+    fechar: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
   };
 
   var partes = ['<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'];

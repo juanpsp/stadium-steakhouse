@@ -742,3 +742,204 @@ body.arrastando-barra {
     padding: var(--s-7);
   }
 }
+
+/* ---------- 12. BUSCA ----------
+   Ocupa o mesmo lugar das pills, e não uma faixa própria: o
+   header já come 72px e as pills 69px, e um campo sempre visível
+   somaria mais 44px — quase um quarto de uma tela de celular
+   permanentemente gasto em barra fixa. Aberta, a busca troca de
+   lugar com as pills, que durante uma busca não servem para
+   nada. Custo de altura: zero. */
+.menu-categorias__linha {
+  display: flex;
+  align-items: center;
+  max-width: var(--container);
+  margin-inline: auto;
+}
+
+/* A lupa fica FORA da trilha que rola: se estivesse dentro, ela
+   sumiria assim que a pessoa arrastasse as categorias. */
+.busca-lupa {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: var(--gutter);
+  margin-right: var(--s-6);
+  color: var(--ink-mute);
+  background-color: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  transition: color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease);
+}
+
+.busca-lupa:hover {
+  color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+/* O fio que separa as duas zonas: à esquerda a lupa, que nunca
+   sai do lugar; à direita a trilha, que rola.
+
+   O fio é filho da lupa, e não borda da trilha. Parece detalhe,
+   mas não é: a trilha rola e é mascarada nas pontas, e uma borda
+   dela seria apagada pela própria máscara. Preso à lupa, o fio
+   fica cravado no lugar enquanto as pills deslizam atrás.
+
+   Altura de 24px, menor que a barra: um fio de altura inteira
+   corta a barra em duas caixas e pesa demais para o que é — uma
+   separação, não uma moldura. */
+.busca-lupa::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  /* Centrado no vão, e a conta não é óbvia: o espaço até a
+     primeira pill é a margem da lupa (20px) MAIS o recuo da
+     trilha (12px). Metade de 32 é 16 — por isso -16px, e não
+     metade da margem, que deixaria o fio grudado no botão. */
+  right: calc(var(--s-5) * -1);
+  width: 1px;
+  height: 24px;
+  transform: translateY(-50%);
+  background-color: var(--border-strong);
+}
+
+/* A trilha perde o recuo lateral original — aquele espaço agora
+   pertence à lupa — e ganha um respiro à esquerda para a
+   primeira pill não nascer colada no fio. */
+.menu-categorias__linha .menu-categorias__track {
+  margin-inline: 0;
+  padding-left: var(--s-4);
+}
+
+/* As pills somem gradualmente ao encostar no fio, em vez de
+   serem cortadas em seco. Uma pill pela metade grudada no
+   divisor parece defeito; um esmaecimento parece intenção.
+
+   A rampa termina exatamente no recuo da trilha (12px), que é
+   onde a primeira pill começa. Um pixel a mais e a pill nasceria
+   desbotada com a barra parada no início. */
+@supports (mask-image: linear-gradient(#000, #000)) {
+  .menu-categorias__linha .menu-categorias__track {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--s-4)
+    );
+    mask-image: linear-gradient(to right, transparent 0, #000 var(--s-4));
+  }
+}
+
+.busca {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: var(--s-3) var(--gutter);
+}
+
+.busca__linha {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  background-color: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  padding-inline: var(--s-4);
+}
+
+.busca__linha:focus-within {
+  border-color: var(--burgundy);
+}
+
+.busca__lupa {
+  color: var(--ink-mute);
+  flex: none;
+}
+
+/* 16px no campo não é escolha estética: abaixo disso o Safari do
+   iPhone dá zoom sozinho ao focar, e a página inteira salta. */
+.busca__campo {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 40px;
+  border: 0;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.busca__campo:focus {
+  outline: none;
+}
+
+/* O X nativo do type="search" é feio e some no iOS; o botão
+   próprio é consistente nos dois. */
+.busca__campo::-webkit-search-cancel-button {
+  display: none;
+}
+
+.busca__fechar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--ink-mute);
+  border-radius: var(--r-pill);
+  transition: color var(--t-hover) var(--ease);
+}
+
+.busca__fechar:hover {
+  color: var(--burgundy);
+}
+
+.busca__contagem {
+  margin-top: var(--s-2);
+  padding-left: var(--s-4);
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+}
+
+/* Busca sem resultado. Ocupa o lugar do cardápio, com um exemplo
+   do que funciona — "nada encontrado" sozinho não ajuda ninguém
+   a tentar de novo. */
+.busca-vazio {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: var(--s-4);
+  padding-block: var(--s-12);
+}
+
+.busca-vazio .ico {
+  width: 32px;
+  height: 32px;
+  color: var(--border-strong);
+}
+
+.busca-vazio p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+  max-width: 42ch;
+}
+
+/* O atributo "hidden" esconde via display:none da folha do
+   navegador — e QUALQUER display declarado aqui ganha dele. Como
+   esta linha é flex, sem esta regra ela continua na tela mesmo
+   marcada como escondida, e as pills ficavam empilhadas em cima
+   do campo de busca. */
+.menu-categorias__linha[hidden],
+.busca[hidden],
+.busca__contagem[hidden] {
+  display: none;
+}

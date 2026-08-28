@@ -167,6 +167,14 @@
      se algum prato precisar de mais linhas de extra. */
   var LIMITE_EXTRAS = 6;
 
+  /* Chave do alergênico no arquivo de dados -> chave de tradução.
+     Usada no aviso do card e também na busca. */
+  var ALERGENICOS = {
+    camarao: "cardapio.alergCamarao",
+    peixe: "cardapio.alergPeixe",
+    castanhas: "cardapio.alergCastanhas"
+  };
+
   /* Escolhe o campo do idioma atual num dado que usa sufixo
      (descricao_pt / descricao_en / descricao_es). */
   function porSufixo(prato, base) {
@@ -332,14 +340,9 @@
        lesse os pratos sem marca concluiria que são seguros.
        O aviso no rodapé do cardápio diz exatamente isso. */
     if (prato.alergenicos && prato.alergenicos.length) {
-      var mapaAlerg = {
-        camarao: "cardapio.alergCamarao",
-        peixe: "cardapio.alergPeixe",
-        castanhas: "cardapio.alergCastanhas"
-      };
       var nomes = prato.alergenicos
         .map(function (chave) {
-          return mapaAlerg[chave] ? i18n.t(mapaAlerg[chave]) : chave;
+          return ALERGENICOS[chave] ? i18n.t(ALERGENICOS[chave]) : chave;
         })
         .join(", ");
 
@@ -428,6 +431,92 @@
     return card;
   }
 
+  /* =========================================================
+     BUSCA
+     =========================================================
+     A página INTEIRA filtra — não é uma lista de sugestões de
+     texto como a do Google. A diferença é de intenção: no Google
+     você já sabe o que quer e quer sair dali; aqui a pessoa está
+     escolhendo o jantar.
+
+     Quem digita "camarão" não procura um prato — pergunta "o que
+     vocês têm com camarão?". A resposta são 12 pratos, em 5
+     seções, de R$ 65,90 a R$ 109,90. Numa lista de nomes ela
+     teria de abrir os 12 para comparar; filtrando a página, vê
+     preço e foto de todos numa rolada.
+
+     E o Google só sugere texto porque não pode mostrar um milhão
+     de resultados. São 129 pratos: dá para mostrar os que batem.
+     ========================================================= */
+
+  /* Termo de busca em vigor. Vazio = cardápio inteiro. */
+  var termoBusca = "";
+
+  /* Tira acento e caixa. É o que faz "brocolis" achar "Brócolis"
+     e "acucar" achar "açúcar" — no teclado do celular ninguém
+     acentua para buscar. */
+  function semAcento(valor) {
+    return String(valor || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase();
+  }
+
+  /* Tudo que um prato tem de texto, no idioma da vez.
+
+     Inclui o RÓTULO da categoria, nunca o id interno: buscar por
+     "peixe" chegava a devolver Kahn Chicken e Banks Chicken,
+     porque o id é "frangosPeixes". E é o rótulo que faz "massa"
+     encontrar as massas, que se chamam penne e talharim e nunca
+     escrevem a palavra. */
+  function textoDeBusca(prato, categoria) {
+    var partes = [prato.nome, porSufixo(prato, "descricao")];
+
+    if (categoria) {
+      partes.push(i18n.campo(categoria.nav));
+      partes.push(categoria.titulo);
+    }
+
+    partes.push(porSufixo(prato, "grupo"));
+    partes.push(porSufixo(prato, "serve"));
+    for (var n = 1; n <= LIMITE_EXTRAS; n++) {
+      partes.push(porSufixo(prato, "extra" + n));
+    }
+    if (prato.precos) {
+      prato.precos.forEach(function (opcao) {
+        partes.push(
+          i18n.campo({
+            pt: opcao.rotulo_pt,
+            en: opcao.rotulo_en,
+            es: opcao.rotulo_es
+          })
+        );
+      });
+    }
+    /* O alergênico entra pela chave ("camarao", "peixe") e pela
+       palavra traduzida, senão "shrimp" não acharia nada em
+       inglês. */
+    if (prato.alergenicos) {
+      partes.push(prato.alergenicos.join(" "));
+      prato.alergenicos.forEach(function (chave) {
+        partes.push(i18n.t(ALERGENICOS[chave] || ""));
+      });
+    }
+
+    return semAcento(partes.join(" "));
+  }
+
+  /* Várias palavras funcionam como E, não OU: "camarão massa"
+     devolve as massas com camarão, e não tudo que tem qualquer
+     uma das duas. */
+  function combina(prato, categoria, termos) {
+    if (!termos.length) return true;
+    var texto = textoDeBusca(prato, categoria);
+    return termos.every(function (termo) {
+      return texto.indexOf(termo) !== -1;
+    });
+  }
+
   /* ---------- MONTAGEM DA PÁGINA ---------- */
 
   function desenhar() {
@@ -440,12 +529,18 @@
     area.innerHTML = "";
     nav.innerHTML = "";
 
+    var termos = semAcento(termoBusca).split(/\s+/).filter(Boolean);
+    var encontrados = 0;
+
     CATEGORIAS.forEach(function (categoria) {
       var doGrupo = pratos.filter(function (p) {
-        return p.categoria === categoria.id;
+        return p.categoria === categoria.id && combina(p, categoria, termos);
       });
-      /* Categoria sem prato não vira seção nem pill vazia. */
+      /* Categoria sem prato não vira seção nem pill vazia. Durante
+         uma busca é isto que faz as seções sem resultado sumirem,
+         de graça: a mesma regra que já existia. */
       if (!doGrupo.length) return;
+      encontrados += doGrupo.length;
 
       var link = el("a", "cat-link", i18n.campo(categoria.nav));
       link.href = "#container-" + categoria.id;
@@ -495,12 +590,107 @@
       area.appendChild(secao);
     });
 
+    /* Busca sem nenhum resultado: em vez de uma página vazia, um
+       recado com exemplos do que funciona. */
+    if (termos.length && !encontrados) {
+      var vazio = el("div", "busca-vazio");
+      vazio.appendChild(icone("busca", "ico--lg"));
+      vazio.appendChild(el("h2", "t-h3", i18n.t("busca.vazioTitulo")));
+      vazio.appendChild(el("p", null, i18n.t("busca.vazioTexto")));
+      area.appendChild(vazio);
+    }
+
+    atualizarContagem(termos.length ? encontrados : null);
+
     /* A primeira categoria já nasce marcada: sem isto a barra
        fica sem nenhuma pill acesa até a pessoa rolar a página. */
     var primeira = nav.querySelector(".cat-link");
     if (primeira) primeira.classList.add("ativo");
 
     iniciarScrollspy();
+  }
+
+  /* ---------- CONTROLE DA BUSCA ---------- */
+
+  /* "12 resultados" no lugar das pills. Recebe null quando não há
+     busca em vigor, e some. */
+  function atualizarContagem(quantos) {
+    var alvo = document.querySelector("[data-busca-contagem]");
+    if (!alvo) return;
+    if (quantos === null) {
+      alvo.textContent = "";
+      alvo.hidden = true;
+      return;
+    }
+    alvo.textContent =
+      quantos === 1
+        ? i18n.t("busca.um")
+        : i18n.t("busca.varios").replace("{n}", quantos);
+    alvo.hidden = false;
+  }
+
+  function iniciarBusca() {
+    var caixa = document.querySelector("[data-busca]");
+    var campo = document.querySelector("[data-busca-campo]");
+    var abrir = document.querySelector("[data-busca-abrir]");
+    var fechar = document.querySelector("[data-busca-fechar]");
+    var barraPills = document.querySelector("[data-barra-pills]");
+    if (!caixa || !campo || !abrir || !fechar || !barraPills) return;
+
+    function mostrar(ligada) {
+      caixa.hidden = !ligada;
+      barraPills.hidden = ligada;
+      abrir.setAttribute("aria-expanded", ligada ? "true" : "false");
+    }
+
+    abrir.addEventListener("click", function () {
+      mostrar(true);
+      campo.focus();
+      /* Leva a pessoa ao topo da lista: buscar no meio da página
+         deixaria os primeiros resultados acima da dobra, fora de
+         vista, e pareceria que a busca não achou nada. */
+      var area = document.querySelector("[data-cardapio]");
+      if (area && area.getBoundingClientRect().top < 0) {
+        area.scrollIntoView({ block: "start" });
+      }
+    });
+
+    function limpar() {
+      campo.value = "";
+      termoBusca = "";
+      mostrar(false);
+      desenhar();
+    }
+
+    /* O ✕ tem dois papéis, e nessa ordem: com texto no campo ele
+       limpa a busca e mantém o campo aberto; com o campo já
+       vazio, fecha e devolve as pills. */
+    fechar.addEventListener("click", function () {
+      if (campo.value) {
+        campo.value = "";
+        termoBusca = "";
+        desenhar();
+        campo.focus();
+        return;
+      }
+      limpar();
+    });
+
+    campo.addEventListener("keydown", function (evento) {
+      if (evento.key === "Escape") limpar();
+    });
+
+    /* Redesenhar 129 cards a cada tecla trava em celular fraco. O
+       filtro em si é instantâneo; o custo é o DOM. Uma folga de
+       140ms deixa a pessoa terminar a palavra antes. */
+    var relogio = null;
+    campo.addEventListener("input", function () {
+      clearTimeout(relogio);
+      relogio = setTimeout(function () {
+        termoBusca = campo.value.trim();
+        desenhar();
+      }, 140);
+    });
   }
 
   /* ---------- ACORDEÃO ----------
@@ -668,6 +858,9 @@
     if (!i18n) return;
     desenhar();
     permitirArraste(document.querySelector("[data-cat-nav]"));
+    iniciarBusca();
+    /* A busca em vigor sobrevive à troca de idioma: "termoBusca"
+       fica guardado e desenhar() refiltra no idioma novo. */
     document.addEventListener("stadium:idioma", desenhar);
   });
 })(window, document);

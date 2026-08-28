@@ -77,8 +77,34 @@
     <!-- Barra de categorias: as pills e as seções abaixo são
          geradas a partir da taxonomia em assets/js/cardapio.js,
          para nunca saírem de sincronia uma com a outra. -->
+    <!-- A busca mora dentro da mesma barra fixa das categorias, e
+         não acima dela: header (72px) + pills (69px) já ocupam um
+         quinto de uma tela de celular, e um campo sempre visível
+         somaria mais 44px. Aberta, a busca troca de lugar com as
+         pills — durante uma busca elas não servem para nada. -->
     <nav class="menu-categorias" data-i18n-attr="aria-label:cardapio.navAria" aria-label="Categorias do cardápio">
-        <div class="menu-categorias__track" data-cat-nav></div>
+        <div class="menu-categorias__linha" data-barra-pills>
+            <button class="busca-lupa" type="button" data-busca-abrir
+                    data-i18n-attr="aria-label:busca.abrir" aria-label="Buscar no cardápio">
+                <svg class="ico" aria-hidden="true"><use href="#i-busca"/></svg>
+            </button>
+            <div class="menu-categorias__track" data-cat-nav></div>
+        </div>
+
+        <div class="busca" data-busca hidden>
+            <div class="busca__linha">
+                <svg class="ico busca__lupa" aria-hidden="true"><use href="#i-busca"/></svg>
+                <input class="busca__campo" type="search" autocomplete="off"
+                       data-busca-campo
+                       data-i18n-attr="placeholder:busca.placeholder"
+                       placeholder="Buscar prato ou ingrediente">
+                <button class="busca__fechar" type="button" data-busca-fechar
+                        data-i18n-attr="aria-label:busca.limpar" aria-label="Limpar busca">
+                    <svg class="ico" aria-hidden="true"><use href="#i-fechar"/></svg>
+                </button>
+            </div>
+            <p class="busca__contagem" data-busca-contagem aria-live="polite"></p>
+        </div>
     </nav>
 
     <div class="container" data-cardapio></div>
