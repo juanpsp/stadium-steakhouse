@@ -679,14 +679,29 @@ body.arrastando-barra {
    ilustrativa, e a marcação de alergênico não é declaração
    completa. Ficam uma vez só, no fim — repetir em 129 cards
    viraria ruído e ninguém leria nenhum deles. */
+/* Container discreto: a mesma anatomia dos cards de prato
+   (borda de 1px, raio de card, fundo branco), só que sem sombra
+   e sem hover. Assim o bloco se lê como parte do cardápio, e não
+   como texto solto que sobrou no fim da página — que era como
+   estava ficando, encostado nas bordas da tela.
+
+   A última categoria já tem padding-bottom próprio, então aqui
+   a margem de cima é curta de propósito: somar as duas abriria
+   um vão grande demais antes do aviso. */
 .cardapio__rodape {
-  margin-top: var(--s-10);
-  padding-top: var(--s-6);
-  border-top: 1px solid var(--border);
+  margin-top: var(--s-4);
+  margin-bottom: var(--s-10);
+  padding: var(--s-6);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
   display: grid;
-  gap: var(--s-4);
+  gap: var(--s-5);
 }
 
+/* Ícone ao lado do texto, não em cima dele. O "flex" é o que
+   segura isso: sem ele o SVG vira elemento de linha e o
+   parágrafo quebra embaixo. */
 .cardapio__rodape p {
   display: flex;
   align-items: flex-start;
@@ -701,4 +716,17 @@ body.arrastando-barra {
   color: var(--ink-mute);
   flex: none;
   margin-top: 2px;
+}
+
+/* O aviso de alergênico é o mais importante dos dois: ganha o
+   mesmo triângulo âmbar que aparece dentro dos cards, para a
+   pessoa ligar uma coisa à outra. */
+.cardapio__rodape p:last-child .ico {
+  color: #8A5A00;
+}
+
+@media (min-width: 560px) {
+  .cardapio__rodape {
+    padding: var(--s-7);
+  }
 }
