@@ -150,6 +150,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 35,
+    "alergenicos": ["peixe"],
     "nome": "Ceviche de Salmão",
     "categoria": "aquecimento",
     "//": "DESCRIÇÃO ESCRITA POR MIM — o cardápio da foto não traz. Confirmar os ingredientes antes de publicar.",
@@ -232,6 +233,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 44,
+    "alergenicos": ["peixe"],
     "nome": "Gol de Peixinho",
     "categoria": "aquecimento",
     "descricao_pt": "Iscas de tilápia marinadas.",
@@ -251,6 +253,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 45,
+    "alergenicos": ["camarao"],
     "nome": "Milla Shrimp",
     "categoria": "aquecimento",
     "descricao_pt": "250g de camarões.",
@@ -745,6 +748,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 72,
+    "alergenicos": ["camarao"],
     "nome": "Filé Maracanã",
     "categoria": "carnes",
     "descricao_pt": "Filé mignon grelhado, coberto por molho alfredo e camarões.",
@@ -809,6 +813,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 76,
+    "alergenicos": ["peixe","castanhas"],
     "nome": "Salmão Nacional de Santiago",
     "categoria": "frangosPeixes",
     "descricao_pt": "Posta de salmão coberta com molho de amêndoas crocantes.",
@@ -857,6 +862,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 79,
+    "alergenicos": ["peixe"],
     "nome": "Sole Filet",
     "categoria": "frangosPeixes",
     "descricao_pt": "Linguado crocante, empanado com queijo parmesão.",
@@ -873,6 +879,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 80,
+    "alergenicos": ["camarao"],
     "nome": "Casillas Chicken",
     "categoria": "frangosPeixes",
     "descricao_pt": "Sobrecoxa de frango com mix de queijos e camarões grelhados.",
@@ -905,6 +912,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 82,
+    "alergenicos": ["camarao","peixe"],
     "nome": "Tilápia Parc de Princes",
     "categoria": "frangosPeixes",
     /* O impresso escreve "belle muniere"; o correto é "belle
@@ -924,6 +932,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 83,
+    "alergenicos": ["camarao"],
     "nome": "Pasta Canavarro",
     "categoria": "pastas",
     "descricao_pt": "Penne com camarões ao molho funghi porcini.",
@@ -940,6 +949,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 84,
+    "alergenicos": ["camarao"],
     "nome": "Penne Meazza",
     "categoria": "pastas",
     "descricao_pt": "Penne ao molho alfredo, com mix de cogumelos selvagens e camarões grelhados.",
@@ -956,6 +966,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 85,
+    "alergenicos": ["camarao"],
     "nome": "Pasta Formaggio",
     "categoria": "pastas",
     "descricao_pt": "Talharim com camarões e queijo catupiry.",
@@ -975,6 +986,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 86,
+    "alergenicos": ["camarao"],
     "nome": "Pasta Piola",
     "categoria": "pastas",
     "descricao_pt": "Talharim com camarões e tiras de frango ao molho alfredo.",
@@ -1070,6 +1082,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 91,
+    "alergenicos": ["peixe"],
     "nome": "Peixinho",
     "categoria": "kids",
     "descricao_pt": "Filezinho de peixe frito à dorê.",
@@ -1396,6 +1409,7 @@ window.STADIUM.cardapio = [
   },
   {
     "id": 110,
+    "alergenicos": ["camarao"],
     "nome": "Mexican Salad",
     "categoria": "saladas",
     "descricao_pt": "Camarões, frango, mix de alfaces, repolho roxo, pico de gallo, guacamole e nachos.",

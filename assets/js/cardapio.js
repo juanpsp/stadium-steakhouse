@@ -319,6 +319,38 @@
     detalhes.id = idPainel;
     var caixa = el("div", "card-detalhes__caixa");
 
+    /* ALERGÊNICO VEM PRIMEIRO.
+       É a informação de maior consequência da gaveta: quem tem
+       alergia a camarão precisa ver antes de qualquer preço.
+
+       Só entram camarão, peixe e castanhas, e só quando estão na
+       receita. Leite e glúten ficaram de fora de propósito: eles
+       apareceriam em mais de um terço do cardápio e, ainda
+       assim, subcontados — dá para detectar quando a descrição
+       cita queijo, mas não a farinha do empanado nem o creme do
+       molho. Meia lista é pior que lista nenhuma, porque quem
+       lesse os pratos sem marca concluiria que são seguros.
+       O aviso no rodapé do cardápio diz exatamente isso. */
+    if (prato.alergenicos && prato.alergenicos.length) {
+      var mapaAlerg = {
+        camarao: "cardapio.alergCamarao",
+        peixe: "cardapio.alergPeixe",
+        castanhas: "cardapio.alergCastanhas"
+      };
+      var nomes = prato.alergenicos
+        .map(function (chave) {
+          return mapaAlerg[chave] ? i18n.t(mapaAlerg[chave]) : chave;
+        })
+        .join(", ");
+
+      var alerta = el("p", "card-alergenico");
+      alerta.appendChild(icone("alerta", "ico--sm"));
+      alerta.appendChild(
+        el("span", null, i18n.t("cardapio.contem") + " " + nomes)
+      );
+      caixa.appendChild(alerta);
+    }
+
     /* No card enxuto a descrição é o conteúdo do botão: ela sai
        da cara do card e abre aqui dentro. Item sem descrição
        simplesmente não ganha botão — a regra lá embaixo cuida. */
@@ -373,12 +405,17 @@
       lista.appendChild(linhaExtra);
     }
 
-    /* Prato sem opções, sem "serve", sem nenhum extra e — no
-       card enxuto — sem descrição escondida não tem o que
-       mostrar: o botão de detalhes some em vez de abrir uma
-       gaveta vazia. É o que acontece com os acompanhamentos
-       cuja descrição ainda não foi escrita. */
-    if (!tabela && !lista.children.length && !descricaoEscondida) {
+    /* Prato sem opções, sem "serve", sem nenhum extra, sem aviso
+       de alergênico e — no card enxuto — sem descrição escondida
+       não tem o que mostrar: o botão de detalhes some em vez de
+       abrir uma gaveta vazia. É o que acontece com os
+       acompanhamentos cuja descrição ainda não foi escrita.
+
+       O alergênico entra nesta conta: um prato que só tenha o
+       aviso ainda precisa do botão, senão o aviso ficaria dentro
+       de uma gaveta que ninguém consegue abrir. */
+    var temAlerta = !!(prato.alergenicos && prato.alergenicos.length);
+    if (!tabela && !lista.children.length && !descricaoEscondida && !temAlerta) {
       botao.remove();
       return card;
     }

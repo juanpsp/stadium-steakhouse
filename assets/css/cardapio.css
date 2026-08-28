@@ -634,3 +634,71 @@ body.arrastando-barra {
 .card-enxuto__titulo .ico {
   color: var(--burgundy);
 }
+
+/* ---------- 10. AVISO DE ALERGÊNICO ----------
+   Primeira linha da gaveta, e a única com fundo próprio: é a
+   informação de maior consequência da tela. Quem tem alergia a
+   camarão precisa ver isso antes de qualquer preço.
+
+   Âmbar em vez de vermelho de propósito. Vermelho num cardápio
+   lê como "erro" ou "indisponível"; âmbar lê como "atenção",
+   que é o que a mensagem é. */
+.card-alergenico {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink);
+  background-color: rgba(242, 175, 0, 0.14);
+  border-left: 3px solid var(--gold);
+  padding-block: var(--s-3);
+}
+
+.card-alergenico .ico {
+  color: #8A5A00;
+  flex: none;
+  margin-top: 1px;
+}
+
+/* Dentro do card bordô o âmbar transparente some. Aqui ele
+   volta a ter corpo, e o texto passa para a paleta clara. */
+.card-produto--alcool .card-alergenico {
+  background-color: rgba(242, 175, 0, 0.18);
+  color: var(--ink-on-dark);
+}
+
+.card-produto--alcool .card-alergenico .ico {
+  color: var(--gold);
+}
+
+/* ---------- 11. RODAPÉ DO CARDÁPIO ----------
+   Os dois avisos que valem para a página inteira: foto é
+   ilustrativa, e a marcação de alergênico não é declaração
+   completa. Ficam uma vez só, no fim — repetir em 129 cards
+   viraria ruído e ninguém leria nenhum deles. */
+.cardapio__rodape {
+  margin-top: var(--s-10);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: var(--s-4);
+}
+
+.cardapio__rodape p {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+  max-width: 70ch;
+}
+
+.cardapio__rodape .ico {
+  color: var(--ink-mute);
+  flex: none;
+  margin-top: 2px;
+}

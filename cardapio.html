@@ -83,6 +83,23 @@
 
     <div class="container" data-cardapio></div>
 
+    <!-- Rodapé do cardápio: os dois avisos que valem para a
+         página inteira. Fica fora de [data-cardapio] de propósito
+         — aquele contêiner é limpo e redesenhado a cada troca de
+         idioma, e levaria estes avisos junto. -->
+    <div class="container">
+        <div class="cardapio__rodape">
+            <p>
+                <svg class="ico ico--sm" aria-hidden="true"><use href="#i-menu"/></svg>
+                <span data-i18n="cardapio.avisoFotos">As fotos são ilustrativas. A apresentação dos pratos pode variar.</span>
+            </p>
+            <p>
+                <svg class="ico ico--sm" aria-hidden="true"><use href="#i-alerta"/></svg>
+                <span data-i18n="cardapio.avisoAlergia">Sinalizamos camarão, peixe e castanhas quando entram na receita — não é uma declaração completa de alergênicos. Se você tem alergia ou restrição alimentar, avise a equipe antes de pedir.</span>
+            </p>
+        </div>
+    </div>
+
 </main>
 
 <footer class="footer">

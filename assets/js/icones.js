@@ -76,7 +76,12 @@
     ovo: '<path d="M12 21.5c-3.9 0-7-2.9-7-7C5 9.4 8.1 2.5 12 2.5s7 6.9 7 12c0 4.1-3.1 7-7 7z"/>',
     cebola: '<path d="M12 21.5c-3.9 0-7-2.8-7-6.6C5 10.6 8.1 7 12 7s7 3.6 7 7.9c0 3.8-3.1 6.6-7 6.6z"/><path d="M12 7c.2-2 1.4-3.6 3.2-4.4"/><path d="M12 7c-.2-1.7-1.2-3.1-2.7-3.8"/><path d="M12 21.5c-1.7-2.1-2.6-4.4-2.6-6.8S10.3 10 12 8"/><path d="M12 21.5c1.7-2.1 2.6-4.4 2.6-6.8S13.7 10 12 8"/>',
     molho: '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>',
-    porcao: '<circle cx="12" cy="12" r="9"/><path d="M9 12h6"/><path d="M12 9v6"/>'
+    porcao: '<circle cx="12" cy="12" r="9"/><path d="M9 12h6"/><path d="M12 9v6"/>',
+
+    /* Aviso de ingrediente que causa alergia grave. Triângulo,
+       porque é a forma que o mundo inteiro lê como atenção — não
+       dá para inventar linguagem nova num aviso desses. */
+    alerta: '<path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'
   };
 
   var partes = ['<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'];
