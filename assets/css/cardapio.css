@@ -572,17 +572,29 @@ body.arrastando-barra {
 }
 
 /* Sem o "margin-top: auto" que empurra o rodapé para a base do
-   card alto: aqui ele fica na mesma linha do nome. */
+   card alto: aqui ele fica na mesma linha do nome.
+
+   O "flex: 1 1 auto" é o que faz o rodapé ocupar a linha
+   inteira quando o nome é comprido e ele quebra para baixo.
+   Sem isso ele fica do tamanho do conteúdo e encosta na
+   esquerda, colado no preço. */
 .card-produto--enxuto .card-rodape {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   width: auto;
+  min-width: 0;
   margin-top: 0;
   padding-top: 0;
   gap: var(--s-4);
 }
 
+/* O botão vai para a direita por margem automática, não por
+   "justify-content": a maioria destes cards não tem preço, e
+   com um filho só o "space-between" empurraria o botão de volta
+   para a esquerda. A margem funciona nos dois casos — sozinho
+   ou ao lado do preço. */
 .card-produto--enxuto .card-rodape .btn-detalhes {
   flex: 0 0 auto;
+  margin-left: auto;
 }
 
 /* Descrição revelada pelo botão. Mesmo tom da descrição de
