@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#4A0E17">
+    <meta name="description" content="Steakhouse temática esportiva na Zona Oeste do Rio de Janeiro desde 2011. Cortes nobres, porções para dividir e todos os jogos nos telões.">
+
+    <title>Stadium Steakhouse — Unindo Paixões!</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="icon" href="assets/img/diversos/logo-stadium-header.png">
+</head>
+<body>
+
+<!-- Sprite de ícones Lucide — injetado por assets/js/icones.js -->
+<script src="assets/js/icones.js"></script>
+
+<a class="btn btn--sm btn--gold sr-only" href="#conteudo" data-i18n="nav.skip">Ir para o conteúdo</a>
+
+<!-- =========================================================
+     HEADER FIXO
+     ========================================================= -->
+<header class="topbar">
+    <a class="topbar__logo" href="index.html" aria-label="Stadium Steakhouse">
+        <img src="assets/img/diversos/logo-stadium-header.png" alt="Stadium Steakhouse" width="1269" height="923">
+    </a>
+
+    <nav class="topbar__nav" data-i18n-attr="aria-label:nav.aria" aria-label="Navegação principal">
+        <a class="topbar__link" href="index.html" data-i18n="nav.home">Home</a>
+        <a class="topbar__link" href="cardapio.html" data-i18n="nav.menu">Cardápio</a>
+        <a class="topbar__link" href="unidades.html" data-i18n="nav.units">Unidades</a>
+    </nav>
+
+    <div class="topbar__right">
+        <p class="status" data-status data-open="false">
+            <span class="status__dot" aria-hidden="true"></span>
+            <span class="status__short">Aberto</span>
+            <span class="status__long">Aberto até 0h</span>
+        </p>
+
+        <div class="lang" data-lang>
+            <button class="lang__toggle" type="button" aria-expanded="false" aria-haspopup="true"
+                    data-i18n-attr="aria-label:lang.label" aria-label="Escolher idioma">
+                <span data-lang-current>PT</span>
+                <svg class="ico" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            </button>
+            <div class="lang__menu" role="menu" hidden>
+                <button class="lang__option" type="button" role="menuitemradio" aria-checked="true" data-lang-option="pt">
+                    <span data-i18n="lang.pt">Português</span>
+                    <svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>
+                </button>
+                <button class="lang__option" type="button" role="menuitemradio" aria-checked="false" data-lang-option="en">
+                    <span data-i18n="lang.en">English</span>
+                    <svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>
+                </button>
+                <button class="lang__option" type="button" role="menuitemradio" aria-checked="false" data-lang-option="es">
+                    <span data-i18n="lang.es">Español</span>
+                    <svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main id="conteudo">
+
+    <!-- O título da página não é desenhado (a logo ocupa esse
+         papel), mas precisa existir para leitor de tela e busca. -->
+    <h1 class="sr-only">Stadium Steakhouse — Unindo Paixões!</h1>
+
+    <!-- =====================================================
+         CARROSSEL DE NOVIDADES
+         O conteúdo vem de assets/js/promocoes-dados.js (banners).
+         Passa sozinho a cada 6s e para quando a pessoa encosta.
+         ===================================================== -->
+    <section class="banners" data-banners
+             data-i18n-attr="aria-label:banner.aria" aria-label="Novidades do Stadium"
+             aria-roledescription="carrossel">
+        <ul class="banners__track" tabindex="0"></ul>
+
+        <button class="banners__arrow banners__arrow--prev" type="button" data-carousel="prev"
+                data-i18n-attr="aria-label:banner.prev" aria-label="Banner anterior">
+            <svg class="ico ico--lg" aria-hidden="true"><use href="#i-chevron-left"/></svg>
+        </button>
+        <button class="banners__arrow banners__arrow--next" type="button" data-carousel="next"
+                data-i18n-attr="aria-label:banner.next" aria-label="Próximo banner">
+            <svg class="ico ico--lg" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+        </button>
+
+        <div class="banners__controls">
+            <div class="banners__dots"></div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         O CRAQUE DA SEMANA
+         O prato que a casa escolhe empurrar. Editável em
+         promocoes-dados.js -> destaque.
+         ===================================================== -->
+    <section class="section destaque on-dark" data-destaque>
+        <div class="container">
+            <div class="section__head">
+                <p class="t-eyebrow" data-i18n="destaque.eyebrow">A escalação da casa</p>
+                <h2 class="t-h2" data-i18n="destaque.title">O craque da semana</h2>
+                <p class="t-body" data-i18n="destaque.lead">
+                    Toda semana a casa escala um prato para entrar em campo primeiro. Este é o da vez.
+                </p>
+            </div>
+
+            <!-- on-light: o card é branco dentro de uma seção bordô,
+                 então precisa da paleta de texto do tema claro. -->
+            <div class="destaque__card on-light" data-destaque-card></div>
+
+            <div class="destaque__foot">
+                <p class="t-small destaque__hint" data-i18n="destaque.menuHint">
+                    Tem muito mais em campo: aquecimentos, carnes, hambúrgueres, massas, kids e sobremesas.
+                </p>
+                <a class="btn btn--lg btn--outline btn--block" href="cardapio.html">
+                    <span data-i18n="destaque.menuCta">Ver cardápio completo</span>
+                    <svg class="ico ico--lg" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         DELIVERY
+         ===================================================== -->
+    <section class="section delivery">
+        <div class="container">
+            <div class="section__head">
+                <p class="t-eyebrow" data-i18n="delivery.eyebrow">Sem sair de casa</p>
+                <h2 class="t-h2" data-i18n="delivery.title">Peça e receba</h2>
+                <p class="t-body" data-i18n="delivery.lead">
+                    Escolha a unidade e peça direto na loja dela. O cardápio completo também sai para entrega e retirada.
+                </p>
+            </div>
+
+            <!-- Trocar de unidade troca o link de cada aplicativo. -->
+            <div class="unit-switch" role="tablist" data-delivery-switch
+                 data-i18n-attr="aria-label:delivery.switchAria" aria-label="Escolher unidade"></div>
+
+            <ul class="delivery__list" data-delivery></ul>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         A EQUIPE
+         A foto (PNG recortado) assenta na base e divide a
+         seção. Vem de promocoes-dados.js -> equipe.
+         ===================================================== -->
+    <section class="equipe on-dark" data-equipe>
+        <div class="container equipe__grid">
+
+            <div class="equipe__texto">
+                <p class="t-eyebrow" data-i18n="equipe.eyebrow">O nosso time</p>
+                <h2 class="t-h2" data-i18n="equipe.title">Aqui a gente joga com qualidade</h2>
+                <p class="t-body equipe__lead" data-i18n="equipe.lead">
+                    Time completo em campo desde 2011. Cozinha, salão e bar afinados para a sua mesa não esperar e não faltar nada nela.
+                </p>
+
+                <ul class="equipe__pilares">
+                    <li>
+                        <svg class="ico ico--lg" aria-hidden="true"><use href="#i-users"/></svg>
+                        <div>
+                            <h3 class="t-h3" data-i18n="equipe.p1.title">Time formado em casa</h3>
+                            <p data-i18n="equipe.p1.desc">Cozinheiros, garçons e bartenders treinados aqui dentro. Quem atende a sua mesa sabe o cardápio de cor.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg class="ico ico--lg" aria-hidden="true"><use href="#i-tv"/></svg>
+                        <div>
+                            <h3 class="t-h3" data-i18n="equipe.p2.title">Vibração de arquibancada</h3>
+                            <p data-i18n="equipe.p2.desc">Futebol e UFC nos telões em HD, com camisas históricas nas paredes. Aqui o jogo tem torcida.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg class="ico ico--lg" aria-hidden="true"><use href="#i-smile"/></svg>
+                        <div>
+                            <h3 class="t-h3" data-i18n="equipe.p3.title">Acolhimento de casa cheia</h3>
+                            <p data-i18n="equipe.p3.desc">Espaço kids com monitor, cardápio infantil e mesas que cabem a família inteira.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <figure class="equipe__foto" data-equipe-foto></figure>
+
+        </div>
+    </section>
+
+    <!-- =====================================================
+         UNIDADES (resumo — o detalhe vive em unidades.html)
+         ===================================================== -->
+    <section class="section units">
+        <div class="container">
+            <div class="section__head">
+                <p class="t-eyebrow" data-i18n="units.eyebrow">Onde a gente está</p>
+                <h2 class="t-h2" data-i18n="units.title">Duas casas, dois climas</h2>
+                <p class="t-body" data-i18n="units.lead">
+                    A Barra recebe a resenha e o almoço da semana. O Recreio abre cedo, de frente para a orla.
+                </p>
+                <div class="section__aside">
+                    <a class="btn btn--ghost" href="unidades.html">
+                        <span data-i18n="units.all">Ver todas as unidades</span>
+                        <svg class="ico" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div class="units__grid" data-units></div>
+        </div>
+    </section>
+
+</main>
+
+<!-- =========================================================
+     RODAPÉ
+     ========================================================= -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer__grid">
+            <div class="footer__marca">
+                <div class="footer__logo">
+                    <img src="assets/img/diversos/logo-stadium-header.png" alt="Stadium Steakhouse" width="1269" height="923">
+                </div>
+                <p class="t-small" style="margin-top: var(--s-4); color: var(--ink-on-dark-mute);"
+                   data-i18n="footer.tagline">Unindo paixões desde 2011.</p>
+            </div>
+
+            <div>
+                <p class="footer__title" data-i18n="footer.nav">Navegação</p>
+                <div class="footer__links">
+                    <a href="index.html" data-i18n="nav.home">Home</a>
+                    <a href="cardapio.html" data-i18n="nav.menu">Cardápio</a>
+                    <a href="unidades.html" data-i18n="nav.units">Unidades</a>
+                </div>
+            </div>
+
+            <div>
+                <p class="footer__title" data-i18n="footer.contact">Contato</p>
+                <div class="footer__links">
+                    <a href="https://wa.me/5521999999999" target="_blank" rel="noopener noreferrer">(21) 99999-9999</a>
+                    <a href="#" data-i18n="footer.work">Trabalhe conosco</a>
+                    <a href="#" data-i18n="footer.privacy">Política de privacidade</a>
+                </div>
+            </div>
+
+            <div>
+                <p class="footer__title" data-i18n="footer.social">Redes sociais</p>
+                <div class="footer__social">
+                    <a href="#" aria-label="Facebook"><svg class="ico" aria-hidden="true"><use href="#i-facebook"/></svg></a>
+                    <a href="#" aria-label="Instagram"><svg class="ico" aria-hidden="true"><use href="#i-instagram"/></svg></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__legal">
+            <p>&copy; 2026 Stadium Steakhouse. <span data-i18n="footer.rights">Todos os direitos reservados.</span></p>
+            <p><span data-i18n="footer.by">Desenvolvido por</span> <strong>Juan</strong></p>
+        </div>
+    </div>
+</footer>
+
+<!-- =========================================================
+     NAVEGAÇÃO INFERIOR FIXA (mobile)
+     ========================================================= -->
+<nav class="bottomnav" data-i18n-attr="aria-label:nav.aria" aria-label="Navegação principal">
+    <a class="bottomnav__item" href="index.html">
+        <svg class="ico" aria-hidden="true"><use href="#i-home"/></svg>
+        <span data-i18n="nav.home">Home</span>
+    </a>
+    <a class="bottomnav__item" href="cardapio.html">
+        <svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg>
+        <span data-i18n="nav.menu">Cardápio</span>
+    </a>
+    <a class="bottomnav__item" href="unidades.html">
+        <svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg>
+        <span data-i18n="nav.units">Unidades</span>
+    </a>
+</nav>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/promocoes-dados.js"></script>
+<script src="assets/js/global.js"></script>
+<script src="assets/js/home.js"></script>
+
+<!-- Animação de entrada, só nesta página. Vem por último: os
+     blocos acima precisam existir antes de virarem gatilho. -->
+<script src="assets/js/vendor/gsap.min.js"></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/js/vendor/CustomEase.min.js"></script>
+<script src="assets/js/animacoes.js"></script>
+</body>
+</html>

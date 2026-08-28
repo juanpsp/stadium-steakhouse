@@ -1,0 +1,138 @@
+/* =========================================================
+   STADIUM STEAKHOUSE — TOKENS
+   Valores literais do guia de design visual.
+   Nada aqui é arredondado ou "melhorado": se o guia diz
+   18px, aqui é 18px.
+   ========================================================= */
+
+:root {
+  /* ---------- 1. COR INSTITUCIONAL ---------- */
+  --gold: #F2AF00;          /* acento de conversão — no máximo UM por tela */
+  --gold-hover: #D99B00;
+  --gold-press: #B07D00;
+
+  --burgundy: #4A0E17;      /* header, rodapé, faixas institucionais */
+  --burgundy-hover: #5F1420;
+
+  --charcoal: #1A1A1A;      /* fundo escuro (preto puro é proibido) */
+  --cream: #FAF7F0;         /* fundo de leitura */
+  --pitch: #1F5A26;         /* SÓ funcional: vegetariano, herbal, gramado */
+
+  /* ---------- 2. SUPERFÍCIES ---------- */
+  --surface: #FFFFFF;
+  /* Fundo de leitura do site. É o Cream institucional puxado
+     para o branco — clareado o suficiente para o card branco
+     ainda se destacar dele. O Cream #FAF7F0 segue intacto como
+     cor de marca; esta é uma derivação só de superfície.
+     Desvio deliberado do guia, registrado aqui de propósito. */
+  --surface-page: #FDFCF9;
+  --surface-dark: var(--charcoal);
+  --surface-dark-card: #262626;
+
+  --border: #E8E1D2;
+  --border-strong: #D6CDB9;
+  --border-dark: rgba(250, 247, 240, 0.12);
+  --border-dark-strong: rgba(250, 247, 240, 0.24);
+
+  /* ---------- 3. TEXTO ---------- */
+  --ink: #101010;           /* títulos */
+  --ink-body: #262626;      /* corpo */
+  --ink-mute: #4D4D4D;      /* apoio */
+
+  --ink-on-dark: #FAF7F0;
+  --ink-on-dark-body: #F4EFE4;
+  --ink-on-dark-mute: #A6A6A6;
+
+  --price: #5F1420;         /* preço no tema claro */
+  --price-on-dark: var(--gold);
+  --error: #A52208;
+
+  /* ---------- 4. TIPOGRAFIA ---------- */
+  --font-display: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+  --font-body: "Barlow", system-ui, sans-serif;
+  --font-label: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;
+
+  --track-display: 0.02em;
+  --track-eyebrow: 0.16em;
+  --track-meta: 0.08em;
+  --track-price: -0.01em;
+
+  /* ---------- 5. ESPAÇO (grid 4px) ---------- */
+  --s-1: 2px;
+  --s-2: 4px;
+  --s-3: 8px;
+  --s-4: 12px;
+  --s-5: 16px;
+  --s-6: 20px;
+  --s-7: 24px;
+  --s-8: 32px;
+  --s-9: 40px;
+  --s-10: 56px;
+  --s-11: 72px;
+  --s-12: 96px;
+  --s-13: 128px;
+
+  /* ---------- 6. CANTOS ---------- */
+  --r-tag: 2px;
+  --r-field: 4px;
+  --r-sticker: 4px;
+  --r-btn: 6px;
+  --r-card: 10px;
+  --r-panel: 14px;
+  --r-pill: 999px;         /* só navegação de categoria e ação flutuante */
+
+  /* ---------- 7. ELEVAÇÃO (sombras quentes, nunca azuladas) ---------- */
+  --shadow-sm: 0 1px 2px rgba(26, 10, 4, 0.16);
+  --shadow-md: 0 4px 14px rgba(26, 10, 4, 0.22);
+  --shadow-lg: 0 14px 36px rgba(26, 10, 4, 0.28);
+  --shadow-sticker: 0 3px 0 rgba(49, 8, 16, 0.55);
+  --glow-gold: 0 0 0 3px rgba(242, 175, 0, 0.32);
+
+  /* ---------- 8. MOVIMENTO ---------- */
+  --ease: cubic-bezier(0.2, 0.8, 0.28, 1);
+  --t-press: 90ms;
+  --t-hover: 140ms;
+  --t-accordion: 220ms;
+  --t-zoom: 360ms;
+
+  /* ---------- 9. PROTEÇÃO SOBRE FOTOGRAFIA ---------- */
+  /* Texto sobre foto SEMPRE leva scrim. Foto de produto em card, NUNCA. */
+  --scrim-bottom: linear-gradient(
+    to top,
+    rgba(16, 16, 16, 0.92) 0%,
+    rgba(16, 16, 16, 0.55) 42%,
+    rgba(16, 16, 16, 0) 100%
+  );
+
+  /* ---------- 10. LAYOUT ---------- */
+  --container: 1240px;
+  --gutter: 20px;           /* mobile */
+  --section-y: 56px;        /* respiro de seção mobile */
+  --topbar-h: 72px;
+  --bottomnav-h: 64px;
+  --measure: 62ch;          /* largura máxima de parágrafo */
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 40px;
+    --section-y: 96px;
+    --topbar-h: 84px;
+    --bottomnav-h: 0px;     /* no desktop a navegação vive no header */
+  }
+}
+
+/* =========================================================
+   PONTE COM O PROTÓTIPO ANTIGO
+   cardapio.css e unidades.css ainda usam estes nomes.
+   Ficam apontando para os tokens corretos até refatorarmos
+   aquelas páginas. Não usar em código novo.
+   ========================================================= */
+:root {
+  --cor-amarela: var(--gold);
+  --cor-background: var(--charcoal);
+  --cor-background-card: var(--surface-dark-card);
+  --cor-preta: var(--charcoal);
+  --branco: var(--cream);
+  --texto-secundario: var(--ink-on-dark-mute);
+}

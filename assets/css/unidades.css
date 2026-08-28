@@ -1,0 +1,366 @@
+/* =========================================================
+   STADIUM STEAKHOUSE — UNIDADES
+   Tema claro: aqui a pessoa lê endereço e horário, e cream é
+   o fundo de leitura do sistema. Mobile-first.
+   ========================================================= */
+
+.unidades__intro {
+  padding-block: var(--s-8) var(--s-7);
+}
+
+.unidades__intro .t-body {
+  margin-top: var(--s-4);
+}
+
+/* O respiro até o rodapé agora é a margem do card de reserva,
+   que vem logo abaixo desta lista. */
+.unidades__lista {
+  display: grid;
+  gap: var(--s-8);
+}
+
+/* ---------- CARD DE UNIDADE ---------- */
+.unidade {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  overflow: hidden;
+}
+
+.unidade__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: 18px 18px var(--s-4);
+}
+
+/* ---------- FOTOS DO LOCAL ----------
+   auto-fit resolve o número de fotos sozinho: com uma só ela
+   ocupa a faixa inteira, com duas ou três elas dividem. */
+.unidade__galeria {
+  display: grid;
+  /* 130px cabe duas lado a lado já em 375px de tela */
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--s-3);
+  padding: var(--s-2) 18px var(--s-6);
+}
+
+.unidade__quadro {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background-color: var(--surface-page);
+  border: 1px solid var(--border);
+}
+
+/* Foto de local não leva gradiente nem texto por cima. */
+.unidade__quadro img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--t-zoom) var(--ease);
+}
+
+.unidade__quadro:hover img {
+  transform: scale(1.04);
+}
+
+.unidade__desc {
+  padding-inline: 18px;
+  color: var(--ink-body);
+}
+
+/* Estado de funcionamento desta unidade, calculado na hora a
+   partir dos horários em promocoes-dados.js. */
+.unidade__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+  padding: 5px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-tag);
+  white-space: nowrap;
+}
+
+.unidade__status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  background-color: var(--ink-mute);
+}
+
+.unidade__status[data-open="true"] {
+  color: var(--pitch);
+  border-color: var(--pitch);
+}
+
+.unidade__status[data-open="true"]::before {
+  background-color: var(--pitch);
+}
+
+/* ---------- MAPA ---------- */
+.unidade__mapa {
+  position: relative;
+  height: 200px;
+  margin: var(--s-6) 18px 0;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background-color: var(--border);
+}
+
+.unidade__mapa iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* ---------- ENDEREÇO E TAGS ---------- */
+.unidade__corpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  padding: var(--s-6) 18px 18px;
+}
+
+.unidade__endereco {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-body);
+}
+
+.unidade__endereco .ico {
+  color: var(--burgundy);
+  margin-top: 2px;
+  flex: none;
+}
+
+.unidade__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* ---------- HORÁRIOS ---------- */
+.unidade__horarios {
+  border-top: 1px solid var(--border);
+  padding-top: var(--s-5);
+}
+
+.unidade__horarios h3 {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--ink-mute);
+  margin-bottom: var(--s-4);
+}
+
+/* Os blocos ficam lado a lado e dividem a largura por igual.
+   auto-fit acomoda as três faixas da Barra e as quatro do
+   Recreio sem precisar de regra separada para cada uma. */
+.unidade__horarios dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: var(--s-2);
+}
+
+/* Com quatro faixas, o celular estreito encaixaria três em cima
+   e uma órfã embaixo. Em 2x2 fica equilibrado. */
+.unidade__horarios dl[data-blocos="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 480px) {
+  .unidade__horarios dl[data-blocos="4"] {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.horario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  align-items: center;
+  text-align: center;
+  padding: var(--s-3) var(--s-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-field);
+  background-color: var(--surface-page);
+}
+
+.horario dt {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+}
+
+.horario dd {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.1;
+  letter-spacing: var(--track-price);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Hoje: o bloco inteiro se destaca, não só o texto. */
+.horario.hoje {
+  background-color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+.horario.hoje dt {
+  color: var(--gold);
+}
+
+.horario.hoje dd {
+  color: var(--cream);
+}
+
+.unidade__feriado {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px dashed var(--border);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-mute);
+}
+
+/* ---------- CARD DE FECHO ----------
+   Único lugar com o telefone escrito. Dentro do card de unidade
+   já existe o botão "Ligar"; quem quer reservar mesmo desce até
+   aqui e encontra as duas casas juntas. */
+.reserva {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  margin-top: var(--s-9);
+  margin-bottom: var(--s-12);
+  padding: var(--s-7) 18px;
+  background-color: var(--burgundy);
+  border-radius: var(--r-panel);
+  color: var(--ink-on-dark-body);
+}
+
+.reserva__topo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+
+.reserva__topo .ico {
+  color: var(--gold);
+  flex: none;
+  margin-top: 2px;
+}
+
+.reserva__topo h2 {
+  color: var(--ink-on-dark);
+  margin-bottom: var(--s-2);
+}
+
+.reserva__topo p {
+  color: var(--ink-on-dark-body);
+}
+
+.reserva__linhas {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.reserva__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--border-dark-strong);
+  border-radius: var(--r-card);
+  transition: background-color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease);
+}
+
+.reserva__item:hover {
+  background-color: rgba(250, 247, 240, 0.08);
+  border-color: var(--gold);
+}
+
+.reserva__unidade {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--gold);
+}
+
+.reserva__fone {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: var(--track-price);
+  color: var(--cream);
+}
+
+@media (min-width: 640px) {
+  .reserva {
+    padding: var(--s-8);
+  }
+  .reserva__linhas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- AÇÕES ---------- */
+.unidade__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  border-top: 1px solid var(--border);
+  padding-top: var(--s-5);
+}
+
+.unidade__acoes .btn {
+  flex: 1 1 auto;
+}
+
+@media (min-width: 768px) {
+  .unidade__mapa {
+    height: 260px;
+  }
+  .unidade__acoes .btn {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .unidades__lista {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+  }
+}

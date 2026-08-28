@@ -1,0 +1,636 @@
+/* =========================================================
+   STADIUM STEAKHOUSE — CARDÁPIO
+   Tema claro, igual ao resto do site. Mobile-first.
+   O cardápio é a tela mais usada: tudo aqui existe para o
+   nome do prato e o preço serem lidos de relance, a 390px,
+   com uma mão só.
+   ========================================================= */
+
+/* ---------- 1. ABERTURA ---------- */
+.cardapio__intro {
+  padding-block: var(--s-8) var(--s-6);
+}
+
+/* O H1 tem entrelinha 0.92, bem fechada: sem um respiro maior
+   aqui o parágrafo encosta na base das letras. */
+.cardapio__intro .t-body {
+  margin-top: var(--s-7);
+}
+
+/* ---------- 2. BARRA DE CATEGORIAS ----------
+   Pill é permitido em navegação de categoria. Fica grudada
+   abaixo do header e desliza sozinha até a categoria ativa. */
+.menu-categorias {
+  position: sticky;
+  top: var(--topbar-h);
+  z-index: 900;
+  background-color: rgba(253, 252, 249, 0.88);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.menu-categorias__track {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: var(--s-4) var(--gutter);
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* a mão aberta avisa que a barra é pegável */
+  cursor: grab;
+}
+
+/* Enquanto o mouse arrasta, a rolagem tem de ser seca: com
+   "smooth" ligada cada quadro do arraste vira uma animação e a
+   barra fica borrachuda, atrasada em relação ao cursor. */
+.menu-categorias__track.arrastando {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  /* impede que o navegador selecione os nomes das categorias
+     durante o arraste */
+  user-select: none;
+}
+
+.menu-categorias__track::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-link {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--ink-mute);
+  background-color: var(--surface);
+  padding: 9px 16px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  transition: color var(--t-hover) var(--ease),
+    background-color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease);
+}
+
+.cat-link:hover {
+  color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+/* Ativa em bordô com o texto em ouro — o mesmo par da barra de
+   navegação inferior, onde a página atual também acende em
+   ouro sobre bordô. As duas navegações do site passam a marcar
+   "você está aqui" do mesmo jeito. */
+.cat-link.ativo {
+  background-color: var(--burgundy);
+  border-color: var(--burgundy);
+  color: var(--gold);
+}
+
+/* ---------- 3. SEÇÕES ---------- */
+.categoria {
+  /* Onde o salto de categoria para.
+     Cuidado: três recuos entram nesta conta, e é fácil somar o
+     mesmo espaço duas vezes.
+       88px  scroll-padding-top do <html> (já cobre o header fixo)
+       +32px este recuo, que cobre a barra de categorias (69px)
+       +40px o padding-top da própria seção, aqui embaixo
+     Dá ~160px, e a barra termina em 141px: sobra um respiro de
+     ~19px acima do rótulo. Repetir a altura do header aqui era
+     o que abria um vão de 131px na chegada. */
+  scroll-margin-top: 32px;
+  padding-top: var(--s-9);
+}
+
+.categoria__head {
+  margin-bottom: var(--s-6);
+}
+
+/* Regra que vale para a seção inteira — hoje só a idade
+   limite do menu kids. Fica presa ao título, num tom mais
+   baixo: é condição de compra, não chamariz. */
+.categoria__nota {
+  margin-top: var(--s-3);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-mute);
+  border-left: 3px solid var(--gold);
+  padding-left: var(--s-3);
+}
+
+/* A última categoria (drinks) encostava no rodapé. */
+.categoria:last-child {
+  padding-bottom: var(--s-12);
+}
+
+/* Um item por linha, como em app de delivery: o prato ocupa a
+   largura toda e sobra espaço para a descrição respirar. */
+.container-produto {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+}
+
+/* ---------- 4. CARD DE PRATO ----------
+   Ordem fixa do guia: foto -> nome -> descrição -> metadado ->
+   preço + ação. Sem sombra em repouso. Foto de produto nunca
+   leva gradiente e nunca recebe texto por cima.
+
+   Foto no flanco ocupando 34% da largura do card e a altura
+   inteira dele. Em porcentagem, não em pixel fixo: assim ela
+   cresce junto com a tela em vez de encolher. */
+.card-produto {
+  display: grid;
+  grid-template-columns: 34% 1fr;
+  grid-template-areas:
+    "foto corpo"
+    "detalhes detalhes";
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  transition: box-shadow var(--t-accordion) var(--ease),
+    border-color var(--t-accordion) var(--ease),
+    transform var(--t-accordion) var(--ease);
+}
+
+.card-produto:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.card-produto.ativo {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+/* A foto sangra até a borda do card e acompanha a altura da
+   linha, então ela cresce quando a descrição é mais longa. */
+.card-foto {
+  grid-area: foto;
+  height: 100%;
+  min-height: 150px;
+  overflow: hidden;
+  background-color: var(--surface-page);
+  border-right: 1px solid var(--border);
+}
+
+.card-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-corpo {
+  grid-area: corpo;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0;
+  padding: 16px;
+}
+
+.card-nome {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+}
+
+.card-descricao {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-mute);
+}
+
+/* Em card estreito o preço e o botão não cabem lado a lado, e
+   o wrap resolve isso sozinho: quebra quando falta espaço, sem
+   depender de adivinhar a largura em media query. */
+.card-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: auto;
+  padding-top: var(--s-4);
+}
+
+.card-rodape .btn-detalhes {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+/* ---------- PREÇO ---------- */
+.card-preco-caixa {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* "a partir de" fica pequeno e discreto: quem manda na leitura
+   é o número, não o aviso. */
+.card-preco-desde {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+  line-height: 1;
+}
+
+/* Preço no tema claro é bordô, como manda o guia. */
+.card-preco {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: var(--track-price);
+  color: var(--price);
+  white-space: nowrap;
+}
+
+.card-preco .t-price__unit,
+.card-preco .t-price__cents {
+  font-size: 62%;
+}
+
+/* Botão de detalhes: rótulo em texto, porque ícone sozinho não
+   carrega informação. */
+.btn-detalhes {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-field);
+  transition: background-color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease), color var(--t-hover) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-detalhes:hover {
+  border-color: var(--burgundy);
+  color: var(--burgundy);
+}
+
+.btn-detalhes:active {
+  transform: scale(0.97);
+  transition-duration: var(--t-press);
+}
+
+.btn-detalhes .ico {
+  transition: transform var(--t-hover) var(--ease);
+}
+
+.card-produto.ativo .btn-detalhes {
+  border-color: var(--burgundy);
+  color: var(--burgundy);
+}
+
+.card-produto.ativo .btn-detalhes .ico {
+  transform: rotate(180deg);
+}
+
+/* ---------- 4.1 BEBIDA ALCOÓLICA ----------
+   Card em bordô, a cor institucional da marca. Não inventei um
+   marrom novo: o guia trabalha com uma paleta fechada, e o
+   bordô já é o tom escuro da casa — some com o risco de o
+   cardápio virar uma colcha de retalhos e ainda assim separa o
+   bloco à primeira vista. */
+.card-produto--alcool {
+  background-color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+.card-produto--alcool:hover {
+  border-color: var(--gold);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-produto--alcool .card-foto {
+  background-color: rgba(250, 247, 240, 0.06);
+  border-right-color: rgba(250, 247, 240, 0.14);
+}
+
+/* O nome usa classe própria do cardápio, então não é alcançado
+   pelo "on-dark" do sistema — sem esta linha ele fica preto
+   sobre bordô e some. */
+.card-produto--alcool .card-nome {
+  color: var(--ink-on-dark);
+}
+
+/* No escuro o preço é ouro, como manda o guia. */
+.card-produto--alcool .card-preco,
+.card-produto--alcool .card-opcoes__valor {
+  color: var(--gold);
+}
+
+.card-produto--alcool .card-preco-desde,
+.card-produto--alcool .card-descricao,
+.card-produto--alcool .card-opcoes__rotulo {
+  color: var(--ink-on-dark-mute);
+}
+
+.card-produto--alcool .btn-detalhes {
+  color: var(--ink-on-dark-body);
+  border-color: var(--border-dark-strong);
+}
+
+.card-produto--alcool .btn-detalhes:hover,
+.card-produto--alcool.ativo .btn-detalhes {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+/* A gaveta acompanha o card: fundo um tom mais fundo que o
+   bordô, para ler como continuação e não como remendo claro. */
+.card-produto--alcool .card-detalhes__caixa {
+  background-color: rgba(16, 16, 16, 0.22);
+}
+
+.card-produto--alcool .card-detalhes__caixa > :first-child,
+.card-produto--alcool .card-detalhes__caixa > * + *,
+.card-produto--alcool .card-opcoes li + li {
+  border-top-color: rgba(250, 247, 240, 0.14);
+}
+
+.card-produto--alcool .card-detalhes li,
+.card-produto--alcool .card-detalhes li .ico {
+  color: var(--ink-on-dark-body);
+}
+
+.card-produto--alcool .card-detalhes li .ico {
+  color: var(--gold);
+}
+
+/* Aviso legal: discreto, mas presente em todo card de álcool. */
+.card-aviso {
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid rgba(250, 247, 240, 0.14);
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-on-dark-mute);
+}
+
+/* ---------- 5. ACORDEÃO ----------
+   Abre por altura em 220ms, sem fade, como manda o guia.
+   grid-template-rows anima de verdade, ao contrário de height:auto. */
+/* Abre em faixa cheia, abaixo da foto e do texto — é a "linha
+   que desce" com as demais informações do prato. */
+.card-detalhes {
+  grid-area: detalhes;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--t-accordion) var(--ease);
+}
+
+.card-produto.ativo .card-detalhes {
+  grid-template-rows: 1fr;
+}
+
+.card-detalhes__caixa {
+  overflow: hidden;
+  min-height: 0;
+  background-color: var(--surface-page);
+}
+
+/* O recheio da gaveta fica nos FILHOS da caixa, nunca na caixa.
+   A caixa é o que colapsa (a linha da grade vai de 0fr a 1fr) e
+   padding não colapsa junto: com o card fechado sobraria uma
+   faixa de fundo aparecendo embaixo.
+
+   E precisa valer para qualquer filho, não só para <ul>: a
+   descrição do card enxuto é um <p>, e era exatamente por isso
+   que ela saía colada nas bordas, sem respiro nenhum. */
+.card-detalhes__caixa > * {
+  padding-inline: 16px;
+}
+
+.card-detalhes__caixa > :first-child {
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--border);
+}
+
+.card-detalhes__caixa > :last-child {
+  padding-bottom: var(--s-5);
+}
+
+/* Dois blocos na mesma gaveta (descrição e extras, ou tabela de
+   preços e extras) ganham uma linha entre eles. */
+.card-detalhes__caixa > * + * {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.card-detalhes ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* ---------- OPÇÕES DE TAMANHO E PREÇO ----------
+   Rótulo à esquerda, preço à direita, alinhados numa coluna só:
+   assim dá para comparar os valores de cima a baixo sem
+   procurar. */
+.card-opcoes li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-block: var(--s-2);
+}
+
+.card-opcoes li + li {
+  border-top: 1px solid var(--border);
+}
+
+.card-opcoes__rotulo {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+}
+
+.card-opcoes__valor {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: var(--track-price);
+  color: var(--price);
+  white-space: nowrap;
+}
+
+.card-opcoes__valor .t-price__unit,
+.card-opcoes__valor .t-price__cents {
+  font-size: 62%;
+}
+
+.card-detalhes li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-body);
+}
+
+.card-detalhes li .ico {
+  color: var(--burgundy);
+  margin-top: 2px;
+  flex: none;
+}
+
+/* ---------- 6. TELAS MAIORES ---------- */
+@media (min-width: 560px) {
+  .card-corpo {
+    padding: 18px;
+  }
+  .card-detalhes__caixa > * {
+    padding-inline: 18px;
+  }
+  .card-foto {
+    min-height: 176px;
+  }
+}
+
+/* Duas colunas só a partir daqui. Numa única coluna a 1240px
+   o card ficaria com mais de um metro de largura e a descrição
+   esticaria numa linha só, que é pior de ler. */
+@media (min-width: 1024px) {
+  .container-produto {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-5);
+  }
+}
+
+/* Enquanto a barra de categorias está sendo arrastada com o
+   mouse, o cursor pode sair dela e começar a selecionar o texto
+   da página. Isso segura a seleção até o botão ser solto. */
+body.arrastando-barra {
+  user-select: none;
+}
+
+/* ---------- 8. CARD ENXUTO (ACOMPANHAMENTOS) ----------
+   Acompanhamento não tem foto e quase nunca tem preço próprio.
+   O que sobra é o nome e o botão, e é isso que o card mostra:
+   uma linha só, nome à esquerda, botão à direita. A descrição
+   fica guardada atrás do botão, na mesma gaveta que os outros
+   cards já usam.
+
+   São vinte itens numa lista. Card grande aqui viraria uma
+   rolagem sem fim para uma informação que a pessoa varre com
+   o olho. */
+.card-produto--enxuto {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "corpo"
+    "detalhes";
+}
+
+.card-produto--enxuto .card-corpo {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: 14px 16px;
+}
+
+/* O nome pode quebrar em duas linhas num item comprido
+   ("Batata Frita Homemade" a 390px) sem empurrar o botão. */
+.card-produto--enxuto .card-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Sem o "margin-top: auto" que empurra o rodapé para a base do
+   card alto: aqui ele fica na mesma linha do nome. */
+.card-produto--enxuto .card-rodape {
+  flex: 0 0 auto;
+  width: auto;
+  margin-top: 0;
+  padding-top: 0;
+  gap: var(--s-4);
+}
+
+.card-produto--enxuto .card-rodape .btn-detalhes {
+  flex: 0 0 auto;
+}
+
+/* Descrição revelada pelo botão. Mesmo tom da descrição de
+   card comum — ela é a mesma coisa, só que guardada. */
+.card-detalhes__texto {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-mute);
+}
+
+/* ---------- 9. BLOCO DENTRO DA CATEGORIA ----------
+   "Molhos da Casa" e "Acompanhamentos Adicionais" dentro de
+   Assistências. Ocupa a linha inteira da grade, inclusive no
+   desktop, onde os cards ficam em duas colunas. */
+.categoria__grupo {
+  grid-column: 1 / -1;
+  margin-top: var(--s-6);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  padding-bottom: var(--s-3);
+  border-bottom: 2px solid var(--border-strong);
+}
+
+/* O primeiro rótulo já vem logo abaixo do cabeçalho da seção,
+   que tem margem própria. */
+.categoria__grupo:first-child {
+  margin-top: 0;
+}
+
+/* Ícone + nome andam juntos no card enxuto. Se o nome quebrar
+   em duas linhas, ele não escorrega para debaixo do ícone. */
+.card-enxuto__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Bordô, não ouro. São 25 ícones numa tela só, e o guia reserva
+   o ouro para no máximo um acento por tela — dourar todos eles
+   gastaria o acento e ainda deixaria o ícone brigando com o
+   nome. Bordô é a mesma cor que os ícones das listas de detalhe
+   já usam. */
+.card-enxuto__titulo .ico {
+  color: var(--burgundy);
+}

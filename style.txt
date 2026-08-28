@@ -1,0 +1,165 @@
+/* =========================================
+   1. RESET E VARIÁVEIS BASE
+   ========================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+    --cor-amarela: #FDC82F;
+    --cor-background: #1F1B1B;
+    --cor-backgrond-car: #2E2A2A;
+    --cor-preta: #000000;
+    --branco: #ffffff;
+
+}
+
+body {
+  background-color: #1F1B1B; /* Fundo geral do site mais escuro */
+  font-family: sans-serif;
+}
+
+/* Título da Seção */
+.cardápio-títulos {
+  color: #FDC82F; /* Amarelo Stadium */
+  margin: 30px 16px 20px;
+}
+
+/* =========================================
+   2. O CONTAINER (A Prateleira)
+   ========================================= */
+.container-cardapio {
+  display: flex;
+  flex-direction: column; /* Mobile-first: um embaixo do outro */
+  gap: 20px;
+  padding: 0 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Breakpoint: Telas maiores (Tablets e Desktops) */
+@media (min-width: 768px) {
+  .container-cardapio {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .card-produto {
+    width: calc(50% - 10px); /* 2 cards por linha, descontando o gap */
+  }
+}
+
+/* =========================================
+   3. O CARD PRINCIPAL
+   ========================================= */
+.card-produto {
+  background-color: #2d2d2d;
+  border-radius: 12px;
+  position: relative; /* Importante para o botão flutuar */
+  
+  /* Usando Grid para dividir 35% / 65% perfeitamente */
+  display: grid;
+  grid-template-columns: 35% 65%;
+  grid-template-rows: auto auto; /* Linha 1: Foto e Textos | Linha 2: Accordion */
+}
+
+/* O container da foto (Ocupa a coluna 1) */
+.card-header {
+  grid-column: 1 / 2;
+  padding: 16px 0 16px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.card-header img {
+  width: 100%;
+  border-radius: 50%; /* Se a frigideira for arredondada na arte */
+  object-fit: cover;
+}
+
+/* O container do texto (Ocupa a coluna 2) */
+.card-body {
+  grid-column: 2 / 3;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-body h3 {
+  color: #facc15;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.descricao-prato {
+  color: #cccccc;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.preco {
+  color: #facc15;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* Botão de + */
+.btn-expandir {
+  background-color: #facc15;
+  color: #1a1a1a;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   4. O ACCORDION (Área escondida)
+   ========================================= */
+/* O container extra ocupa as duas colunas inteiras na parte de baixo */
+.card-details {
+  grid-column: 1 / 3; 
+  background-color: transparent;
+  
+  /* Lógica da Animação */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.card-details ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card-details li {
+  color: #eeeeee;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+/* Criando o bullet point amarelo */
+.card-details li::before {
+  content: "•";
+  color: #facc15;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* CLASSE ATIVADA PELO JAVASCRIPT */
+.card-produto.ativo .card-details {
+  max-height: 200px; /* Abre espaço suficiente para o texto */
+  padding: 16px;
+}

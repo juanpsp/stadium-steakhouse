@@ -1,0 +1,795 @@
+/* =========================================================
+   STADIUM STEAKHOUSE — HOME
+   Mobile-first. Ordem das seções:
+   carrossel de novidades -> craque da semana -> delivery ->
+   a casa -> unidades -> footer
+
+   O topo não leva atalho para o cardápio de propósito: ele já
+   está a um toque na barra inferior fixa. O topo é vitrine.
+   ========================================================= */
+
+/* ---------- 1. CARROSSEL DE NOVIDADES ---------- */
+.banners {
+  position: relative;
+  background-color: var(--charcoal);
+}
+
+.banners__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.banners__track::-webkit-scrollbar {
+  display: none;
+}
+
+.banners__track:focus-visible {
+  outline: none;
+  box-shadow: inset var(--glow-gold);
+}
+
+/* Ocupa a tela inteira abaixo do header: nada da próxima seção
+   aparece nesse primeiro quadro. A barra inferior fixa flutua
+   por cima dos últimos pixels, então os controles do carrossel
+   sobem o suficiente para não ficarem atrás dela. */
+.banner {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: flex-end;
+  /* vh para navegador antigo; dvh acompanha a barra do celular
+     aparecendo e sumindo, que é o que dá a sensação de tela cheia */
+  min-height: calc(100vh - var(--topbar-h));
+  min-height: calc(100dvh - var(--topbar-h));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* A foto entra como <img>. Enquanto ela não existir, o fundo
+   de reserva do tema pinta um ambiente coerente com a marca —
+   a tela nunca aparece quebrada. */
+.banner__media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-color: var(--charcoal);
+}
+
+.banner__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* A foto preenche o quadro em qualquer proporção de tela: ao
+   estreitar, ela aproxima; ao alargar, corta em cima e embaixo.
+   Nunca sobra borda.
+
+   --foco decide qual parte da imagem fica protegida do corte, e
+   vem de cada banner em promocoes-dados.js. --zoom é opcional,
+   para aproximar ainda mais que o necessário. */
+.banner__foto {
+  object-fit: cover;
+  object-position: var(--foco, 50% 50%);
+  transform: scale(var(--zoom, 1));
+  transform-origin: var(--foco, 50% 50%);
+}
+
+.banner--noite .banner__media {
+  background-image: radial-gradient(120% 90% at 78% 26%, rgba(242, 175, 0, 0.30) 0%, rgba(242, 175, 0, 0) 58%),
+    radial-gradient(100% 80% at 10% 84%, rgba(74, 14, 23, 0.9) 0%, rgba(74, 14, 23, 0) 60%),
+    linear-gradient(160deg, #241014 0%, var(--charcoal) 55%, #120d0d 100%);
+}
+
+.banner--manha .banner__media {
+  background-image: radial-gradient(130% 100% at 70% 14%, rgba(242, 175, 0, 0.42) 0%, rgba(242, 175, 0, 0) 62%),
+    radial-gradient(90% 70% at 18% 90%, rgba(95, 20, 32, 0.75) 0%, rgba(95, 20, 32, 0) 62%),
+    linear-gradient(150deg, #3a1e14 0%, #241713 48%, var(--charcoal) 100%);
+}
+
+.banner--festa .banner__media {
+  background-image: radial-gradient(70% 55% at 84% 20%, rgba(242, 175, 0, 0.34) 0%, rgba(242, 175, 0, 0) 60%),
+    radial-gradient(60% 50% at 22% 26%, rgba(242, 175, 0, 0.16) 0%, rgba(242, 175, 0, 0) 60%),
+    linear-gradient(165deg, var(--burgundy) 0%, #2b0a11 58%, var(--charcoal) 100%);
+}
+
+/* Texto sobre foto SEMPRE leva scrim de proteção. */
+.banner__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--scrim-bottom);
+}
+
+/* O texto é o rodapé da imagem, não o assunto dela: bloco
+   compacto, encostado na base, para a fotografia respirar. */
+.banner__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  /* o respiro de baixo abre espaço para os controles e para a
+     barra de navegação fixa */
+  padding-block: var(--s-9)
+    calc(var(--bottomnav-h) + var(--s-11));
+}
+
+.banner__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.banner__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 8vw, 38px);
+  line-height: 0.96;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--cream);
+  text-shadow: 0 2px 12px rgba(16, 16, 16, 0.6);
+  max-width: 15ch;
+}
+
+.banner__desc {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-on-dark-body);
+  max-width: 40ch;
+}
+
+/* O gancho comercial do slide: horário, preço ou chamada. */
+.banner__hook {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: var(--track-price);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.banner__hook .t-price__unit,
+.banner__hook .t-price__cents {
+  font-size: 62%;
+}
+
+/* ---------- 1.1 CONTROLES DO CARROSSEL ---------- */
+.banners__arrow {
+  display: none;
+}
+
+.banners__controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* sobe acima da barra de navegação fixa */
+  bottom: calc(var(--bottomnav-h) + var(--s-6));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-5);
+}
+
+.banners__dots {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.banners__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background-color: rgba(250, 247, 240, 0.4);
+  transition: background-color var(--t-hover) var(--ease),
+    width var(--t-hover) var(--ease);
+}
+
+.banners__dot[aria-current="true"] {
+  width: 24px;
+  background-color: var(--gold);
+}
+
+/* Sem botão de pausa, os pontos são o controle manual junto
+   com o arraste e as setas. Área de toque de 34px cada. */
+.banners__dot {
+  position: relative;
+}
+
+.banners__dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 768px) {
+  .banner__title {
+    max-width: 18ch;
+    font-size: clamp(38px, 5vw, 46px);
+  }
+  .banner__desc {
+    font-size: 16px;
+  }
+  .banner__hook {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Na tela larga o corte passa a ser em cima e embaixo, então
+     cada foto usa o próprio enquadramento de desktop. */
+  .banner__foto {
+    object-position: var(--foco-lg, var(--foco, 50% 50%));
+    transform: scale(var(--zoom-lg, var(--zoom, 1)));
+    transform-origin: var(--foco-lg, var(--foco, 50% 50%));
+  }
+
+  /* As setas ficam na margem, então o texto do banner recua o
+     suficiente para não passar por baixo delas. */
+  .banner__inner {
+    padding-block: var(--s-12) var(--s-12);
+    padding-left: calc(var(--gutter) + 76px);
+  }
+
+  .banners__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--r-pill);
+    background-color: rgba(250, 247, 240, 0.92);
+    color: var(--ink);
+    box-shadow: var(--shadow-md);
+    transition: background-color var(--t-hover) var(--ease),
+      color var(--t-hover) var(--ease);
+  }
+
+  .banners__arrow:hover {
+    background-color: var(--gold);
+  }
+
+  .banners__arrow--prev {
+    left: var(--gutter);
+  }
+
+  .banners__arrow--next {
+    right: var(--gutter);
+  }
+
+  /* Alinha os controles com a coluna de texto, não com a tela. */
+  .banners__controls {
+    justify-content: flex-start;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-left: calc(var(--gutter) + 76px);
+    padding-right: var(--gutter);
+  }
+}
+
+/* ---------- 2. O CRAQUE DA SEMANA ---------- */
+.destaque {
+  background-color: var(--burgundy);
+}
+
+/* Card deliberadamente diferente dos cards padrão do cardápio:
+   o fio dourado de 3px no topo é o que o marca como escalado
+   pela casa. Continua com raio 10px, borda 1px e padding 18px. */
+.destaque__card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--gold);
+  border-radius: var(--r-card);
+  overflow: hidden;
+}
+
+.destaque__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background-color: var(--surface-dark-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.destaque__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destaque__placeholder {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: rgba(250, 247, 240, 0.32);
+  text-align: center;
+  padding-inline: var(--s-5);
+}
+
+.destaque__selo {
+  position: absolute;
+  top: var(--s-5);
+  left: var(--s-5);
+  font-size: 16px;
+  padding: 7px 12px;
+}
+
+.destaque__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: 18px;
+  flex: 1;
+}
+
+.destaque__nome {
+  font-size: 28px;
+}
+
+.destaque__desc {
+  color: var(--ink-body);
+}
+
+.destaque__precos {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-top: var(--s-2);
+}
+
+.destaque__de {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-mute);
+  text-decoration: line-through;
+}
+
+.destaque__preco {
+  font-size: 36px;
+}
+
+.destaque__acao {
+  margin-top: var(--s-4);
+}
+
+.destaque__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  margin-top: var(--s-7);
+}
+
+/* Este texto é a ponte para o cardápio inteiro, então não pode
+   ler como legenda: sobe para 16px e vai na cor de corpo, não
+   na de apoio. */
+.destaque__hint {
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink-on-dark-body);
+  max-width: var(--measure);
+}
+
+@media (min-width: 768px) {
+  .destaque__card {
+    flex-direction: row;
+  }
+
+  .destaque__media {
+    flex: 0 0 42%;
+    aspect-ratio: auto;
+  }
+
+  .destaque__body {
+    padding: var(--s-8);
+    justify-content: center;
+  }
+
+  .destaque__nome {
+    font-size: 36px;
+  }
+
+  .destaque__foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-8);
+  }
+
+  .destaque__foot .btn {
+    width: auto;
+    flex: none;
+  }
+}
+
+/* ---------- 3. DELIVERY ---------- */
+
+/* Alternador de unidade. Pill é permitido em navegação de
+   categoria. O estado ativo é bordô, não ouro: o ouro fica
+   reservado para conversão, e isto aqui é uma escolha. */
+.unit-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-bottom: var(--s-6);
+}
+
+.unit-switch__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--ink-mute);
+  background-color: var(--surface);
+  padding: 9px 16px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  transition: background-color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease), color var(--t-hover) var(--ease);
+}
+
+.unit-switch__btn:hover {
+  border-color: var(--burgundy);
+  color: var(--burgundy);
+}
+
+.unit-switch__btn[aria-selected="true"] {
+  background-color: var(--burgundy);
+  border-color: var(--burgundy);
+  color: var(--cream);
+}
+
+.unit-switch__btn:active {
+  transform: scale(0.97);
+  transition-duration: var(--t-press);
+}
+
+.delivery__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.delivery__item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  padding: 18px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  transition: box-shadow var(--t-accordion) var(--ease),
+    transform var(--t-accordion) var(--ease),
+    border-color var(--t-accordion) var(--ease);
+}
+
+.delivery__item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+/* Caixa branca, não creme: o logo do iFood vem com fundo branco
+   sólido e o do 99Food com fundo transparente. No branco os dois
+   assentam igual — no creme, o iFood mostraria um quadrado. */
+.delivery__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  padding: 4px;
+  overflow: hidden;
+  border-radius: var(--r-field);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--burgundy);
+}
+
+/* O iFood é um logo deitado (120x65) e o 99Food é quase
+   quadrado (71x80). Limitar os dois pela altura deixaria o
+   iFood minúsculo; limitar pela largura, o 99Food gigante.
+   Travando os dois eixos, eles ficam com peso visual parecido. */
+.delivery__logo {
+  max-width: 100%;
+  max-height: 30px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.delivery__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.delivery__name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+}
+
+.delivery__hint {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+
+.delivery__item .ico--go {
+  color: var(--ink-mute);
+  flex: none;
+}
+
+@media (min-width: 768px) {
+  .delivery__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- 4. A EQUIPE ----------
+   A foto recortada assenta na base e divide a seção: no
+   celular ela fecha o bloco por baixo, no desktop ela ocupa
+   a coluna da direita. */
+.equipe {
+  position: relative;
+  background-color: var(--burgundy);
+  padding-top: var(--section-y);
+  overflow: hidden;
+}
+
+.equipe__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+}
+
+.equipe__lead {
+  margin-top: var(--s-4);
+}
+
+.equipe .t-h2 {
+  margin-top: var(--s-3);
+}
+
+.equipe__pilares {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-8);
+}
+
+/* Card leve: a mesma anatomia do card de produto (raio 10,
+   borda 1, padding 18, sem sombra em repouso). Sobre o bordô
+   basta um véu claro para o bloco se destacar sem virar caixa
+   pesada. */
+.equipe__pilares li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+  padding: 18px;
+  background-color: rgba(250, 247, 240, 0.05);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--r-card);
+  transition: background-color var(--t-accordion) var(--ease),
+    border-color var(--t-accordion) var(--ease),
+    box-shadow var(--t-accordion) var(--ease),
+    transform var(--t-accordion) var(--ease);
+}
+
+/* O ouro fica guardado para o hover: três bordas douradas
+   paradas na tela brigariam com o botão de conversão. No tema
+   escuro quem carrega a elevação é a borda; a sombra só
+   reforça, porque marrom sobre bordô rende pouco. */
+.equipe__pilares li:hover {
+  background-color: rgba(250, 247, 240, 0.08);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.equipe__pilares .ico {
+  color: var(--gold);
+  flex: none;
+  margin-top: 2px;
+}
+
+.equipe__pilares h3 {
+  margin-bottom: var(--s-2);
+}
+
+.equipe__pilares p {
+  color: var(--ink-on-dark-body);
+  font-size: 14px;
+  line-height: 1.45;
+  max-width: 46ch;
+}
+
+/* A foto não leva moldura nem sombra: o recorte já é a forma.
+   O fio dourado na base faz as vezes de linha de campo e
+   evita que ela pareça flutuando. */
+.equipe__foto {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding-top: var(--s-6);
+  border-bottom: 3px solid var(--gold);
+}
+
+.equipe__retrato {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 340px;
+  object-fit: contain;
+  /* dissolve o corte do busto para não virar uma linha reta */
+  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+}
+
+.equipe__credito {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  text-align: center;
+  padding: var(--s-4) 0 var(--s-5);
+}
+
+.equipe__credito strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--ink-on-dark);
+}
+
+.equipe__credito span {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--gold);
+}
+
+@media (min-width: 900px) {
+  .equipe {
+    padding-top: 0;
+  }
+
+  /* Texto à esquerda, retrato à direita encostado na base. */
+  .equipe__grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    column-gap: var(--s-12);
+    gap: 0;
+  }
+
+  .equipe__texto {
+    padding-block: var(--section-y);
+  }
+
+  .equipe__foto {
+    padding-top: 0;
+    border-bottom: none;
+    align-self: end;
+  }
+
+  .equipe__retrato {
+    max-height: 460px;
+    /* encosta no rodapé da seção: sem fade, sem corte visível */
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* Placa apoiada na base da foto. O fundo próprio é obrigatório:
+     sem ele o texto cai em cima da camisa clara e some. O fio
+     dourado à esquerda ecoa a keyline do escudo. */
+  .equipe__credito {
+    position: absolute;
+    bottom: var(--s-8);
+    left: 0;
+    align-items: flex-start;
+    text-align: left;
+    padding: var(--s-3) var(--s-5);
+    background-color: rgba(36, 7, 12, 0.9);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--r-btn) var(--r-btn) 0;
+  }
+}
+
+/* ---------- 5. UNIDADES ---------- */
+.units__grid {
+  display: grid;
+  gap: var(--s-5);
+  margin-top: var(--s-7);
+}
+
+.unit-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: 18px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  transition: box-shadow var(--t-accordion) var(--ease),
+    transform var(--t-accordion) var(--ease),
+    border-color var(--t-accordion) var(--ease);
+}
+
+.unit-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.unit-card__addr {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  color: var(--ink-body);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.unit-card__addr .ico {
+  color: var(--burgundy);
+  margin-top: 1px;
+}
+
+.unit-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.unit-card__foot {
+  margin-top: auto;
+  padding-top: var(--s-4);
+}
+
+@media (min-width: 768px) {
+  .units__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

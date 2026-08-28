@@ -1,0 +1,13 @@
+# Configuração de editor e de ferramenta — é de máquina, não do site.
+.vscode/
+.claude/
+
+# Lixo que o Windows e o OneDrive deixam pelas pastas.
+desktop.ini
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Backup do arquivo de dados do cardápio, feito antes da carga
+# manual dos pratos. Fica só na máquina.
+*.bak
