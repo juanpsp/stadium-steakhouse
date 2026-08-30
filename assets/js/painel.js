@@ -450,46 +450,32 @@
     return h + "h";
   }
 
-  /* ---------- PREÇO × ATENÇÃO ----------
-     Cruzamento feito aqui, na hora de exibir: o preço já vive no
-     cardápio e a atenção já vive no banco. Gravar preço junto de
-     cada medição seria pior — no dia de um reajuste, o histórico
-     inteiro passaria a mentir sobre quanto o prato custava.
+  /* ---------- ATENÇÃO DENTRO DA CATEGORIA ----------
+     A primeira versão disto cruzava faixa de preço com atenção no
+     cardápio inteiro, e não sobrevivia a este cardápio: 17
+     hambúrgueres custam exatamente R$ 59,90, as cinco massas
+     custam exatamente R$ 79,90 — sem variação de preço não há o
+     que explicar. E onde há variação (Aquecimento, de R$ 10,50 a
+     R$ 219,90) ela vem de a categoria misturar pão de alho com
+     prato de dividir, não de política de preço.
 
-     LEITURA COM CUIDADO. Atenção depende muito da POSIÇÃO: um
-     prato no começo da página é visto por todo mundo,
-     independente do que custa. Se as carnes caras estão no alto e
-     os acompanhamentos baratos no fim, esta tabela mede posição
-     achando que mede preço. Ela levanta hipótese; quem confirma é
-     mudar a ordem e olhar de novo. Está escrito na tela por isso.
+     Comparar vizinhos resolve o que a faixa de preço não
+     resolvia. Pratos da mesma categoria estão lado a lado na
+     página, disputam o mesmo momento do pedido e têm a mesma
+     proposta — então a posição para de ser desculpa e o que
+     sobra é o prato: foto, nome, descrição, ordem dentro da
+     lista.
 
-     Duas colunas em vez de uma média só: "olhados" mostra quantos
-     pratos da faixa alguém chegou a ver, e o tempo é a média
-     ENTRE OS VISTOS. Uma média sobre a faixa inteira misturaria
-     "ninguém achou" com "acharam e não interessou", que são
-     problemas diferentes e têm soluções diferentes. */
-  var FAIXAS = [
-    { de: 0,  ate: 30,       nome: "até R$ 30" },
-    { de: 30, ate: 60,       nome: "R$ 30 a 60" },
-    { de: 60, ate: 90,       nome: "R$ 60 a 90" },
-    { de: 90, ate: Infinity, nome: "acima de R$ 90" }
-  ];
+     O preço fica como coluna. Se os ignorados forem os caros,
+     quem conclui é quem conhece a casa; a tela não afirma isso. */
 
-  /* "R$ 59,90" -> 59.9. Em prato com vários tamanhos vale o MENOR:
-     é o preço que a pessoa vê primeiro e o que forma a impressão
-     de caro ou barato. */
-  function precoDoPrato(p) {
-    var texto = p.preco;
-    if (!texto && p.precos && p.precos.length) {
-      var menor = null;
-      p.precos.forEach(function (o) {
-        var n = paraNumero(o.valor);
-        if (n !== null && (menor === null || n < menor)) menor = n;
-      });
-      return menor;
-    }
-    return paraNumero(texto);
-  }
+  /* Bebida ninguém precisa ser convencido a pedir: quem senta já
+     sabe se quer chope, suco ou refrigerante. Medir esforço de
+     convencimento onde não há convencimento a fazer só sujaria a
+     leitura das que importam. */
+  var FORA_DA_COMPARACAO = ["bebidas", "drinks"];
+
+  var categoriaAtencao = null;
 
   function paraNumero(t) {
     if (!t) return null;
@@ -497,58 +483,130 @@
     return isNaN(n) ? null : n;
   }
 
-  function mostrarPreco(porPrato, porClique) {
-    var corpo = $("[data-t-preco]");
+  /* Prato com vários tamanhos entra pelo MENOR: é o preço que a
+     pessoa vê primeiro e o que forma a impressão de caro. */
+  function precoDoPrato(p) {
+    if (p.preco) return paraNumero(p.preco);
+    if (p.precos && p.precos.length) {
+      var menor = null;
+      p.precos.forEach(function (o) {
+        var n = paraNumero(o.valor);
+        if (n !== null && (menor === null || n < menor)) menor = n;
+      });
+      return menor;
+    }
+    return null;
+  }
+
+  function dinheiro(v) {
+    return v === null ? "—" : "R$ " + v.toFixed(2).replace(".", ",");
+  }
+
+  function montarSeletorCategoria() {
+    var sel = $("[data-categoria-atencao]");
+    var ordem = (window.STADIUM && window.STADIUM.ordemCategorias) || [];
+    var rot = (window.STADIUM && window.STADIUM.rotuloCategorias) || {};
+    if (!ordem.length) return;
+
+    var html = "";
+    ordem.forEach(function (chave) {
+      var id = chave.replace(/^container-/, "");
+      if (FORA_DA_COMPARACAO.indexOf(id) !== -1) return;
+      html += '<option value="' + escapar(id) + '">' +
+              escapar(rot[chave] || id) + "</option>";
+      if (!categoriaAtencao) categoriaAtencao = id;
+    });
+    sel.innerHTML = html;
+    sel.value = categoriaAtencao;
+
+    sel.addEventListener("change", function () {
+      categoriaAtencao = sel.value;
+      if (ultimoPorPrato) mostrarCategoria(ultimoPorPrato);
+    });
+  }
+
+  /* Guardado para o seletor poder redesenhar sem ir ao servidor:
+     a comparação é toda entre dados que já estão na tela. */
+  var ultimoPorPrato = null;
+
+  function mostrarCategoria(porPrato) {
+    ultimoPorPrato = porPrato;
+    var corpo = $("[data-t-categoria-pratos]");
     var lista = (window.STADIUM && window.STADIUM.cardapio) || [];
-    if (!lista.length) {
+    if (!lista.length || !categoriaAtencao) {
       corpo.innerHTML = '<tr><td class="painel-vazio">cardápio não carregado</td></tr>';
       return;
     }
 
-    var caixas = FAIXAS.map(function (f) {
-      return { nome: f.nome, de: f.de, ate: f.ate, pratos: 0, vistos: 0, ms: 0, cliques: 0 };
+    var doGrupo = lista.filter(function (p) {
+      return p.categoria === categoriaAtencao;
     });
-    var semPreco = 0;
+    if (!doGrupo.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">categoria vazia</td></tr>';
+      return;
+    }
 
-    lista.forEach(function (p) {
-      var valor = precoDoPrato(p);
-      if (valor === null) {
-        semPreco += 1;
-        return;
-      }
-      var caixa = null;
-      for (var i = 0; i < caixas.length; i++) {
-        if (valor >= caixas[i].de && valor < caixas[i].ate) {
-          caixa = caixas[i];
-          break;
+    var linhas = doGrupo.map(function (p) {
+      return {
+        nome: p.nome,
+        preco: precoDoPrato(p),
+        ms: porPrato[String(p.id)] || 0
+      };
+    });
+
+    /* A média é entre os pratos que RECEBERAM atenção, não entre
+       todos. A primeira versão dividia por todos, e com 14 de 20
+       pratos zerados a média despencava e o primeiro colocado
+       aparecia com "+739%" — número que não descreve nada, só a
+       falta de dado. Visto na tela, não no código.
+
+       Prato zerado sai da conta e ganha rótulo próprio. Ele não
+       perdeu a comparação: ele não entrou nela. São problemas
+       diferentes — um é "não interessou", o outro é "ninguém
+       chegou lá" — e a contagem de quantos ficaram fora vai
+       escrita embaixo da tabela. */
+    var soma = 0;
+    var vistos = 0;
+    linhas.forEach(function (l) {
+      if (l.ms > 0) { soma += l.ms; vistos += 1; }
+    });
+    var media = vistos ? soma / vistos : 0;
+    var semAtencao = linhas.length - vistos;
+
+    linhas.sort(function (a, b) { return b.ms - a.ms; });
+
+    corpo.innerHTML = linhas
+      .map(function (l) {
+        /* "nada" na coluna de tempo já diz que o prato não
+           apareceu; repetir na coluna ao lado é dizer duas vezes.
+           Quantos ficaram de fora vai na nota embaixo. */
+        var vs = "—";
+        var classe = "";
+        if (l.ms > 0 && media > 0) {
+          var pct = Math.round(((l.ms - media) / media) * 100);
+          vs = (pct >= 0 ? "+" : "") + pct + "%";
+          /* Só o que está bem abaixo dos vizinhos ganha destaque.
+             Marcar tudo abaixo da média marcaria metade da lista
+             por definição e não apontaria nada. */
+          if (pct <= -50) classe = ' class="painel-alerta"';
         }
-      }
-      if (!caixa) return;
-
-      caixa.pratos += 1;
-      var ms = porPrato[String(p.id)] || 0;
-      if (ms > 0) {
-        caixa.vistos += 1;
-        caixa.ms += ms;
-      }
-      caixa.cliques += porClique[String(p.id)] || 0;
-    });
-
-    corpo.innerHTML = caixas
-      .map(function (c) {
-        var media = c.vistos ? Math.round(c.ms / c.vistos) : 0;
         return (
-          "<tr><td>" + escapar(c.nome) + "</td>" +
-          "<td class='painel-num'>" + numero(c.vistos) + " de " + numero(c.pratos) + "</td>" +
-          "<td class='painel-num'>" + (media ? duracao(media) : "—") + "</td>" +
-          "<td class='painel-num painel-sec'>" + numero(c.cliques) + "</td></tr>"
+          "<tr" + classe + "><td>" + escapar(l.nome) + "</td>" +
+          "<td class='painel-num'>" + escapar(dinheiro(l.preco)) + "</td>" +
+          "<td class='painel-num'>" + (l.ms ? duracao(l.ms) : "nada") + "</td>" +
+          "<td class='painel-num painel-sec'>" + vs + "</td></tr>"
         );
       })
       .join("");
 
-    $("[data-preco-fora]").textContent = semPreco
-      ? semPreco + " pratos ficam de fora por não terem preço no cardápio (os acompanhamentos)."
-      : "";
+    $("[data-categoria-nota]").textContent =
+      media > 0
+        ? "média entre os " + vistos + " pratos que apareceram: " +
+          duracao(Math.round(media)) +
+          (semAtencao
+            ? " · " + semAtencao + " não apareceram para ninguém"
+            : "")
+        : "nenhum prato desta categoria recebeu atenção no período";
   }
 
   /* ---------- UM PRATO NO TEMPO ---------- */
@@ -774,14 +832,10 @@
         });
 
         var msPorPrato = {};
-        var cliquePorPrato = {};
         porTipo.prato.forEach(function (l) {
           msPorPrato[l.chave] = Number(l.tempo_ms || 0);
         });
-        porTipo.clique.forEach(function (l) {
-          cliquePorPrato[l.chave] = Number(l.cliques || 0);
-        });
-        mostrarPreco(msPorPrato, cliquePorPrato);
+        mostrarCategoria(msPorPrato);
 
         tabela("[data-t-prato]", porTipo.prato, "tempo", 20);
         tabela("[data-t-clique]", porTipo.clique, "cliques", 15);
@@ -919,6 +973,7 @@
         $("[data-restaurante]").textContent = restaurante.nome;
 
         montarSeletor();
+        montarSeletorCategoria();
         ligarPeriodo();
         var p = ultimosDias(7);
         marcarChip(document.querySelector('[data-dias="7"]'));

@@ -162,18 +162,26 @@
                 </table>
             </div>
 
+            <!-- Comparação entre vizinhos, não entre o cardápio
+                 inteiro. Pratos da mesma categoria estão lado a
+                 lado na página e disputam o mesmo momento do
+                 pedido, então a posição deixa de ser desculpa e o
+                 que sobra é o prato. -->
             <div class="painel-bloco painel-bloco--depois">
-                <h3 class="painel-titulo">Preço × atenção</h3>
+                <h3 class="painel-titulo">Atenção dentro da categoria</h3>
                 <p class="painel-legenda">
-                    cuidado ao ler: atenção também depende da posição na página, e faixa
-                    que cai no começo do cardápio leva vantagem. Isto levanta hipótese,
-                    não prova causa.
+                    cada prato comparado com os vizinhos de categoria. O preço está
+                    aqui como coluna, para você ver se os ignorados são os caros —
+                    não como explicação pronta.
                 </p>
+
+                <select class="painel-escolha" data-categoria-atencao></select>
+
                 <table class="painel-tabela">
-                    <thead><tr><th></th><th class="painel-num">olhados</th><th class="painel-num">tempo médio</th><th class="painel-num painel-sec">detalhes</th></tr></thead>
-                    <tbody data-t-preco></tbody>
+                    <thead><tr><th></th><th class="painel-num">preço</th><th class="painel-num">tempo</th><th class="painel-num painel-sec">vs vizinhos</th></tr></thead>
+                    <tbody data-t-categoria-pratos></tbody>
                 </table>
-                <p class="painel-legenda" data-preco-fora></p>
+                <p class="painel-legenda" data-categoria-nota></p>
             </div>
 
             <div class="painel-secao__grade">
