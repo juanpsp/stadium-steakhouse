@@ -76,56 +76,81 @@
 
         <p class="painel-resumo" data-resumo></p>
 
-        <!-- VISÃO GERAL: quantas pessoas, quanto tempo, onde -->
-        <div class="painel-cartoes" data-geral></div>
+        <!-- GERAL — a caixa que separa o global do detalhe.
+             Fica em superfície própria porque responde outra
+             pergunta: aqui é "quanta gente"; abaixo é "o que ela
+             fez em cada página". Sem essa separação os oito
+             números se misturavam com as tabelas e nada tinha
+             hierarquia. -->
+        <section class="painel-geral">
+            <h2 class="painel-geral__titulo">Visão geral</h2>
+            <div class="painel-cartoes" data-geral></div>
+        </section>
 
-        <!-- FUNIL: em ordem de página, não de audiência.
-             O que interessa é ver ONDE a queda acontece. -->
-        <div class="painel-grades">
-            <div class="painel-bloco">
-                <h2 class="painel-titulo">Até onde descem na home</h2>
-                <p class="painel-legenda">% de quem abriu a home e chegou a ver cada faixa</p>
-                <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-home></tbody></table>
-            </div>
+        <!-- Daqui para baixo, uma seção por página do site, e o
+             CARDÁPIO vem primeiro porque é o que mais interessa.
+             Agrupar por página em vez de por tipo de número é o
+             que deixa procurar uma coisa só sem varrer a tela
+             inteira — e abre lugar para métricas novas caírem na
+             seção certa em vez de virarem mais um quadrado
+             solto. -->
+        <section class="painel-secao">
+            <h2 class="painel-secao__titulo"><span>Cardápio</span></h2>
 
             <div class="painel-bloco">
-                <h2 class="painel-titulo">Até onde descem no cardápio</h2>
+                <h3 class="painel-titulo">Até onde descem</h3>
                 <p class="painel-legenda">% de quem abriu o cardápio e chegou a ver cada categoria</p>
                 <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-categoria></tbody></table>
             </div>
 
+            <div class="painel-secao__grade">
+                <div class="painel-bloco">
+                    <h3 class="painel-titulo">Pratos mais olhados</h3>
+                    <p class="painel-legenda">tempo somado de todas as visitas</p>
+                    <table class="painel-tabela"><tbody data-t-prato></tbody></table>
+                </div>
+
+                <div class="painel-bloco">
+                    <h3 class="painel-titulo">Cliques em detalhes</h3>
+                    <p class="painel-legenda">quem parou de olhar e foi ler</p>
+                    <table class="painel-tabela"><tbody data-t-clique></tbody></table>
+                </div>
+            </div>
+        </section>
+
+        <section class="painel-secao">
+            <h2 class="painel-secao__titulo"><span>Home</span></h2>
+
             <div class="painel-bloco">
-                <h2 class="painel-titulo">Até onde descem nas unidades</h2>
+                <h3 class="painel-titulo">Até onde descem</h3>
+                <p class="painel-legenda">% de quem abriu a home e chegou a ver cada faixa</p>
+                <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-home></tbody></table>
+            </div>
+        </section>
+
+        <section class="painel-secao">
+            <h2 class="painel-secao__titulo"><span>Unidades</span></h2>
+
+            <div class="painel-bloco">
+                <h3 class="painel-titulo">Até onde descem</h3>
                 <p class="painel-legenda">% de quem abriu a página de unidades e chegou a ver cada bloco</p>
                 <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-unidades></tbody></table>
             </div>
+        </section>
 
-            <div class="painel-bloco">
-                <h2 class="painel-titulo">Pratos mais olhados</h2>
-                <p class="painel-legenda">tempo somado de todas as visitas</p>
-                <table class="painel-tabela"><tbody data-t-prato></tbody></table>
-            </div>
-
-            <div class="painel-bloco">
-                <h2 class="painel-titulo">Cliques em detalhes</h2>
-                <p class="painel-legenda">quem parou de olhar e foi ler</p>
-                <table class="painel-tabela"><tbody data-t-clique></tbody></table>
-            </div>
-        </div>
-
-        <p class=painel-nota>
+        <p class="painel-nota">
             <b>Visita</b> é uma aba aberta: se a mesma pessoa voltar amanhã, conta de novo;
             se abrir home, cardápio e unidades na mesma navegação, conta uma vez só — por isso as três fatias de visita não somam 100%.
             <b>Tempo</b> é o que ficou de fato na tela, já descontadas as pausas — sai da
             aba, o relógio para.
         </p>
-        <p class=painel-nota>
+        <p class="painel-nota">
             Nas três listas de "até onde descem", <b>chegaram</b> e <b>pararam</b> medem coisas
             diferentes de propósito. Chegar é ter passado pelo bloco; parar é ter ficado
             ali. Alcance alto com tempo baixo não é sucesso — é gente rolando reto. Um
             traço no lugar do tempo quer dizer que ninguém parou naquela faixa.
         </p>
-        <p class=painel-nota>
+        <p class="painel-nota">
             Nada disso identifica ninguém: não há nome, e-mail, telefone nem rastro entre
             visitas — a contagem morre quando a aba fecha.
         </p>

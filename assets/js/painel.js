@@ -48,6 +48,31 @@
     return (window.STADIUM && window.STADIUM.ordemCategorias) || null;
   }
 
+  /* ---------- RÓTULOS ----------
+     O nome que veio do banco é o texto que estava na tela na
+     hora da medição, e por isso não serve de rótulo: quem navega
+     em inglês grava "Starters", e a seção de banners grava o
+     título da promoção da vez — que muda toda semana.
+
+     A chave, essa nunca muda. Então o rótulo sai daqui, e o nome
+     gravado vira só reserva para chave que este mapa não
+     conhece (as unidades, cujo nome é próprio e vem dos dados). */
+  var ROTULOS = {
+    banners: "Banners do topo",
+    destaque: "Craque da semana",
+    delivery: "Delivery",
+    equipe: "Nosso time",
+    unidades: "Nossas unidades",
+    intro: "Abertura da página",
+    reserva: "Reserve a sua mesa"
+  };
+
+  function rotulo(chave, gravado) {
+    var doCardapio = window.STADIUM && window.STADIUM.rotuloCategorias;
+    if (doCardapio && doCardapio[chave]) return doCardapio[chave];
+    return ROTULOS[chave] || gravado || chave;
+  }
+
   var cracha = null;
   var restaurante = null;
   var periodo = null;
@@ -127,6 +152,10 @@
 
   function duracao(ms) {
     var s = Math.round((ms || 0) / 1000);
+    /* Meio segundo arredonda para zero, e "0s" ao lado de uma
+       porcentagem parece medição quebrada. Houve tempo ali —
+       só foi curto demais para caber na conta. */
+    if (ms > 0 && s === 0) return "<1s";
     if (s < 90) return s + "s";
     var m = Math.floor(s / 60);
     return m + "min " + (s - m * 60) + "s";
@@ -219,7 +248,7 @@
              três linhas e a tabela virava sopa. Assim a barra
              ocupa espaço zero e fica onde o olho já está. */
           '<tr><td class="painel-barra" style="--pct:' + pct + '%">' +
-          (l.nome || l.chave) + "</td>" +
+          rotulo(l.chave, l.nome) + "</td>" +
           "<td class='painel-num'>" + pct.toFixed(0) + "%</td>" +
           /* Traço, e não "0s": zero aqui não é tempo medido, é
              ninguém tendo parado. Escrito como número, pareceria

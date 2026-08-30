@@ -133,15 +133,40 @@
 }
 
 /* ---------- VISÃO GERAL ----------
-   auto-fit + minmax: os cartões se reorganizam sozinhos
-   conforme a largura, sem eu ter que escrever um breakpoint
-   para cada quantidade possível. */
+   Caixa própria, com o bordô da marca bem diluído. Ela existe
+   para separar duas perguntas que estavam na mesma pilha: aqui
+   é "quanta gente entrou"; da linha de baixo para cá é "o que
+   ela fez em cada página".
 
+   A cor é fraca de propósito. Um bordô cheio aqui competiria
+   com o header e roubaria a atenção do número, que é o que se
+   veio ler. */
+
+.painel-geral {
+  background-color: rgba(74, 14, 23, 0.045);
+  border: 1px solid rgba(74, 14, 23, 0.1);
+  border-radius: var(--r-card);
+  padding: var(--s-6);
+  margin-bottom: var(--s-8);
+}
+
+.painel-geral__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--burgundy);
+  margin-bottom: var(--s-5);
+}
+
+/* auto-fit + minmax: os cartões se reorganizam sozinhos
+   conforme a largura, sem um breakpoint para cada quantidade
+   possível. */
 .painel-cartoes {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--s-3);
-  margin-bottom: var(--s-8);
 }
 
 .painel-cartao {
@@ -177,19 +202,50 @@
   margin-top: 2px;
 }
 
-/* ---------- TABELAS ---------- */
+/* ---------- SEÇÕES POR PÁGINA ----------
+   Uma faixa por página do site, na ordem de quem lê: cardápio
+   primeiro, que é o que se quer ver. O título fica sobre uma
+   régua que atravessa a largura toda — é o que faz a divisão
+   ser vista de longe, sem precisar ler. */
 
-.painel-grades {
+.painel-secao {
+  margin-bottom: var(--s-10);
+}
+
+.painel-secao__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-5);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--burgundy);
+}
+
+/* A régua nasce depois do texto e come o resto da linha. */
+.painel-secao__titulo::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background-color: rgba(74, 14, 23, 0.12);
+}
+
+.painel-secao__grade {
   display: grid;
   gap: var(--s-6);
+  margin-top: var(--s-6);
 }
 
 @media (min-width: 900px) {
-  .painel-grades {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--s-8);
+  .painel-secao__grade {
+    grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ---------- TABELAS ---------- */
 
 .painel-bloco {
   background-color: var(--surface);

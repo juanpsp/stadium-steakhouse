@@ -152,6 +152,18 @@
     return "container-" + c.id;
   });
 
+  /* E os rótulos em português, pela mesma chave. O painel não
+     pode usar o nome que ficou gravado na medição: ele é o texto
+     que estava na tela na hora, e quem navega de cardápio em
+     inglês grava "Starters". Aconteceu no teste — a mesma
+     categoria virou duas, e o painel mostrava a versão inglesa
+     para quem lê em português. A chave nunca muda; o rótulo
+     vem daqui. */
+  STADIUM.rotuloCategorias = {};
+  CATEGORIAS.forEach(function (c) {
+    STADIUM.rotuloCategorias["container-" + c.id] = c.nav.pt;
+  });
+
   /* =========================================================
      FOTOS PROVISÓRIAS — REMOVER QUANDO AS REAIS CHEGAREM
      =========================================================
