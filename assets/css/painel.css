@@ -588,6 +588,8 @@
   .painel-periodo,
   .painel-baixar__botoes,
   .painel-escolha,
+  .painel-serie__remover,
+  .painel-serie__adicionar,
   .painel-entrada {
     display: none !important;
   }
@@ -605,17 +607,68 @@
     padding: 0;
   }
 
-  /* Um bloco por vez, inteiro. */
+  /* PROIBIR QUEBRA É O QUE DESPERDIÇAVA PÁGINA.
+
+     A primeira versão proibia quebra em todo bloco, inclusive na
+     caixa da visão geral e nas tabelas longas. Bloco que não
+     cabe no resto da página e não pode ser partido pula inteiro
+     para a próxima, deixando o pé da página em branco — oito
+     páginas para um conteúdo que cabe em três.
+
+     A regra certa é mais fina: o que não pode partir é a LINHA e
+     o cartão, que são pequenos. Tabela longa parte, e o
+     cabeçalho dela se repete na página seguinte, que é como
+     relatório impresso sempre funcionou. */
+  .painel-geral,
   .painel-bloco,
+  .painel-secao {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
   .painel-cartao,
-  .painel-geral {
+  .painel-tabela tr,
+  .painel-grafico,
+  .painel-serie {
     break-inside: avoid;
     page-break-inside: avoid;
   }
 
-  .painel-secao__titulo {
+  /* Cabeçalho de tabela repetido em cada página da continuação:
+     sem isto a segunda metade de uma lista longa aparece sem
+     dizer o que cada coluna é. */
+  .painel-tabela thead {
+    display: table-header-group;
+  }
+
+  /* Título nunca fica sozinho no pé da página. */
+  .painel-secao__titulo,
+  .painel-titulo,
+  .painel-legenda {
     break-after: avoid;
     page-break-after: avoid;
+  }
+
+  /* Margens de tela são generosas demais para papel. */
+  .painel-secao {
+    margin-bottom: var(--s-6);
+  }
+
+  .painel-geral {
+    margin-bottom: var(--s-5);
+    padding: var(--s-4);
+  }
+
+  .painel-bloco {
+    padding: var(--s-4);
+  }
+
+  .painel-cartao__valor {
+    font-size: 22px;
+  }
+
+  .painel-cartoes {
+    gap: 6px;
   }
 
   /* A barra de fundo do funil não sobrevive à impressão sem isto:
@@ -637,9 +690,113 @@
     font-size: 14px;
     margin-bottom: var(--s-3);
   }
+
+  /* ---- CAPA DO RELATÓRIO ----
+     Na tela o período é uma linha discreta porque quem está ali
+     acabou de escolhê-lo. No papel ele é a primeira pergunta de
+     quem recebe o arquivo, então vira título. */
+  .painel-capa {
+    display: block !important;
+    border-bottom: 3px solid var(--burgundy);
+    padding-bottom: var(--s-4);
+    margin-bottom: var(--s-6);
+  }
+
+  .painel-capa__casa {
+    font-family: var(--font-label);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--track-meta);
+    color: var(--ink-mute);
+  }
+
+  .painel-capa__recorte {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 26px;
+    line-height: 1.1;
+    color: var(--burgundy);
+    margin-top: 2px;
+  }
+
+  .painel-capa__datas {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink-body);
+    margin-top: 4px;
+  }
+
+  .painel-resumo {
+    display: none;
+  }
+}
+
+/* Só existe no papel. */
+.painel-capa {
+  display: none;
 }
 
 /* Na tela quem responde isso é o próprio seletor. */
 .painel-so-impressao {
+  display: none;
+}
+
+/* ---------- PRATOS ACOMPANHADOS ----------
+   Um gráfico por prato, empilhados. Não é um gráfico com cinco
+   linhas: com movimento pequeno a maioria dos dias é zero, cinco
+   linhas sobrepostas viram emaranhado, e impressas em preto e
+   branco ficariam indistinguíveis. Separados, comparam igual e
+   sobrevivem ao papel. */
+
+.painel-serie + .painel-serie {
+  margin-top: var(--s-6);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--border);
+}
+
+.painel-serie__topo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+.painel-serie__remover {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 41px;
+  margin-bottom: var(--s-4);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--ink-mute);
+  background-color: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-btn);
+}
+
+.painel-serie__remover:hover {
+  color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+.painel-serie__adicionar {
+  margin-top: var(--s-5);
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--burgundy);
+  background: none;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--r-btn);
+  padding: 9px 14px;
+}
+
+.painel-serie__adicionar:hover {
+  border-color: var(--burgundy);
+}
+
+.painel-serie__adicionar[hidden] {
   display: none;
 }

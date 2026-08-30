@@ -57,6 +57,15 @@
     <!-- DADOS -------------------------------------------------- -->
     <section class="painel-dados" data-dados hidden>
 
+        <!-- Só aparece no papel. Na tela o período é uma linha
+             discreta porque quem está ali acabou de escolhê-lo;
+             para quem recebe o PDF, ele é a primeira pergunta. -->
+        <div class="painel-capa">
+            <p class="painel-capa__casa" data-capa-casa></p>
+            <p class="painel-capa__recorte" data-capa-recorte></p>
+            <p class="painel-capa__datas" data-capa-datas></p>
+        </div>
+
         <div class="painel-cabeca">
             <p class="t-eyebrow" data-restaurante>—</p>
             <h1 class="t-h2">Atenção no site</h1>
@@ -163,14 +172,13 @@
                  efeito de uma mudança: reajuste de preço, foto
                  nova, troca de posição. O degrau aparece no dia. -->
             <div class="painel-bloco painel-bloco--depois">
-                <h3 class="painel-titulo">Acompanhar um prato</h3>
-                <p class="painel-legenda">tempo de atenção por dia, e a variação contra o período anterior de mesmo tamanho</p>
+                <h3 class="painel-titulo">Acompanhar pratos</h3>
+                <p class="painel-legenda">tempo de atenção por dia, e a variação contra o período anterior de mesmo tamanho. Até cinco pratos, para comparar lado a lado no relatório.</p>
 
-                <select class="painel-escolha" data-prato-serie></select>
-                <p class="painel-so-impressao" data-impresso-prato></p>
-
-                <p class="painel-destaque" data-serie-resumo></p>
-                <div class="painel-grafico" data-serie-grafico></div>
+                <div data-series></div>
+                <button class="painel-serie__adicionar" type="button" data-add-serie>
+                    + adicionar prato
+                </button>
             </div>
 
             <div class="painel-bloco painel-bloco--depois">

@@ -113,7 +113,6 @@
      consulta carrega o recorte junto. */
   var horaDe = null;
   var horaAte = null;
-  var pratoSerie = null;
 
   /* Cada carga leva um número. Resposta que chega depois de uma
      carga mais nova é descartada.
@@ -643,18 +642,32 @@
         : "nenhum prato desta categoria recebeu atenção no período";
   }
 
-  /* ---------- UM PRATO NO TEMPO ---------- */
+  /* ---------- PRATOS NO TEMPO ----------
+     Até cinco de uma vez, um gráfico por prato empilhado.
 
-  /* A lista sai do próprio cardápio, e não do que já tem medição:
-     querer olhar um prato JUSTAMENTE porque ele não aparece em
-     lugar nenhum é uma pergunta legítima, e uma lista só com quem
-     tem dado não deixaria fazer. */
-  function montarSeletor() {
-    var sel = $("[data-prato-serie]");
-    var lista = (window.STADIUM && window.STADIUM.cardapio) || [];
+     Não é um gráfico com cinco linhas em cima da outra. Com
+     movimento pequeno a maioria dos dias é zero, e cinco linhas
+     sobrepostas viram um emaranhado; e no papel, impresso em
+     preto e branco, elas ficariam indistinguíveis. Gráficos
+     separados com a mesma régua comparam igual e sobrevivem à
+     impressão — cada um com o seu próprio total e a sua própria
+     variação em cima.
+
+     Cinco é teto e não meta: cada prato custa duas idas ao
+     servidor (o período atual e o anterior). */
+  var MAX_SERIES = 5;
+
+  /* Começa com um. O primeiro prato do cardápio é só um ponto de
+     partida — quem abre o painel troca em seguida. */
+  var pratosSerie = [];
+
+  function listaDePratos() {
+    return (window.STADIUM && window.STADIUM.cardapio) || [];
+  }
+
+  function opcoesDePrato(escolhido) {
+    var lista = listaDePratos();
     var rot = (window.STADIUM && window.STADIUM.rotuloCategorias) || {};
-    if (!lista.length) return;
-
     var porCat = {};
     var ordem = [];
     lista.forEach(function (p) {
@@ -669,35 +682,104 @@
     ordem.forEach(function (cat) {
       html += '<optgroup label="' + escapar(rot["container-" + cat] || cat) + '">';
       porCat[cat].forEach(function (p) {
-        html += '<option value="' + escapar(p.id) + '">' + escapar(p.nome) + "</option>";
+        var sel = String(p.id) === String(escolhido) ? " selected" : "";
+        html += '<option value="' + escapar(p.id) + '"' + sel + ">" +
+                escapar(p.nome) + "</option>";
       });
       html += "</optgroup>";
     });
-    sel.innerHTML = html;
+    return html;
+  }
 
-    pratoSerie = String(lista[0].id);
-    sel.value = pratoSerie;
-    sel.addEventListener("change", function () {
-      pratoSerie = sel.value;
-      if (periodo) carregarSerie();
+  function nomeDoPrato(id) {
+    var achado = null;
+    listaDePratos().forEach(function (p) {
+      if (String(p.id) === String(id)) achado = p.nome;
+    });
+    return achado || String(id);
+  }
+
+  /* Redesenha os seletores e as caixas de gráfico. Só a moldura;
+     os números chegam depois, quando as consultas voltarem. */
+  function montarSeries() {
+    var caixa = $("[data-series]");
+    if (!caixa) return;
+    if (!pratosSerie.length) {
+      var lista = listaDePratos();
+      if (!lista.length) return;
+      pratosSerie = [String(lista[0].id)];
+    }
+
+    caixa.innerHTML = pratosSerie
+      .map(function (id, i) {
+        return (
+          '<div class="painel-serie" data-serie="' + i + '">' +
+          '<div class="painel-serie__topo">' +
+          '<select class="painel-escolha" data-serie-prato="' + i + '">' +
+          opcoesDePrato(id) +
+          "</select>" +
+          (pratosSerie.length > 1
+            ? '<button class="painel-serie__remover" type="button" ' +
+              'data-remover-serie="' + i + '" title="tirar do relatório">×</button>'
+            : "") +
+          "</div>" +
+          '<p class="painel-so-impressao">' + escapar(nomeDoPrato(id)) + "</p>" +
+          '<p class="painel-destaque" data-serie-resumo="' + i + '"></p>' +
+          '<div class="painel-grafico" data-serie-grafico="' + i + '"></div>' +
+          "</div>"
+        );
+      })
+      .join("");
+
+    caixa.querySelectorAll("[data-serie-prato]").forEach(function (sel) {
+      sel.addEventListener("change", function () {
+        pratosSerie[Number(sel.getAttribute("data-serie-prato"))] = sel.value;
+        montarSeries();
+        carregarSerie();
+      });
+    });
+
+    caixa.querySelectorAll("[data-remover-serie]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        pratosSerie.splice(Number(b.getAttribute("data-remover-serie")), 1);
+        montarSeries();
+        carregarSerie();
+      });
+    });
+
+    var add = $("[data-add-serie]");
+    if (add) add.hidden = pratosSerie.length >= MAX_SERIES;
+  }
+
+  function ligarAdicionarSerie() {
+    var add = $("[data-add-serie]");
+    if (!add) return;
+    add.addEventListener("click", function () {
+      if (pratosSerie.length >= MAX_SERIES) return;
+      /* Entra um prato que ainda não está na lista, para o novo
+         gráfico não nascer duplicado do anterior. */
+      var lista = listaDePratos();
+      var novo = null;
+      lista.forEach(function (p) {
+        if (novo === null && pratosSerie.indexOf(String(p.id)) === -1) {
+          novo = String(p.id);
+        }
+      });
+      if (novo === null) return;
+      pratosSerie.push(novo);
+      montarSeries();
+      carregarSerie();
     });
   }
 
-  /* Barras em HTML, não em SVG. Um gráfico em SVG precisa de
-     viewBox fixo, e aí o texto encolhe junto com a tela: num
-     celular os rótulos ficariam ilegíveis. Em HTML a barra é
-     porcentagem de altura e o texto continua texto. */
-  function desenharSerie(atual, anterior) {
-    var caixa = $("[data-serie-grafico]");
-    var resumo = $("[data-serie-resumo]");
-
-    /* Antes de qualquer saída antecipada: prato sem dado nenhum
-       também precisa ser nomeado no papel, senão o PDF mostra uma
-       tabela vazia sem dizer de quê. */
-    var opcP = $("[data-prato-serie]");
-    $("[data-impresso-prato]").textContent =
-      "Prato: " +
-      (opcP && opcP.selectedOptions[0] ? opcP.selectedOptions[0].textContent : "");
+  /* Barras em HTML, não em SVG. SVG precisa de viewBox fixo e o
+     texto encolhe junto com a tela; num celular os rótulos
+     ficariam ilegíveis. Em HTML a barra é porcentagem de altura e
+     texto continua texto. */
+  function desenharSerie(indice, atual, anterior) {
+    var caixa = $('[data-serie-grafico="' + indice + '"]');
+    var resumo = $('[data-serie-resumo="' + indice + '"]');
+    if (!caixa || !resumo) return;
 
     var total = 0;
     var maior = 0;
@@ -719,19 +801,17 @@
     }
 
     /* Variação sem cor de status de propósito: mais atenção não é
-       automaticamente bom nem ruim. Um prato pode subir porque a
-       foto melhorou ou porque o preço assustou e a pessoa ficou
-       lendo. Quem interpreta é quem conhece a casa. */
+       automaticamente bom. Um prato pode subir porque a foto
+       melhorou ou porque o preço assustou e a pessoa ficou lendo.
+       Quem interpreta é quem conhece a casa. */
     var texto = duracao(total) + " no período";
     if (antes > 0) {
       var var100 = Math.round(((total - antes) / antes) * 100);
-      texto +=
-        " · " + (var100 >= 0 ? "+" : "") + var100 + "% vs o período anterior";
+      texto += " · " + (var100 >= 0 ? "+" : "") + var100 + "% vs o período anterior";
     } else if (total > 0) {
       texto += " · não tinha nada no período anterior";
     }
     resumo.textContent = texto;
-
 
     var DIAS_CURTOS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
 
@@ -748,8 +828,8 @@
           var v = Number(d.tempo_ms || 0);
           var alt = maior ? Math.round((v / maior) * 100) : 0;
           /* Data em UTC de propósito: "2026-08-29" já é o dia do
-             Rio, calculado no banco. Ler como local deslocaria um
-             dia para trás. */
+             Rio, calculado no banco. Ler como local voltaria um
+             dia. */
           var data = new Date(d.dia + "T12:00:00Z");
           var titulo =
             DIAS_CURTOS[data.getUTCDay()] + " " +
@@ -758,17 +838,9 @@
             " · " + (v ? duracao(v) : "nada") +
             (d.pessoas ? " · " + numero(d.pessoas) + " pessoa(s)" : "");
 
-          /* Rótulo só no maior, e só quando a barra é larga o
-             bastante para segurá-lo. Em 90 dias a coluna tem menos
-             de 2px: o texto transborda por cima das vizinhas e
-             atravessa o pico. Nesse caso o total já está no
-             título e o detalhe fica na dica do mouse. */
-          /* O rótulo sai do fluxo e é ancorado no TOPO da barra
-             (mesma altura em "bottom"). Dentro do fluxo ele
-             ocupava ~20px da coluna e encurtava justamente a
-             barra que estava marcando: a maior desenhava MENOR
-             que as vizinhas e o gráfico dizia o contrário do
-             dado. */
+          /* Rótulo só no maior, e só quando a barra o segura. Em
+             90 dias a coluna tem menos de 2px e o texto
+             transbordaria por cima das vizinhas. */
           var rotulo =
             cabeRotulo && v && v === maior
               ? '<span class="painel-grafico__valor" style="bottom:' + alt + '%">' +
@@ -795,37 +867,40 @@
     return p[2] + "/" + p[1];
   }
 
-  /* Duas janelas do mesmo tamanho, coladas: a atual e a de antes
+  /* Duas janelas do mesmo tamanho por prato: a atual e a de antes
      dela. É o que responde "mudou depois do reajuste". */
   function carregarSerie() {
-    if (!pratoSerie || !periodo) return;
+    if (!pratosSerie.length || !periodo) return;
     var minhaCarga = carga;
     var largura = periodo.ate.getTime() - periodo.de.getTime();
-    var base = {
-      p_restaurante: restaurante.id,
-      p_chave: pratoSerie,
-      p_hora_de: horaDe,
-      p_hora_ate: horaAte
-    };
 
-    Promise.all([
-      pedir("/rest/v1/rpc/serie", Object.assign({}, base, {
-        p_de: periodo.de.toISOString(),
-        p_ate: periodo.ate.toISOString()
-      })),
-      pedir("/rest/v1/rpc/serie", Object.assign({}, base, {
-        p_de: new Date(periodo.de.getTime() - largura).toISOString(),
-        p_ate: periodo.de.toISOString()
-      }))
-    ])
-      .then(function (r) {
-        if (minhaCarga !== carga) return;
-        desenharSerie(r[0] || [], r[1] || []);
-      })
-      ["catch"](function () {
-        if (minhaCarga !== carga) return;
-        $("[data-serie-resumo]").textContent = "não consegui carregar";
-      });
+    pratosSerie.forEach(function (id, i) {
+      var base = {
+        p_restaurante: restaurante.id,
+        p_chave: id,
+        p_hora_de: horaDe,
+        p_hora_ate: horaAte
+      };
+      Promise.all([
+        pedir("/rest/v1/rpc/serie", Object.assign({}, base, {
+          p_de: periodo.de.toISOString(),
+          p_ate: periodo.ate.toISOString()
+        })),
+        pedir("/rest/v1/rpc/serie", Object.assign({}, base, {
+          p_de: new Date(periodo.de.getTime() - largura).toISOString(),
+          p_ate: periodo.de.toISOString()
+        }))
+      ])
+        .then(function (r) {
+          if (minhaCarga !== carga) return;
+          desenharSerie(i, r[0] || [], r[1] || []);
+        })
+        ["catch"](function () {
+          if (minhaCarga !== carga) return;
+          var el = $('[data-serie-resumo="' + i + '"]');
+          if (el) el.textContent = "não consegui carregar";
+        });
+    });
   }
 
   /* ---------- CARGA ---------- */
@@ -922,6 +997,7 @@
           distribuicao: dist,
           aparelhos: r[9] || []
         };
+        prepararCapa();
         $("[data-baixar-ia]").disabled = false;
         $("[data-baixar-pdf]").disabled = false;
 
@@ -1207,6 +1283,64 @@
     };
   }
 
+  /* Quantos dias o recorte cobre. É o que vira "Recorte de 30
+     dias" na capa, e serve tanto para os botões prontos quanto
+     para uma data escolhida à mão. */
+  function diasDoPeriodo(P) {
+    return Math.round((P.ate.getTime() - P.de.getTime()) / 86400000);
+  }
+
+  function frasePeriodo(P) {
+    var n = diasDoPeriodo(P);
+    var texto = "Recorte de " + n + (n === 1 ? " dia" : " dias");
+    if (P.horaDe !== null) {
+      texto += ", das " + P.horaDe + "h às " + P.horaAte + "h59";
+    }
+    return texto;
+  }
+
+  function datasPeriodo(P) {
+    return (
+      P.de.toLocaleDateString("pt-BR") + " a " +
+      new Date(P.ate.getTime() - 1).toLocaleDateString("pt-BR")
+    );
+  }
+
+  /* A capa só aparece no papel, mas é preenchida sempre: quem
+     manda imprimir não passa por aqui de novo. */
+  function prepararCapa() {
+    var P = ultimoPacote;
+    if (!P) return;
+    $("[data-capa-casa]").textContent = restaurante ? restaurante.nome : "";
+    $("[data-capa-recorte]").textContent = frasePeriodo(P);
+    $("[data-capa-datas]").textContent = datasPeriodo(P);
+  }
+
+  /* O navegador usa o TÍTULO DA PÁGINA como nome do arquivo ao
+     salvar em PDF. Sem mexer nele, todo relatório sai chamado
+     "Painel — Stadium Steakhouse" e some na pasta de downloads
+     junto com os anteriores. Trocado antes de imprimir e
+     devolvido depois, para a aba não ficar com nome esquisito.
+
+     Barra é proibida em nome de arquivo no Windows, então as
+     datas vão com hífen. */
+  var TITULO_ORIGINAL = document.title;
+
+  function imprimir() {
+    var P = ultimoPacote;
+    if (P) {
+      prepararCapa();
+      document.title =
+        "Stadium — " + frasePeriodo(P).replace("Recorte de ", "") +
+        " — " + datasPeriodo(P).replace(/\//g, "-");
+    }
+    window.print();
+  }
+
+  window.addEventListener("afterprint", function () {
+    document.title = TITULO_ORIGINAL;
+  });
+
   function baixarParaIA() {
     var r = montarRelatorio();
     if (!r) return;
@@ -1273,9 +1407,7 @@
     /* A caixa de impressão do navegador tem "Salvar como PDF" em
        todos eles. Quem desenha o documento é a folha de impressão
        no CSS, não este clique. */
-    $("[data-baixar-pdf]").addEventListener("click", function () {
-      window.print();
-    });
+    $("[data-baixar-pdf]").addEventListener("click", imprimir);
     document.querySelectorAll("[data-dias]").forEach(function (b) {
       b.addEventListener("click", function () {
         var p = ultimosDias(Number(b.getAttribute("data-dias")));
@@ -1301,7 +1433,17 @@
 
   /* ---------- PARTIDA ---------- */
 
+  /* Duas portas levam aqui: o crachá guardado, na abertura da
+     página, e o formulário. Se as duas passarem, cada ouvinte é
+     ligado duas vezes e um clique em "adicionar prato" adiciona
+     dois — que foi o que apareceu no teste. Chips de período
+     teriam o mesmo problema, disparando duas cargas por clique. */
+  var painelAberto = false;
+
   function abrirPainel(email) {
+    if (painelAberto) return;
+    painelAberto = true;
+
     pedir("/rest/v1/restaurante?select=id,nome,slug")
       .then(function (lista) {
         if (!lista.length) {
@@ -1319,7 +1461,8 @@
         $("[data-quem]").textContent = email || "";
         $("[data-restaurante]").textContent = restaurante.nome;
 
-        montarSeletor();
+        montarSeries();
+        ligarAdicionarSerie();
         montarSeletorCategoria();
         ligarPeriodo();
         var p = ultimosDias(7);
