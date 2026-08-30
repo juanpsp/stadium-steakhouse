@@ -66,7 +66,14 @@
     {
       id: "pastas",
       titulo: "Azzurra",
-      nav: { pt: "Massas", en: "Pasta", es: "Pastas" }
+      nav: { pt: "Massas", en: "Pasta", es: "Pastas" },
+      /* Frase do cardápio impresso, transcrita da foto. Ver a
+         nota sobre "adesivo" no fim da lista de categorias. */
+      adesivo: {
+        pt: "Partir para o abraço com as…",
+        en: "Time to celebrate with the…",
+        es: "Ir al abrazo con las…"
+      }
     },
     {
       id: "kids",
@@ -79,6 +86,11 @@
         pt: "Menu exclusivo para crianças de até 12 anos.",
         en: "Menu for children up to 12 years old only.",
         es: "Menú exclusivo para niños de hasta 12 años."
+      },
+      adesivo: {
+        pt: "Pelo amor dos meus filhinhos!!!",
+        en: "For the love of my little ones!!!",
+        es: "¡¡¡Por el amor de mis hijitos!!!"
       }
     },
     {
@@ -118,6 +130,27 @@
       nav: { pt: "Drinks", en: "Cocktails", es: "Tragos" }
     }
   ];
+
+  /* A ordem das categorias fica visível de fora porque o painel
+     desenha o funil do cardápio nesta mesma ordem — funil só faz
+     sentido lido de cima para baixo.
+
+     O painel carrega este arquivo só por causa desta linha, e
+     isso é seguro: sem i18n e sem [data-cardapio] a montagem
+     desiste sozinha lá embaixo, então nada é desenhado.
+
+     Copiar a lista para lá seria mais simples e estaria errado:
+     seriam duas ordens envelhecendo separadas, e no dia em que
+     uma categoria mudasse de lugar o painel seguiria mostrando
+     a ordem antiga sem reclamar. */
+  window.STADIUM = STADIUM;
+  /* Com o prefixo "container-", que é o id real da seção na
+     página — e é ele, não o id curto, que a medição grava. Sem o
+     prefixo a lista até existiria, mas não casaria com nada e a
+     ordenação falharia em silêncio. */
+  STADIUM.ordemCategorias = CATEGORIAS.map(function (c) {
+    return "container-" + c.id;
+  });
 
   /* =========================================================
      FOTOS PROVISÓRIAS — REMOVER QUANDO AS REAIS CHEGAREM
@@ -235,6 +268,11 @@
         (prato.alcoolico ? " card-produto--alcool on-dark" : "")
     );
     var idPainel = "detalhes-" + prato.id;
+
+    /* Etiqueta que a medição de atenção usa para saber de qual
+       prato é cada card. Ver assets/js/metricas.js. */
+    card.setAttribute("data-prato", prato.id);
+    card.setAttribute("data-prato-nome", prato.nome);
 
     if (!enxuto) {
       /* Os dados ainda apontam todos para o mesmo "imagem-teste":
@@ -517,6 +555,19 @@
     });
   }
 
+  /* Fio com a bola no meio, como no cardápio impresso. Dois
+     traços e o ícone: decoração pura, então sai da árvore de
+     acessibilidade — quem usa leitor de tela não ganha nada
+     ouvindo "imagem" doze vezes. */
+  function divisorDeBola() {
+    var linha = el("div", "divisor-bola");
+    linha.setAttribute("aria-hidden", "true");
+    linha.appendChild(el("span", "divisor-bola__fio"));
+    linha.appendChild(icone("bola"));
+    linha.appendChild(el("span", "divisor-bola__fio"));
+    return linha;
+  }
+
   /* ---------- MONTAGEM DA PÁGINA ---------- */
 
   function desenhar() {
@@ -587,8 +638,35 @@
       grade.appendChild(fragmento);
       secao.appendChild(grade);
 
+      /* ADESIVO DA SEÇÃO — a frase que o cardápio impresso traz
+         solta, na letra manuscrita. Fica DEPOIS dos cards, torto,
+         em tom rebaixado: é decoração de fundo, não conteúdo.
+
+         Só aparece durante a navegação normal. Numa busca ele
+         sairia junto com os resultados filtrados e viraria
+         legenda de coisa nenhuma.
+
+         Hoje só duas categorias têm frase, porque só duas
+         apareceram legíveis nas fotos do impresso. Categoria sem
+         "adesivo" não ganha nada — inventar a voz da casa seria
+         pior que deixar em branco. */
+      if (categoria.adesivo && !termos.length) {
+        var adesivo = el("p", "adesivo", i18n.campo(categoria.adesivo));
+        adesivo.setAttribute("aria-hidden", "true");
+        secao.appendChild(adesivo);
+      }
+
       area.appendChild(secao);
+
+      /* A bola que separa os blocos, assinatura gráfica do
+         impresso. Entre seções, nunca depois da última. */
+      area.appendChild(divisorDeBola());
     });
+
+    /* O divisor da última seção sobra: ele separaria o cardápio
+       do rodapé, onde já existe uma borda. */
+    var ultimo = area.lastElementChild;
+    if (ultimo && ultimo.classList.contains("divisor-bola")) ultimo.remove();
 
     /* Busca sem nenhum resultado: em vez de uma página vazia, um
        recado com exemplos do que funciona. */

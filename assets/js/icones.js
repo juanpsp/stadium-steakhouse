@@ -84,7 +84,23 @@
     alerta: '<path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
 
     busca: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
-    fechar: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+    fechar: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+
+    /* A bola que separa os blocos no cardápio impresso. Pentágono
+       central e cinco costuras saindo dele até a borda — é o que
+       o olho reconhece como bola de futebol; um círculo com
+       manchas viraria bola de vôlei. */
+    bola:
+      '<circle cx="12" cy="12" r="10"/>' +
+      /* O preenchimento vai como ATRIBUTO, e não por CSS: os
+         paths de um <use> ficam numa shadow tree, e seletor de
+         fora não entra lá. Só herança atravessa — e o ".ico"
+         herda "fill: none". Atributo de apresentação no próprio
+         path vence a herança e é o único jeito de pintar isto. */
+      '<path fill="currentColor" d="M12 8 15.8 10.8 14.35 15.3 9.65 15.3 8.2 10.8z"/>' +
+      '<path d="M12 8V4.6"/><path d="m15.8 10.8 3.2-1"/>' +
+      '<path d="m14.35 15.3 2 2.7"/><path d="m9.65 15.3-2 2.7"/>' +
+      '<path d="m8.2 10.8-3.2-1"/>'
   };
 
   var partes = ['<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'];

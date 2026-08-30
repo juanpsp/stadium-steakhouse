@@ -81,6 +81,12 @@
   function montarUnidade(unidade) {
     var card = el("article", "unidade");
     card.id = unidade.id;
+    /* Marca a casa para a medição de atenção. Cada unidade é um
+       bloco próprio, e não um pedaço de "unidades": as duas casas
+       competem pela mesma visita, e saber qual delas prende mais
+       é uma pergunta de negócio, não de layout. O nome que
+       aparece no painel sai do <h2> logo abaixo. */
+    card.setAttribute("data-secao", "unidade-" + unidade.id);
 
     /* --- cabeçalho: nome + estado agora --- */
     var head = el("div", "unidade__head");

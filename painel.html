@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#4A0E17">
+    <!-- Página interna: não deve aparecer em busca nenhuma. -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Painel — Stadium Steakhouse</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/painel.css">
+    <link rel="icon" href="assets/img/diversos/logo-stadium-header.png">
+</head>
+<body class="painel-body">
+
+<script src="assets/js/icones.js"></script>
+
+<header class="topbar">
+    <a class="topbar__logo" href="index.html" aria-label="Stadium Steakhouse">
+        <img src="assets/img/diversos/logo-stadium-header.png" alt="Stadium Steakhouse" width="1269" height="923">
+    </a>
+    <div class="topbar__right">
+        <p class="painel-quem" data-quem hidden></p>
+        <button class="btn btn--sm btn--ghost" type="button" data-sair hidden>Sair</button>
+    </div>
+</header>
+
+<main class="container painel">
+
+    <!-- ENTRADA ------------------------------------------------
+         O formulário só existe até a pessoa entrar. A senha vai
+         direto para o Supabase e nunca é guardada aqui. -->
+    <section class="painel-entrada" data-entrada>
+        <h1 class="t-h2">Painel</h1>
+        <p class="t-body">Acesso restrito à equipe.</p>
+
+        <form class="painel-form" data-form>
+            <label>
+                <span>E-mail</span>
+                <input type="email" name="email" autocomplete="username" required>
+            </label>
+            <label>
+                <span>Senha</span>
+                <input type="password" name="senha" autocomplete="current-password" required>
+            </label>
+            <button class="btn btn--gold" type="submit" data-entrar>Entrar</button>
+            <p class="painel-erro" data-erro hidden></p>
+        </form>
+    </section>
+
+    <!-- DADOS -------------------------------------------------- -->
+    <section class="painel-dados" data-dados hidden>
+
+        <div class="painel-cabeca">
+            <p class="t-eyebrow" data-restaurante>—</p>
+            <h1 class="t-h2">Atenção no site</h1>
+        </div>
+
+        <div class="painel-periodo">
+            <button class="painel-chip" type="button" data-dias="7">7 dias</button>
+            <button class="painel-chip" type="button" data-dias="30">30 dias</button>
+            <button class="painel-chip" type="button" data-dias="90">90 dias</button>
+            <span class="painel-ate">
+                <label>de <input type="date" data-de></label>
+                <label>até <input type="date" data-ate></label>
+                <button class="painel-chip" type="button" data-aplicar>aplicar</button>
+                <button class="painel-chip" type="button" data-atualizar title="recarregar o período atual">↻</button>
+            </span>
+        </div>
+
+        <p class="painel-resumo" data-resumo></p>
+
+        <!-- VISÃO GERAL: quantas pessoas, quanto tempo, onde -->
+        <div class="painel-cartoes" data-geral></div>
+
+        <!-- FUNIL: em ordem de página, não de audiência.
+             O que interessa é ver ONDE a queda acontece. -->
+        <div class="painel-grades">
+            <div class="painel-bloco">
+                <h2 class="painel-titulo">Até onde descem na home</h2>
+                <p class="painel-legenda">% de quem abriu a home e chegou a ver cada faixa</p>
+                <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-home></tbody></table>
+            </div>
+
+            <div class="painel-bloco">
+                <h2 class="painel-titulo">Até onde descem no cardápio</h2>
+                <p class="painel-legenda">% de quem abriu o cardápio e chegou a ver cada categoria</p>
+                <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-categoria></tbody></table>
+            </div>
+
+            <div class="painel-bloco">
+                <h2 class="painel-titulo">Até onde descem nas unidades</h2>
+                <p class="painel-legenda">% de quem abriu a página de unidades e chegou a ver cada bloco</p>
+                <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-unidades></tbody></table>
+            </div>
+
+            <div class="painel-bloco">
+                <h2 class="painel-titulo">Pratos mais olhados</h2>
+                <p class="painel-legenda">tempo somado de todas as visitas</p>
+                <table class="painel-tabela"><tbody data-t-prato></tbody></table>
+            </div>
+
+            <div class="painel-bloco">
+                <h2 class="painel-titulo">Cliques em detalhes</h2>
+                <p class="painel-legenda">quem parou de olhar e foi ler</p>
+                <table class="painel-tabela"><tbody data-t-clique></tbody></table>
+            </div>
+        </div>
+
+        <p class=painel-nota>
+            <b>Visita</b> é uma aba aberta: se a mesma pessoa voltar amanhã, conta de novo;
+            se abrir home, cardápio e unidades na mesma navegação, conta uma vez só — por isso as três fatias de visita não somam 100%.
+            <b>Tempo</b> é o que ficou de fato na tela, já descontadas as pausas — sai da
+            aba, o relógio para.
+        </p>
+        <p class=painel-nota>
+            Nas três listas de "até onde descem", <b>chegaram</b> e <b>pararam</b> medem coisas
+            diferentes de propósito. Chegar é ter passado pelo bloco; parar é ter ficado
+            ali. Alcance alto com tempo baixo não é sucesso — é gente rolando reto. Um
+            traço no lugar do tempo quer dizer que ninguém parou naquela faixa.
+        </p>
+        <p class=painel-nota>
+            Nada disso identifica ninguém: não há nome, e-mail, telefone nem rastro entre
+            visitas — a contagem morre quando a aba fecha.
+        </p>
+    </section>
+
+</main>
+
+<!-- Os dois arquivos do cardápio entram aqui só como fonte de
+     verdade: um diz quantos pratos existem, o outro em que ordem
+     as categorias aparecem na página. Nenhum dos dois desenha
+     nada nesta página — a montagem do cardápio desiste sozinha
+     quando não acha o container. Sem eles, esses dois números
+     virariam constantes no código do painel e envelheceriam
+     caladas. -->
+<script src="assets/js/cardapio-dados.js"></script>
+<script src="assets/js/cardapio.js"></script>
+<script src="assets/js/painel.js"></script>
+</body>
+</html>

@@ -943,3 +943,143 @@ body.arrastando-barra {
 .busca__contagem[hidden] {
   display: none;
 }
+
+/* ---------- 13. DIVISOR DE BOLA ----------
+   O fio com a bola no meio, entre os blocos, como no cardápio
+   impresso. É a assinatura gráfica da casa e não custa nada em
+   leitura: fica no vão que já existia entre uma seção e outra. */
+.divisor-bola {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  padding-top: var(--s-9);
+}
+
+.divisor-bola__fio {
+  flex: 1 1 auto;
+  height: 1px;
+  background-color: var(--border-strong);
+}
+
+.divisor-bola .ico {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--burgundy);
+  /* traço mais fino que o padrão: a bola tem cinco costuras
+     internas e, com 2px, elas empastam num ícone deste tamanho */
+  stroke-width: 1.5;
+}
+
+/* O pentágono preenchido não mora aqui — mora no próprio símbolo
+   em icones.js, como atributo. Seletor CSS não atravessa a
+   shadow tree de um <use>, então uma regra daqui não pintaria
+   nada. Ver o comentário no ícone "bola". */
+
+/* ---------- 14. ADESIVO DA SEÇÃO ----------
+   A frase solta do cardápio impresso, colada depois dos cards.
+   Torta de propósito — adesivo colado à mão não sai reto.
+
+   É DECORAÇÃO DE FUNDO, e o tom baixo é o que garante isso: se
+   ela competisse com o nome dos pratos, viraria conteúdo, e o
+   olho pararia numa frase em vez de num preço. Por isso o texto
+   é bordô rebaixado sobre um creme quase invisível, e não ouro:
+   o ouro é o acento de conversão do guia, no máximo um por tela,
+   e gastá-lo aqui tiraria força do que realmente vende. */
+.adesivo {
+  display: inline-block;
+  margin-top: var(--s-7);
+  padding: var(--s-3) var(--s-6);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: rgba(74, 14, 23, 0.55);
+  background-color: rgba(242, 175, 0, 0.1);
+  border: 1px dashed rgba(74, 14, 23, 0.22);
+  border-radius: var(--r-btn);
+  transform: rotate(-2.2deg);
+  /* o adesivo é enfeite: não deve capturar toque nem seleção */
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Segundo adesivo da página inclina para o outro lado. Todos
+   tortos no mesmo ângulo pareceriam erro de CSS, não mão. */
+.categoria:nth-of-type(even) .adesivo {
+  transform: rotate(1.8deg);
+}
+
+@media (min-width: 560px) {
+  .adesivo {
+    font-size: 17px;
+  }
+}
+
+/* ---------- PAINEL DE MEDIÇÃO (só com ?metricas=1) ----------
+   Ferramenta de prova, não parte do produto. Só entra na tela
+   quando o parâmetro está na URL — cliente nenhum vê isto. */
+.metricas-painel {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 78px;
+  z-index: 9999;
+  max-height: 42vh;
+  overflow: auto;
+  padding: 10px 12px;
+  background: rgba(26, 26, 26, 0.94);
+  color: #FAF7F0;
+  border-radius: 10px;
+  font: 12px/1.35 ui-monospace, monospace;
+}
+
+.metricas-painel__topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.metricas-painel__topo [data-estado] {
+  margin-left: auto;
+  color: #F2AF00;
+}
+
+.metricas-painel button {
+  color: #FAF7F0;
+  border: 1px solid rgba(250, 247, 240, 0.4);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font: inherit;
+}
+
+.metricas-painel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.metricas-painel th,
+.metricas-painel td {
+  text-align: left;
+  padding: 3px 6px 3px 0;
+  border-bottom: 1px solid rgba(250, 247, 240, 0.12);
+}
+
+/* O tempo cru fica apagado: ele existe para recalibrar os tetos
+   depois, não para ser lido no dia a dia. */
+.metricas-painel .cru {
+  color: rgba(250, 247, 240, 0.45);
+}
+
+.metricas-painel__layout {
+  margin-bottom: 6px;
+  color: rgba(250, 247, 240, 0.55);
+}
+
+.metricas-painel thead th {
+  color: #F2AF00;
+  padding-top: 6px;
+}

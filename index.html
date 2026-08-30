@@ -79,7 +79,7 @@
          O conteúdo vem de assets/js/promocoes-dados.js (banners).
          Passa sozinho a cada 6s e para quando a pessoa encosta.
          ===================================================== -->
-    <section class="banners" data-banners
+    <section class="banners" data-banners data-secao="banners"
              data-i18n-attr="aria-label:banner.aria" aria-label="Novidades do Stadium"
              aria-roledescription="carrossel">
         <ul class="banners__track" tabindex="0"></ul>
@@ -103,7 +103,7 @@
          O prato que a casa escolhe empurrar. Editável em
          promocoes-dados.js -> destaque.
          ===================================================== -->
-    <section class="section destaque on-dark" data-destaque>
+    <section class="section destaque on-dark" data-destaque data-secao="destaque">
         <div class="container">
             <div class="section__head">
                 <p class="t-eyebrow" data-i18n="destaque.eyebrow">A escalação da casa</p>
@@ -132,7 +132,7 @@
     <!-- =====================================================
          DELIVERY
          ===================================================== -->
-    <section class="section delivery">
+    <section class="section delivery" data-secao="delivery">
         <div class="container">
             <div class="section__head">
                 <p class="t-eyebrow" data-i18n="delivery.eyebrow">Sem sair de casa</p>
@@ -155,7 +155,7 @@
          A foto (PNG recortado) assenta na base e divide a
          seção. Vem de promocoes-dados.js -> equipe.
          ===================================================== -->
-    <section class="equipe on-dark" data-equipe>
+    <section class="equipe on-dark" data-equipe data-secao="equipe">
         <div class="container equipe__grid">
 
             <div class="equipe__texto">
@@ -198,7 +198,7 @@
     <!-- =====================================================
          UNIDADES (resumo — o detalhe vive em unidades.html)
          ===================================================== -->
-    <section class="section units">
+    <section class="section units" data-secao="unidades">
         <div class="container">
             <div class="section__head">
                 <p class="t-eyebrow" data-i18n="units.eyebrow">Onde a gente está</p>
@@ -289,6 +289,8 @@
 <script src="assets/js/promocoes-dados.js"></script>
 <script src="assets/js/global.js"></script>
 <script src="assets/js/home.js"></script>
+<!-- Medição de atenção por seção. ?metricas=1 mostra o painel. -->
+<script src="assets/js/metricas.js"></script>
 
 <!-- Animação de entrada, só nesta página. Vem por último: os
      blocos acima precisam existir antes de virarem gatilho. -->
