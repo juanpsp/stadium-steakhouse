@@ -105,6 +105,7 @@
      consulta carrega o recorte junto. */
   var horaDe = null;
   var horaAte = null;
+  var pratoSerie = null;
 
   var DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
   /* O Postgres devolve 0 para domingo. Semana de restaurante se
@@ -417,6 +418,172 @@
     return h + "h";
   }
 
+  /* ---------- UM PRATO NO TEMPO ---------- */
+
+  /* A lista sai do próprio cardápio, e não do que já tem medição:
+     querer olhar um prato JUSTAMENTE porque ele não aparece em
+     lugar nenhum é uma pergunta legítima, e uma lista só com quem
+     tem dado não deixaria fazer. */
+  function montarSeletor() {
+    var sel = $("[data-prato-serie]");
+    var lista = (window.STADIUM && window.STADIUM.cardapio) || [];
+    var rot = (window.STADIUM && window.STADIUM.rotuloCategorias) || {};
+    if (!lista.length) return;
+
+    var porCat = {};
+    var ordem = [];
+    lista.forEach(function (p) {
+      if (!porCat[p.categoria]) {
+        porCat[p.categoria] = [];
+        ordem.push(p.categoria);
+      }
+      porCat[p.categoria].push(p);
+    });
+
+    var html = "";
+    ordem.forEach(function (cat) {
+      html += '<optgroup label="' + (rot["container-" + cat] || cat) + '">';
+      porCat[cat].forEach(function (p) {
+        html += '<option value="' + p.id + '">' + p.nome + "</option>";
+      });
+      html += "</optgroup>";
+    });
+    sel.innerHTML = html;
+
+    pratoSerie = String(lista[0].id);
+    sel.value = pratoSerie;
+    sel.addEventListener("change", function () {
+      pratoSerie = sel.value;
+      if (periodo) carregarSerie();
+    });
+  }
+
+  /* Barras em HTML, não em SVG. Um gráfico em SVG precisa de
+     viewBox fixo, e aí o texto encolhe junto com a tela: num
+     celular os rótulos ficariam ilegíveis. Em HTML a barra é
+     porcentagem de altura e o texto continua texto. */
+  function desenharSerie(atual, anterior) {
+    var caixa = $("[data-serie-grafico]");
+    var resumo = $("[data-serie-resumo]");
+
+    var total = 0;
+    var maior = 0;
+    atual.forEach(function (d) {
+      var v = Number(d.tempo_ms || 0);
+      total += v;
+      if (v > maior) maior = v;
+    });
+
+    var antes = 0;
+    (anterior || []).forEach(function (d) {
+      antes += Number(d.tempo_ms || 0);
+    });
+
+    if (!total && !antes) {
+      resumo.textContent = "sem atenção registrada neste período";
+      caixa.innerHTML = "";
+      return;
+    }
+
+    /* Variação sem cor de status de propósito: mais atenção não é
+       automaticamente bom nem ruim. Um prato pode subir porque a
+       foto melhorou ou porque o preço assustou e a pessoa ficou
+       lendo. Quem interpreta é quem conhece a casa. */
+    var texto = duracao(total) + " no período";
+    if (antes > 0) {
+      var var100 = Math.round(((total - antes) / antes) * 100);
+      texto +=
+        " · " + (var100 >= 0 ? "+" : "") + var100 + "% vs o período anterior";
+    } else if (total > 0) {
+      texto += " · não tinha nada no período anterior";
+    }
+    resumo.textContent = texto;
+
+    var DIAS_CURTOS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+
+    /* A folga entre barras não pode ser fixa. Em 90 dias, 89
+       folgas de 3px comem a largura inteira e as barras ficam com
+       ZERO de espessura — o gráfico some. Medido, não suposto. */
+    var folga = atual.length > 45 ? 1 : atual.length > 20 ? 2 : 3;
+    var cabeRotulo = atual.length <= 20;
+
+    caixa.innerHTML =
+      '<div class="painel-grafico__barras" style="--folga:' + folga + 'px">' +
+      atual
+        .map(function (d) {
+          var v = Number(d.tempo_ms || 0);
+          var alt = maior ? Math.round((v / maior) * 100) : 0;
+          /* Data em UTC de propósito: "2026-08-29" já é o dia do
+             Rio, calculado no banco. Ler como local deslocaria um
+             dia para trás. */
+          var data = new Date(d.dia + "T12:00:00Z");
+          var titulo =
+            DIAS_CURTOS[data.getUTCDay()] + " " +
+            String(data.getUTCDate()).padStart(2, "0") + "/" +
+            String(data.getUTCMonth() + 1).padStart(2, "0") +
+            " · " + (v ? duracao(v) : "nada") +
+            (d.pessoas ? " · " + numero(d.pessoas) + " pessoa(s)" : "");
+
+          /* Rótulo só no maior, e só quando a barra é larga o
+             bastante para segurá-lo. Em 90 dias a coluna tem menos
+             de 2px: o texto transborda por cima das vizinhas e
+             atravessa o pico. Nesse caso o total já está no
+             título e o detalhe fica na dica do mouse. */
+          var rotulo =
+            cabeRotulo && v && v === maior
+              ? '<span class="painel-grafico__valor">' + duracao(v) + "</span>"
+              : "";
+
+          return (
+            '<div class="painel-grafico__col" title="' + titulo + '">' +
+            rotulo +
+            '<span class="painel-grafico__barra" style="height:' + alt + '%"></span>' +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      '<div class="painel-grafico__eixo"><span>' +
+      rotuloDia(atual[0]) + "</span><span>" +
+      rotuloDia(atual[atual.length - 1]) + "</span></div>";
+  }
+
+  function rotuloDia(d) {
+    if (!d) return "";
+    var p = String(d.dia).split("-");
+    return p[2] + "/" + p[1];
+  }
+
+  /* Duas janelas do mesmo tamanho, coladas: a atual e a de antes
+     dela. É o que responde "mudou depois do reajuste". */
+  function carregarSerie() {
+    if (!pratoSerie || !periodo) return;
+    var largura = periodo.ate.getTime() - periodo.de.getTime();
+    var base = {
+      p_restaurante: restaurante.id,
+      p_chave: pratoSerie,
+      p_hora_de: horaDe,
+      p_hora_ate: horaAte
+    };
+
+    Promise.all([
+      pedir("/rest/v1/rpc/serie", Object.assign({}, base, {
+        p_de: periodo.de.toISOString(),
+        p_ate: periodo.ate.toISOString()
+      })),
+      pedir("/rest/v1/rpc/serie", Object.assign({}, base, {
+        p_de: new Date(periodo.de.getTime() - largura).toISOString(),
+        p_ate: periodo.de.toISOString()
+      }))
+    ])
+      .then(function (r) {
+        desenharSerie(r[0] || [], r[1] || []);
+      })
+      ["catch"](function () {
+        $("[data-serie-resumo]").textContent = "não consegui carregar";
+      });
+  }
+
   /* ---------- CARGA ---------- */
 
   function carregar(de, ate) {
@@ -463,6 +630,8 @@
         mostrarOrigens(r[5]);
         mostrarAcoes(r[6]);
         mostrarBuscas(r[7]);
+
+        carregarSerie();
 
         var dist = r[8] || [];
         mostrarDistribuicao(
@@ -589,6 +758,7 @@
         $("[data-quem]").textContent = email || "";
         $("[data-restaurante]").textContent = restaurante.nome;
 
+        montarSeletor();
         ligarPeriodo();
         var p = ultimosDias(7);
         marcarChip(document.querySelector('[data-dias="7"]'));

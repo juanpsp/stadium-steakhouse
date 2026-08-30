@@ -445,3 +445,87 @@
   color: var(--ink-mute);
   opacity: 0.55;
 }
+
+/* ---------- UM PRATO NO TEMPO ----------
+   A cor da barra é um passo mais claro do bordô da marca. O
+   bordô puro reprovou na checagem de luminosidade: a #4A0E17 as
+   barras viram blocos quase pretos e dominam a tela, quando o
+   papel delas é ser lida de relance, não gritar. */
+
+.painel-escolha {
+  width: 100%;
+  max-width: 340px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 9px 10px;
+  margin-bottom: var(--s-4);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-btn);
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+.painel-destaque {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: var(--s-4);
+}
+
+.painel-grafico__barras {
+  display: flex;
+  align-items: flex-end;
+  /* Folga entre barras vizinhas: encostadas, duas viram uma.
+     Quem decide o valor é o JS, pelo número de dias — ver lá. */
+  gap: var(--folga, 3px);
+  height: 130px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.painel-grafico__col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  height: 100%;
+  min-width: 0;
+}
+
+.painel-grafico__barra {
+  display: block;
+  background-color: #9E2A3D;
+  /* Canto arredondado só em cima: a base fica presa no zero,
+     que é de onde a comparação parte. */
+  border-radius: 4px 4px 0 0;
+  /* Dia sem nada continua ocupando a coluna e mostra um traço.
+     Coluna omitida encurtaria o gráfico e esconderia o buraco. */
+  min-height: 2px;
+}
+
+.painel-grafico__col:hover .painel-grafico__barra {
+  background-color: var(--burgundy);
+}
+
+/* Rótulo direto só na maior barra. Número em cima de toda barra
+   vira tabela ruim disfarçada de gráfico. */
+.painel-grafico__valor {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--ink-mute);
+  text-align: center;
+  margin-bottom: 3px;
+  white-space: nowrap;
+}
+
+.painel-grafico__eixo {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--s-2);
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+}

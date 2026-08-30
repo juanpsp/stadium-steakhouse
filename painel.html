@@ -140,6 +140,19 @@
             <!-- O único dado em que o cliente fala com palavras
                  dele. Fica logo abaixo do funil porque é o mais
                  acionável da página inteira. -->
+            <!-- Um prato por vez, dia a dia. É o bloco que mostra o
+                 efeito de uma mudança: reajuste de preço, foto
+                 nova, troca de posição. O degrau aparece no dia. -->
+            <div class="painel-bloco painel-bloco--depois">
+                <h3 class="painel-titulo">Acompanhar um prato</h3>
+                <p class="painel-legenda">tempo de atenção por dia, e a variação contra o período anterior de mesmo tamanho</p>
+
+                <select class="painel-escolha" data-prato-serie></select>
+
+                <p class="painel-destaque" data-serie-resumo></p>
+                <div class="painel-grafico" data-serie-grafico></div>
+            </div>
+
             <div class="painel-bloco painel-bloco--depois">
                 <h3 class="painel-titulo">O que procuraram</h3>
                 <p class="painel-legenda">quem não achou nada vem primeiro — ou o prato não existe, ou tem outro nome</p>
