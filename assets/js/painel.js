@@ -450,6 +450,107 @@
     return h + "h";
   }
 
+  /* ---------- PREÇO × ATENÇÃO ----------
+     Cruzamento feito aqui, na hora de exibir: o preço já vive no
+     cardápio e a atenção já vive no banco. Gravar preço junto de
+     cada medição seria pior — no dia de um reajuste, o histórico
+     inteiro passaria a mentir sobre quanto o prato custava.
+
+     LEITURA COM CUIDADO. Atenção depende muito da POSIÇÃO: um
+     prato no começo da página é visto por todo mundo,
+     independente do que custa. Se as carnes caras estão no alto e
+     os acompanhamentos baratos no fim, esta tabela mede posição
+     achando que mede preço. Ela levanta hipótese; quem confirma é
+     mudar a ordem e olhar de novo. Está escrito na tela por isso.
+
+     Duas colunas em vez de uma média só: "olhados" mostra quantos
+     pratos da faixa alguém chegou a ver, e o tempo é a média
+     ENTRE OS VISTOS. Uma média sobre a faixa inteira misturaria
+     "ninguém achou" com "acharam e não interessou", que são
+     problemas diferentes e têm soluções diferentes. */
+  var FAIXAS = [
+    { de: 0,  ate: 30,       nome: "até R$ 30" },
+    { de: 30, ate: 60,       nome: "R$ 30 a 60" },
+    { de: 60, ate: 90,       nome: "R$ 60 a 90" },
+    { de: 90, ate: Infinity, nome: "acima de R$ 90" }
+  ];
+
+  /* "R$ 59,90" -> 59.9. Em prato com vários tamanhos vale o MENOR:
+     é o preço que a pessoa vê primeiro e o que forma a impressão
+     de caro ou barato. */
+  function precoDoPrato(p) {
+    var texto = p.preco;
+    if (!texto && p.precos && p.precos.length) {
+      var menor = null;
+      p.precos.forEach(function (o) {
+        var n = paraNumero(o.valor);
+        if (n !== null && (menor === null || n < menor)) menor = n;
+      });
+      return menor;
+    }
+    return paraNumero(texto);
+  }
+
+  function paraNumero(t) {
+    if (!t) return null;
+    var n = parseFloat(String(t).replace(/[^0-9,]/g, "").replace(",", "."));
+    return isNaN(n) ? null : n;
+  }
+
+  function mostrarPreco(porPrato, porClique) {
+    var corpo = $("[data-t-preco]");
+    var lista = (window.STADIUM && window.STADIUM.cardapio) || [];
+    if (!lista.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">cardápio não carregado</td></tr>';
+      return;
+    }
+
+    var caixas = FAIXAS.map(function (f) {
+      return { nome: f.nome, de: f.de, ate: f.ate, pratos: 0, vistos: 0, ms: 0, cliques: 0 };
+    });
+    var semPreco = 0;
+
+    lista.forEach(function (p) {
+      var valor = precoDoPrato(p);
+      if (valor === null) {
+        semPreco += 1;
+        return;
+      }
+      var caixa = null;
+      for (var i = 0; i < caixas.length; i++) {
+        if (valor >= caixas[i].de && valor < caixas[i].ate) {
+          caixa = caixas[i];
+          break;
+        }
+      }
+      if (!caixa) return;
+
+      caixa.pratos += 1;
+      var ms = porPrato[String(p.id)] || 0;
+      if (ms > 0) {
+        caixa.vistos += 1;
+        caixa.ms += ms;
+      }
+      caixa.cliques += porClique[String(p.id)] || 0;
+    });
+
+    corpo.innerHTML = caixas
+      .map(function (c) {
+        var media = c.vistos ? Math.round(c.ms / c.vistos) : 0;
+        return (
+          "<tr><td>" + escapar(c.nome) + "</td>" +
+          "<td class='painel-num'>" + numero(c.vistos) + " de " + numero(c.pratos) + "</td>" +
+          "<td class='painel-num'>" + (media ? duracao(media) : "—") + "</td>" +
+          "<td class='painel-num painel-sec'>" + numero(c.cliques) + "</td></tr>"
+        );
+      })
+      .join("");
+
+    $("[data-preco-fora]").textContent = semPreco
+      ? semPreco + " pratos ficam de fora por não terem preço no cardápio (os acompanhamentos)."
+      : "";
+  }
+
   /* ---------- UM PRATO NO TEMPO ---------- */
 
   /* A lista sai do próprio cardápio, e não do que já tem medição:
@@ -671,6 +772,16 @@
         porTipo.clique.sort(function (a, b) {
           return b.cliques - a.cliques;
         });
+
+        var msPorPrato = {};
+        var cliquePorPrato = {};
+        porTipo.prato.forEach(function (l) {
+          msPorPrato[l.chave] = Number(l.tempo_ms || 0);
+        });
+        porTipo.clique.forEach(function (l) {
+          cliquePorPrato[l.chave] = Number(l.cliques || 0);
+        });
+        mostrarPreco(msPorPrato, cliquePorPrato);
 
         tabela("[data-t-prato]", porTipo.prato, "tempo", 20);
         tabela("[data-t-clique]", porTipo.clique, "cliques", 15);
