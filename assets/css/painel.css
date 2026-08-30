@@ -392,3 +392,14 @@
 .painel-bloco--depois {
   margin-top: var(--s-6);
 }
+
+/* Linha de busca que não achou nada. É a que dá trabalho e a que
+   paga, então ela não pode parecer igual às outras. */
+.painel-alerta td {
+  color: var(--burgundy);
+  font-weight: 600;
+}
+
+.painel-alerta .painel-sec {
+  color: var(--burgundy);
+}

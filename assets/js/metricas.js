@@ -496,6 +496,80 @@
     acoes[id].n += 1;
   }
 
+  /* ---------- O QUE PROCURARAM ----------
+     O único dado deste site que é QUALITATIVO. Todo o resto é
+     contagem; aqui a pessoa escreve, com as palavras dela, o que
+     veio buscar.
+
+     E o achado não é "procuraram batata" — batata existe, a
+     pessoa achou, sinal zero. O que vale é a busca que voltou
+     VAZIA, e ela tem dois significados, os dois acionáveis:
+
+     1. O prato não existe. "Sem glúten", "vegetariano", "porção
+        individual". É demanda que a casa não atende.
+
+     2. O prato existe com outro nome — e este cardápio é cheio
+        deles. Quem procura "camarão" não acha "Milla Shrimp";
+        quem procura "onion rings" não acha "Jabulonion". O prato
+        está lá e o cliente conclui que não tem. É venda perdida
+        agora, e conserta de graça.
+
+     QUANDO REGISTRAR
+
+     O cardápio avisa a cada 140ms de digitação. Guardar tudo
+     encheria o banco de "b", "ba", "bat", "bata". Duas travas
+     resolvem: espera a pessoa parar de digitar, e depois colapsa
+     termo que é começo do seguinte — quem pausa no meio de
+     "batata" gera "bata" e "batata", que são uma busca só. */
+  var buscas = {};
+  var relogioBusca = null;
+  var ultimaBusca = null;
+
+  /* Tira acento, caixa e espaço sobrando, para "Camarão",
+     "camarao" e "CAMARÃO " caírem na mesma chave. */
+  function normalizarBusca(t) {
+    return String(t || "")
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 60);
+  }
+
+  /* Campo de texto livre aceita qualquer coisa, inclusive o que
+     ninguém quis mandar. E-mail ou telefone digitado por engano
+     no lugar errado não tem por que virar registro. */
+  function pareceDadoPessoal(t) {
+    return t.indexOf("@") !== -1 || /d{8,}/.test(t.replace(/D/g, ""));
+  }
+
+  function registrarBusca(termo, resultados) {
+    if (encerrada) return;
+    var chave = normalizarBusca(termo);
+    if (chave.length < 3) return;
+    if (pareceDadoPessoal(chave)) return;
+
+    /* "bata" seguido de "batata" é uma busca só: desfaz a
+       anterior antes de contar esta. */
+    if (
+      ultimaBusca &&
+      chave !== ultimaBusca &&
+      chave.indexOf(ultimaBusca) === 0 &&
+      buscas[ultimaBusca]
+    ) {
+      buscas[ultimaBusca].n -= 1;
+      if (buscas[ultimaBusca].n <= 0) delete buscas[ultimaBusca];
+    }
+
+    if (!buscas[chave]) {
+      buscas[chave] = { termo: String(termo).slice(0, 60), n: 0, resultados: 0 };
+    }
+    buscas[chave].n += 1;
+    buscas[chave].resultados = resultados;
+    ultimaBusca = chave;
+  }
+
   /* ---------- ÁREA QUE CONTA ----------
      O navegador mede "quanto do card está visível" contra a
      janela inteira — e ele NÃO sabe que existem barras fixas por
@@ -839,7 +913,7 @@
        função em comum o lote misto vinha com formatos
        diferentes e ia inteiro para o lixo — em silêncio, porque
        o envio falha calado de propósito. */
-    function linha(tipo, chave, nome, travado, bruto, cliques) {
+    function linha(tipo, chave, nome, travado, bruto, cliques, resultados) {
       return {
         restaurante_id: RESTAURANTE,
         sessao: SESSAO,
@@ -857,7 +931,11 @@
         nome: nome || String(chave),
         travado_ms: Math.round(travado || 0),
         bruto_ms: Math.round(bruto || 0),
-        cliques: cliques || 0
+        cliques: cliques || 0,
+        /* Só a busca preenche. Vai em toda linha mesmo assim
+           porque o PostgREST recusa o lote inteiro se uma linha
+           tiver campo que a outra não tem. */
+        resultados: resultados === undefined ? null : resultados
       };
     }
 
@@ -880,6 +958,14 @@
        propósito. Quem conta é a existência da linha. */
     Object.keys(pacote.alcance || {}).forEach(function (chave) {
       saida.push(linha("alcance", chave, pacote.alcance[chave].nome, 0, 0, 0));
+    });
+
+    /* Quantas vezes o termo foi procurado, e quantos pratos
+       apareceram. Zero resultados é o achado; o resto é contexto. */
+    Object.keys(pacote.buscas || {}).forEach(function (chave) {
+      var b = pacote.buscas[chave];
+      if (!b.n) return;
+      saida.push(linha("busca", chave, b.termo, 0, 0, b.n, b.resultados));
     });
 
     /* Uma linha por descarga com o tempo ativo. E a base de
@@ -967,6 +1053,7 @@
       secoes: secoes.instantaneo(),
       cliques: cliques,
       acoes: acoes,
+      buscas: buscas,
       /* Só o que ainda não foi mandado. A marca é permanente na
          sessão; reenviar a cada descarga encheria o banco de
          linha repetida para não mudar conta nenhuma. */
@@ -980,6 +1067,8 @@
     enviar(delta);
     cliques = {};
     acoes = {};
+    buscas = {};
+    ultimaBusca = null;
     ativoAcumulado = 0;
 
     var guardado = ler();
@@ -1170,6 +1259,17 @@
         }
       });
     }
+
+    /* O cardápio avisa a cada 140ms de digitação. Esta folga
+       maior é o que separa a palavra terminada do caminho até
+       ela: sem ela, "batata" chegaria como seis registros. */
+    document.addEventListener("stadium:busca", function (evento) {
+      var d = evento.detail || {};
+      clearTimeout(relogioBusca);
+      relogioBusca = setTimeout(function () {
+        registrarBusca(d.termo, d.resultados);
+      }, 1200);
+    });
 
     /* Ligar e pedir rota. Delegado no documento porque os cards
        das unidades são refeitos na troca de idioma — ouvinte preso

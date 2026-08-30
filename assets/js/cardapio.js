@@ -692,6 +692,22 @@
 
     atualizarContagem(termos.length ? encontrados : null);
 
+    /* Avisa a medição do que foi procurado e do que foi achado.
+       Vai por evento, e não por chamada direta, para este arquivo
+       continuar funcionando sozinho: sem o metricas.js carregado,
+       ninguém escuta e nada quebra.
+
+       Quem decide o que virar registro é o outro lado — aqui isto
+       dispara a cada 140ms de digitação, e guardar tudo encheria
+       o banco de "b", "ba", "bat". */
+    if (termos.length) {
+      document.dispatchEvent(
+        new CustomEvent("stadium:busca", {
+          detail: { termo: termoBusca, resultados: encontrados }
+        })
+      );
+    }
+
     /* A primeira categoria já nasce marcada: sem isto a barra
        fica sem nenhuma pill acesa até a pessoa rolar a página. */
     var primeira = nav.querySelector(".cat-link");

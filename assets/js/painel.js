@@ -340,6 +340,31 @@
       .join("");
   }
 
+  /* Zero resultados não é "achou 0": é a pessoa dizendo que
+     procurou algo que este cardápio não entregou. Escrito como
+     número, some no meio da coluna; escrito como palavra, salta. */
+  function mostrarBuscas(linhas) {
+    var corpo = $("[data-t-buscas]");
+    if (!linhas || !linhas.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">ninguém usou a busca</td></tr>';
+      return;
+    }
+    corpo.innerHTML = linhas
+      .slice(0, 20)
+      .map(function (l) {
+        var vazia = Number(l.resultados) === 0;
+        return (
+          "<tr" + (vazia ? ' class="painel-alerta"' : "") + "><td>" +
+          l.termo + "</td>" +
+          "<td class='painel-num'>" + numero(l.vezes) + "x</td>" +
+          "<td class='painel-num painel-sec'>" +
+          (vazia ? "nada" : numero(l.resultados) + " pratos") +
+          "</td></tr>"
+        );
+      })
+      .join("");
+  }
+
   /* ---------- CARGA ---------- */
 
   function carregar(de, ate) {
@@ -359,7 +384,8 @@
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "cardapio.html" })),
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "unidades.html" })),
       pedir("/rest/v1/rpc/origens", args),
-      pedir("/rest/v1/rpc/acoes", args)
+      pedir("/rest/v1/rpc/acoes", args),
+      pedir("/rest/v1/rpc/buscas", args)
     ])
       .then(function (r) {
         var geral = (r[0] && r[0][0]) || {};
@@ -381,6 +407,7 @@
         mostrarFunil("[data-t-unidades]", r[4], ORDEM_UNIDADES);
         mostrarOrigens(r[5]);
         mostrarAcoes(r[6]);
+        mostrarBuscas(r[7]);
 
         $("[data-resumo]").textContent =
           de.toLocaleDateString("pt-BR") + " a " +
