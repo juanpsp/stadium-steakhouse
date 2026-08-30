@@ -240,6 +240,42 @@
     return casa.slice(0, 40);
   }
 
+  /* ---------- EM QUE APARELHO ----------
+     Classificado pelo LADO MENOR da tela, não pela largura. A
+     largura muda quando a pessoa vira o celular de lado: um
+     telefone deitado tem 844px e seria contado como computador.
+     O lado menor não muda com a rotação.
+
+     Não é o campo "layout" que já existe — aquele diz se a grade
+     de pratos está em uma ou duas colunas, serve para decidir se
+     a medição de prato vale, e nem faz sentido na home ou nas
+     unidades, que não têm grade.
+
+     Fica guardado na visita: ninguém troca de aparelho no meio. */
+  var APARELHO = (function () {
+    var CH = "stadium.aparelho";
+    try {
+      var g = window.sessionStorage.getItem(CH);
+      if (g) return g;
+    } catch (e) {}
+
+    var menor = Math.min(
+      window.innerWidth || 0,
+      window.innerHeight || 0
+    );
+    var toque = (navigator.maxTouchPoints || 0) > 0;
+    var valor;
+    if (!menor) valor = "desconhecido";
+    else if (menor < 600) valor = "celular";
+    else if (menor < 1024 && toque) valor = "tablet";
+    else valor = "computador";
+
+    try {
+      window.sessionStorage.setItem(CH, valor);
+    } catch (e) {}
+    return valor;
+  })();
+
   /* Tempo ATIVO acumulado desde a última descarga. Pausa não
      conta — o relógio de inatividade já o interrompe, então a
      duração que chega ao banco é tempo de leitura de verdade,
@@ -268,6 +304,12 @@
     this.tempos = {};
     this.relogio = {};
     this.naTela = {};
+    /* Quantas vezes a pessoa VOLTOU a este item nesta visita.
+       Fica fora de "tempos" de propósito: aquele mapa é zerado a
+       cada descarga, e a contagem de voltas precisa sobreviver a
+       ela. Segue a mesma regra dos cliques — acumula, é enviada,
+       e só então zera. */
+    this.paradas = {};
     this.tetoParada = tetoParada;
     this.tetoTotal = tetoTotal;
     this.buscarNome = buscarNome;
@@ -279,8 +321,7 @@
       this.tempos[id] = {
         nome: nome || this.buscarNome(id),
         travado: 0,
-        bruto: 0,
-        paradas: 0
+        bruto: 0
       };
     } else if (this.tempos[id].nome === String(id)) {
       /* nasceu sem nome: conserta assim que alguém souber */
@@ -289,9 +330,15 @@
     return this.tempos[id];
   };
 
-  Medidor.prototype.abrir = function (id) {
+  /* "continuacao" existe por causa da descarga. A cada 10s os
+     cronômetros fecham e reabrem para não mandar tempo repetido —
+     mas quem está lendo não saiu do prato. Sem esta distinção,
+     alguém parado 30 segundos no mesmo card contaria três voltas
+     e o número diria indecisão onde houve leitura calma. */
+  Medidor.prototype.abrir = function (id, continuacao) {
     if (pausado || encerrada || !this.ligado) return;
     if (this.relogio[id]) return;
+    if (!continuacao) this.paradas[id] = (this.paradas[id] || 0) + 1;
     /* Registro e cronômetro nascem juntos, sempre. O ranking
        percorre os REGISTROS: cronômetro sem registro conta em
        silêncio e não aparece em lugar nenhum. */
@@ -307,7 +354,6 @@
 
     var r = this.registro(id);
     r.bruto += duracao;
-    r.paradas += 1;
     r.travado = Math.min(
       r.travado + Math.min(duracao, this.tetoParada),
       this.tetoTotal
@@ -324,7 +370,7 @@
   Medidor.prototype.reabrirVisiveis = function () {
     var self = this;
     Object.keys(this.naTela).forEach(function (id) {
-      if (self.naTela[id]) self.abrir(id);
+      if (self.naTela[id]) self.abrir(id, true);
     });
   };
 
@@ -342,7 +388,12 @@
     var saida = {};
     Object.keys(this.tempos).forEach(function (id) {
       var t = self.tempos[id];
-      saida[id] = { nome: t.nome, travado: t.travado, bruto: t.bruto };
+      saida[id] = {
+        nome: t.nome,
+        travado: t.travado,
+        bruto: t.bruto,
+        paradas: self.paradas[id] || 0
+      };
       if (self.relogio[id] && !pausado) {
         var aberta = agora() - self.relogio[id];
         saida[id].travado = Math.min(
@@ -913,7 +964,7 @@
        função em comum o lote misto vinha com formatos
        diferentes e ia inteiro para o lixo — em silêncio, porque
        o envio falha calado de propósito. */
-    function linha(tipo, chave, nome, travado, bruto, cliques, resultados) {
+    function linha(tipo, chave, nome, travado, bruto, cliques, resultados, paradas) {
       return {
         restaurante_id: RESTAURANTE,
         sessao: SESSAO,
@@ -923,6 +974,7 @@
            planilha quer a dimensão em cada linha, senão não dá
            para filtrar "o que quem veio da mesa olhou". */
         origem: ORIGEM,
+        aparelho: APARELHO,
         quando: pacote.quando,
         pagina: pacote.pagina,
         layout: pacote.layout,
@@ -935,7 +987,8 @@
         /* Só a busca preenche. Vai em toda linha mesmo assim
            porque o PostgREST recusa o lote inteiro se uma linha
            tiver campo que a outra não tem. */
-        resultados: resultados === undefined ? null : resultados
+        resultados: resultados === undefined ? null : resultados,
+        paradas: paradas === undefined ? null : paradas
       };
     }
 
@@ -946,7 +999,7 @@
       Object.keys(mapa || {}).forEach(function (chave) {
         var r = mapa[chave];
         if (!r.travado || r.travado < 100) return;
-        saida.push(linha(tipo, chave, r.nome, r.travado, r.bruto, 0));
+        saida.push(linha(tipo, chave, r.nome, r.travado, r.bruto, 0, undefined, r.paradas || 0));
       });
     }
 
@@ -1093,6 +1146,7 @@
     medidores.forEach(function (m) {
       m.fecharTudo();
       m.tempos = {};
+      m.paradas = {};
       if (!pausado && !encerrada) m.reabrirVisiveis();
     });
   }

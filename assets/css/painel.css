@@ -438,14 +438,11 @@
    emparelhados: são a mesma pergunta em duas escalas. */
 .painel-dois {
   display: grid;
+  /* auto-fit em vez de duas colunas fixas: são três blocos hoje,
+     e quantos couberem por linha é conta da largura, não minha. */
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: var(--s-3);
   margin-top: var(--s-3);
-}
-
-@media (min-width: 720px) {
-  .painel-dois {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 /* Dia sem movimento continua na lista: a ausência é a informação

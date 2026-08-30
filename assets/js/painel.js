@@ -54,6 +54,14 @@
      de gente. O que não estiver na lista aparece como veio: se
      começar a chegar visita de um portal de bairro, o endereço
      dele é justamente a informação. */
+  var APARELHOS = {
+    celular: "Celular",
+    tablet: "Tablet",
+    computador: "Computador",
+    desconhecido: "Não identificado",
+    "sem registro": "Antes desta medição"
+  };
+
   var ORIGENS = {
     "mesa-barra": "QR da mesa · Barra",
     "mesa-recreio": "QR da mesa · Recreio",
@@ -271,7 +279,7 @@
       cartao("Pratos que receberam atenção", numero(g.pratos_olhados), noCardapio());
   }
 
-  function tabela(seletor, linhas, coluna, limite) {
+  function tabela(seletor, linhas, coluna, limite, comParadas) {
     var corpo = $(seletor);
     if (!linhas || !linhas.length) {
       corpo.innerHTML = '<tr><td class="painel-vazio">nada no período</td></tr>';
@@ -281,9 +289,18 @@
       .slice(0, limite || 15)
       .map(function (l, i) {
         var v = coluna === "cliques" ? numero(l.cliques) + "x" : duracao(l.tempo_ms);
+        /* Uma volta só é o normal — quem viu uma vez e seguiu.
+           Mostrar "1x" em toda linha encheria a coluna de ruído e
+           esconderia justamente as que se repetem. */
+        var voltas = comParadas
+          ? "<td class='painel-num painel-sec'>" +
+            (Number(l.paradas) > 1 ? numero(l.paradas) + "x" : "—") +
+            "</td>"
+          : "";
         return (
           "<tr><td class='painel-pos'>" + (i + 1) + "</td><td>" +
-          escapar(l.nome || l.chave) + "</td><td class='painel-num'>" + v + "</td></tr>"
+          escapar(l.nome || l.chave) + "</td><td class='painel-num'>" + v + "</td>" +
+          voltas + "</tr>"
         );
       })
       .join("");
@@ -330,8 +347,11 @@
 
   /* Mesma barra de fundo do funil, mas aqui o que se compara é
      quanta gente veio de cada porta. */
-  function mostrarOrigens(linhas) {
-    var corpo = $("[data-t-origem]");
+  /* Origem e aparelho respondem a mesma forma de pergunta —
+     "de cada 10 visitas, quantas vieram assim" — então usam o
+     mesmo desenho em vez de duas funções quase iguais. */
+  function mostrarLista(seletor, linhas, rotulos, campo) {
+    var corpo = $(seletor);
     if (!linhas || !linhas.length) {
       corpo.innerHTML = '<tr><td class="painel-vazio">nada no período</td></tr>';
       return;
@@ -339,9 +359,10 @@
     corpo.innerHTML = linhas
       .map(function (l) {
         var pct = Number(l.porcentagem || 0);
+        var chave = l[campo];
         return (
           '<tr><td class="painel-barra" style="--pct:' + pct + '%">' +
-          escapar(ORIGENS[l.origem] || l.origem) + "</td>" +
+          escapar(rotulos[chave] || chave) + "</td>" +
           "<td class='painel-num'>" + numero(l.sessoes) + "</td>" +
           "<td class='painel-num painel-sec'>" +
           (l.tempo_medio_ms > 0 ? duracao(l.tempo_medio_ms) : "—") +
@@ -350,6 +371,7 @@
       })
       .join("");
   }
+
 
   /* A chave vem como "ligar-barra": ação e casa juntas, porque
      querer ligar para a Barra e para o Recreio são perguntas
@@ -815,7 +837,8 @@
       pedir("/rest/v1/rpc/origens", args),
       pedir("/rest/v1/rpc/acoes", args),
       pedir("/rest/v1/rpc/buscas", args),
-      pedir("/rest/v1/rpc/por_hora", args)
+      pedir("/rest/v1/rpc/por_hora", args),
+      pedir("/rest/v1/rpc/aparelhos", args)
     ])
       .then(function (r) {
         if (minhaCarga !== carga) return; /* já tem pedido mais novo */
@@ -837,12 +860,12 @@
         });
         mostrarCategoria(msPorPrato);
 
-        tabela("[data-t-prato]", porTipo.prato, "tempo", 20);
+        tabela("[data-t-prato]", porTipo.prato, "tempo", 20, true);
         tabela("[data-t-clique]", porTipo.clique, "cliques", 15);
         mostrarFunil("[data-t-home]", r[2], ORDEM_HOME);
         mostrarFunil("[data-t-categoria]", r[3], ordemCardapio());
         mostrarFunil("[data-t-unidades]", r[4], ORDEM_UNIDADES);
-        mostrarOrigens(r[5]);
+        mostrarLista("[data-t-origem]", r[5], ORIGENS, "origem");
         mostrarAcoes(r[6]);
         mostrarBuscas(r[7]);
 
@@ -859,6 +882,8 @@
           function (d) { return DIAS[d]; },
           ORDEM_DIAS
         );
+
+        mostrarLista("[data-t-aparelho]", r[9], APARELHOS, "aparelho");
 
         $("[data-resumo]").textContent =
           de.toLocaleDateString("pt-BR") + " a " +
