@@ -465,6 +465,37 @@
     cliques[id].n += 1;
   }
 
+  /* ---------- AÇÕES DE INTENÇÃO ----------
+     Pedir rota e ligar para a loja. É o sinal mais forte que este
+     site consegue produzir sem checkout: rolagem e tempo dizem
+     interesse, isto aqui diz intenção. Ninguém liga para um
+     restaurante sem querer alguma coisa.
+
+     Ficam separadas do clique em "detalhes" e não somadas a ele.
+     Misturar as duas estragaria os dois números: "cliques em
+     detalhes" viraria um total sem significado, e a intenção
+     sumiria dentro de um balde de curiosidade.
+
+     A chave carrega ação e casa juntas ("ligar-barra"), porque
+     querer ligar para a Barra e querer ligar para o Recreio são
+     perguntas diferentes — e as duas casas competem pela mesma
+     visita. */
+  var acoes = {};
+
+  var NOME_DA_ACAO = { ligar: "Ligar", chegar: "Como chegar" };
+
+  function contarAcao(acao, onde) {
+    if (encerrada) return;
+    var id = onde ? acao + "-" + onde : acao;
+    if (!acoes[id]) {
+      acoes[id] = {
+        nome: (NOME_DA_ACAO[acao] || acao) + (onde ? " · " + onde : ""),
+        n: 0
+      };
+    }
+    acoes[id].n += 1;
+  }
+
   /* ---------- ÁREA QUE CONTA ----------
      O navegador mede "quanto do card está visível" contra a
      janela inteira — e ele NÃO sabe que existem barras fixas por
@@ -863,6 +894,14 @@
       saida.push(linha("clique", chave, c.nome, 0, 0, c.n));
     });
 
+    /* Contagem, como o clique em detalhes: pedir rota é ato
+       pontual, não tem duração. */
+    Object.keys(pacote.acoes || {}).forEach(function (chave) {
+      var a = pacote.acoes[chave];
+      if (!a.n) return;
+      saida.push(linha("acao", chave, a.nome, 0, 0, a.n));
+    });
+
     return saida;
   }
 
@@ -927,6 +966,7 @@
       categorias: categorias.instantaneo(),
       secoes: secoes.instantaneo(),
       cliques: cliques,
+      acoes: acoes,
       /* Só o que ainda não foi mandado. A marca é permanente na
          sessão; reenviar a cada descarga encheria o banco de
          linha repetida para não mudar conta nenhuma. */
@@ -939,6 +979,7 @@
     };
     enviar(delta);
     cliques = {};
+    acoes = {};
     ativoAcumulado = 0;
 
     var guardado = ler();
@@ -1129,6 +1170,25 @@
         }
       });
     }
+
+    /* Ligar e pedir rota. Delegado no documento porque os cards
+       das unidades são refeitos na troca de idioma — ouvinte preso
+       ao botão morreria no primeiro redesenho.
+
+       Vem antes do de "detalhes" e não interfere: são seletores
+       diferentes e nenhum dos dois cancela o evento, então o link
+       segue abrindo normalmente. */
+    document.addEventListener("click", function (evento) {
+      var alvo = evento.target.closest && evento.target.closest("[data-acao]");
+      if (!alvo) return;
+      contarAcao(
+        alvo.getAttribute("data-acao"),
+        alvo.getAttribute("data-acao-onde")
+      );
+      /* "tel:" e o mapa saem da página na hora. Descarrega já,
+         senão a contagem morre esperando os 10 segundos. */
+      salvar();
+    });
 
     /* Clique em "detalhes", delegado no documento para continuar
        valendo depois de qualquer redesenho. */

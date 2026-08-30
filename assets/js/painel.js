@@ -309,6 +309,37 @@
       .join("");
   }
 
+  /* A chave vem como "ligar-barra": ação e casa juntas, porque
+     querer ligar para a Barra e para o Recreio são perguntas
+     diferentes. Aqui volta a virar frase. */
+  var ACOES = { ligar: "Ligar para", chegar: "Traçar rota até" };
+  var CASAS = { barra: "a Barra", recreio: "o Recreio" };
+
+  function rotuloAcao(chave, gravado) {
+    var p = String(chave).split("-");
+    var acao = ACOES[p[0]];
+    if (!acao) return gravado || chave;
+    var casa = p.length > 1 ? CASAS[p[1]] || p[1] : "";
+    return casa ? acao + " " + casa : acao;
+  }
+
+  function mostrarAcoes(linhas) {
+    var corpo = $("[data-t-acoes]");
+    if (!linhas || !linhas.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">ninguém ainda</td></tr>';
+      return;
+    }
+    corpo.innerHTML = linhas
+      .map(function (l) {
+        return (
+          "<tr><td>" + rotuloAcao(l.chave, l.nome) + "</td>" +
+          "<td class='painel-num'>" + numero(l.vezes) + "x</td>" +
+          "<td class='painel-num painel-sec'>" + numero(l.sessoes) + "</td></tr>"
+        );
+      })
+      .join("");
+  }
+
   /* ---------- CARGA ---------- */
 
   function carregar(de, ate) {
@@ -327,7 +358,8 @@
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "index.html" })),
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "cardapio.html" })),
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "unidades.html" })),
-      pedir("/rest/v1/rpc/origens", args)
+      pedir("/rest/v1/rpc/origens", args),
+      pedir("/rest/v1/rpc/acoes", args)
     ])
       .then(function (r) {
         var geral = (r[0] && r[0][0]) || {};
@@ -348,6 +380,7 @@
         mostrarFunil("[data-t-categoria]", r[3], ordemCardapio());
         mostrarFunil("[data-t-unidades]", r[4], ORDEM_UNIDADES);
         mostrarOrigens(r[5]);
+        mostrarAcoes(r[6]);
 
         $("[data-resumo]").textContent =
           de.toLocaleDateString("pt-BR") + " a " +

@@ -199,11 +199,17 @@
     /* --- contatos --- */
     var acoes = el("div", "unidade__acoes");
 
+    /* Os dois botões abaixo são marcados para a medição. São o
+       sinal mais próximo de cliente que este site produz: ninguém
+       pede rota nem liga para um restaurante por curiosidade.
+       Rolagem e tempo dizem interesse; isto aqui diz intenção. */
     if (unidade.mapaLink) {
       var comoChegar = el("a", "btn btn--sm btn--burgundy");
       comoChegar.href = unidade.mapaLink;
       comoChegar.target = "_blank";
       comoChegar.rel = "noopener noreferrer";
+      comoChegar.setAttribute("data-acao", "chegar");
+      comoChegar.setAttribute("data-acao-onde", unidade.id);
       comoChegar.appendChild(icone("pin", "ico--sm"));
       comoChegar.appendChild(
         el("span", null, i18n.t("unidades.comoChegar"))
@@ -214,6 +220,8 @@
     if (unidade.telefone) {
       var ligar = el("a", "btn btn--sm btn--outline");
       ligar.href = "tel:" + unidade.telefone;
+      ligar.setAttribute("data-acao", "ligar");
+      ligar.setAttribute("data-acao-onde", unidade.id);
       ligar.appendChild(icone("phone", "ico--sm"));
       ligar.appendChild(el("span", null, i18n.t("unidades.ligar")));
       acoes.appendChild(ligar);
@@ -248,6 +256,12 @@
       var li = el("li");
       var a = el("a", "reserva__item");
       a.href = "tel:" + unidade.telefone;
+      /* Mesma ação do botão do card, e some no mesmo número: o
+         que interessa é quantos quiseram ligar para esta casa,
+         não de qual pedaço da página saíram. Se o bloco de fecho
+         vale a pena é o alcance que responde. */
+      a.setAttribute("data-acao", "ligar");
+      a.setAttribute("data-acao-onde", unidade.id);
       a.appendChild(el("span", "reserva__unidade", i18n.campo(unidade.nome)));
       a.appendChild(
         el(

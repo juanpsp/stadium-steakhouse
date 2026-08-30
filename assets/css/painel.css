@@ -387,3 +387,8 @@
 .painel-bloco--dentro {
   margin-top: var(--s-3);
 }
+
+/* Segundo bloco em diante dentro de uma seção. */
+.painel-bloco--depois {
+  margin-top: var(--s-6);
+}
