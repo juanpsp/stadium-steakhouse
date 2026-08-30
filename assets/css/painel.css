@@ -403,3 +403,45 @@
 .painel-alerta .painel-sec {
   color: var(--burgundy);
 }
+
+/* ---------- RECORTE DE HORA ---------- */
+
+.painel-horas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+.painel-horas select {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-btn);
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+/* Dois blocos lado a lado quando cabe. Hora e dia se leem melhor
+   emparelhados: são a mesma pergunta em duas escalas. */
+.painel-dois {
+  display: grid;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+@media (min-width: 720px) {
+  .painel-dois {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Dia sem movimento continua na lista: a ausência é a informação
+   (segunda-feira vazia diz mais que segunda-feira omitida). */
+.painel-apagado td {
+  color: var(--ink-mute);
+  opacity: 0.55;
+}

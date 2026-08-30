@@ -101,6 +101,15 @@
   var cracha = null;
   var restaurante = null;
   var periodo = null;
+  /* null nos dois = dia inteiro. Guardado aqui porque toda
+     consulta carrega o recorte junto. */
+  var horaDe = null;
+  var horaAte = null;
+
+  var DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  /* O Postgres devolve 0 para domingo. Semana de restaurante se
+     lê de segunda a domingo, então a ordem de exibição é outra. */
+  var ORDEM_DIAS = [1, 2, 3, 4, 5, 6, 0];
 
   function $(s) {
     return document.querySelector(s);
@@ -365,6 +374,49 @@
       .join("");
   }
 
+  /* Só as horas com movimento. Mostrar as 24 encheria metade da
+     tela de zero para dizer que de madrugada não tem ninguém. */
+  function mostrarDistribuicao(seletor, linhas, rotuloDe, ordem) {
+    var corpo = $(seletor);
+    if (!linhas || !linhas.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">nada no período</td></tr>';
+      return;
+    }
+    var porChave = {};
+    var maior = 0;
+    linhas.forEach(function (l) {
+      porChave[l.chave] = Number(l.visitas || 0);
+      if (porChave[l.chave] > maior) maior = porChave[l.chave];
+    });
+
+    var chaves = ordem
+      ? ordem
+      : Object.keys(porChave)
+          .map(Number)
+          .sort(function (a, b) { return a - b; });
+
+    corpo.innerHTML = chaves
+      .map(function (c) {
+        var v = porChave[c] || 0;
+        /* Barra proporcional ao MAIOR, não ao total: o que se quer
+           ver aqui é qual horário ganha dos outros. */
+        var pct = maior ? Math.round(v * 100 / maior) : 0;
+        return (
+          '<tr' + (v ? "" : ' class="painel-apagado"') + '>' +
+          '<td class="painel-barra" style="--pct:' + pct + '%">' +
+          rotuloDe(c) + "</td>" +
+          "<td class='painel-num'>" + numero(v) + "</td></tr>"
+        );
+      })
+      .join("");
+  }
+
+  /* Só "22h". A faixa inteira ("22h às 22h59") é mais precisa e
+     come metade da linha para dizer o óbvio numa lista de horas. */
+  function rotuloHora(h) {
+    return h + "h";
+  }
+
   /* ---------- CARGA ---------- */
 
   function carregar(de, ate) {
@@ -374,7 +426,9 @@
     var args = {
       p_restaurante: restaurante.id,
       p_de: de.toISOString(),
-      p_ate: ate.toISOString()
+      p_ate: ate.toISOString(),
+      p_hora_de: horaDe,
+      p_hora_ate: horaAte
     };
 
     Promise.all([
@@ -385,7 +439,8 @@
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "unidades.html" })),
       pedir("/rest/v1/rpc/origens", args),
       pedir("/rest/v1/rpc/acoes", args),
-      pedir("/rest/v1/rpc/buscas", args)
+      pedir("/rest/v1/rpc/buscas", args),
+      pedir("/rest/v1/rpc/por_hora", args)
     ])
       .then(function (r) {
         var geral = (r[0] && r[0][0]) || {};
@@ -409,9 +464,26 @@
         mostrarAcoes(r[6]);
         mostrarBuscas(r[7]);
 
+        var dist = r[8] || [];
+        mostrarDistribuicao(
+          "[data-t-hora]",
+          dist.filter(function (l) { return l.eixo === "hora"; }),
+          rotuloHora,
+          null
+        );
+        mostrarDistribuicao(
+          "[data-t-dia]",
+          dist.filter(function (l) { return l.eixo === "dia"; }),
+          function (d) { return DIAS[d]; },
+          ORDEM_DIAS
+        );
+
         $("[data-resumo]").textContent =
           de.toLocaleDateString("pt-BR") + " a " +
-          new Date(ate.getTime() - 1).toLocaleDateString("pt-BR");
+          new Date(ate.getTime() - 1).toLocaleDateString("pt-BR") +
+          (horaDe === null
+            ? ""
+            : " · das " + horaDe + "h às " + horaAte + "h59");
       })
       ["catch"](function (e) {
         if (e.message === "sessao") {
@@ -445,7 +517,35 @@
     });
   }
 
+  function ligarHoras() {
+    var de = $("[data-hora-de]");
+    var ate = $("[data-hora-ate]");
+
+    [de, ate].forEach(function (sel) {
+      var html = '<option value="">qualquer</option>';
+      for (var h = 0; h < 24; h++) {
+        html += '<option value="' + h + '">' + h + "h</option>";
+      }
+      sel.innerHTML = html;
+      sel.addEventListener("change", function () {
+        /* Meia faixa não é faixa: escolher só uma ponta não muda
+           nada até a outra existir. */
+        var a = de.value === "" ? null : Number(de.value);
+        var b = ate.value === "" ? null : Number(ate.value);
+        if (a === null || b === null) {
+          horaDe = null;
+          horaAte = null;
+        } else {
+          horaDe = a;
+          horaAte = b;
+        }
+        if (periodo) carregar(periodo.de, periodo.ate);
+      });
+    });
+  }
+
   function ligarPeriodo() {
+    ligarHoras();
     document.querySelectorAll("[data-dias]").forEach(function (b) {
       b.addEventListener("click", function () {
         var p = ultimosDias(Number(b.getAttribute("data-dias")));

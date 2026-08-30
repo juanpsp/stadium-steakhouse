@@ -72,6 +72,14 @@
                 <button class="painel-chip" type="button" data-aplicar>aplicar</button>
                 <button class="painel-chip" type="button" data-atualizar title="recarregar o período atual">↻</button>
             </span>
+
+            <!-- Recorte de hora. Vale para o painel inteiro, e não
+                 só para um bloco: dois blocos discordando na mesma
+                 tela seria pior que não ter o recorte. -->
+            <span class="painel-horas">
+                <label>das <select data-hora-de></select></label>
+                <label>às <select data-hora-ate></select></label>
+            </span>
         </div>
 
         <p class="painel-resumo" data-resumo></p>
@@ -96,6 +104,20 @@
                     <thead><tr><th></th><th class="painel-num">visitas</th><th class="painel-num painel-sec">tempo médio</th></tr></thead>
                     <tbody data-t-origem></tbody>
                 </table>
+            </div>
+
+            <div class="painel-dois">
+                <div class="painel-bloco">
+                    <h3 class="painel-titulo">Em que horário</h3>
+                    <p class="painel-legenda">visitas em cada hora do dia, horário do Rio · o recorte acima não afeta esta lista</p>
+                    <table class="painel-tabela"><tbody data-t-hora></tbody></table>
+                </div>
+
+                <div class="painel-bloco">
+                    <h3 class="painel-titulo">Em que dia</h3>
+                    <p class="painel-legenda">segue o recorte de horário</p>
+                    <table class="painel-tabela"><tbody data-t-dia></tbody></table>
+                </div>
             </div>
         </section>
 
