@@ -155,6 +155,91 @@
     return novo;
   })();
 
+  /* ---------- DE ONDE A PESSOA VEIO ----------
+     Muda o significado de tudo o que vem depois. Quem escaneou o
+     QR da mesa está sentado no salão, com fome, prestes a pedir.
+     Quem veio do Instagram está no sofá. São dois comportamentos
+     diferentes, e sem esta linha eles caem no mesmo balde.
+
+     Duas fontes, porque uma só não cobre:
+
+     O navegador entrega o site anterior, e isso resolve
+     Instagram, Google e afins sozinho. Mas o QR code NÃO tem
+     site anterior — a câmera abre o endereço direto, e para o
+     navegador isso é idêntico a digitar na mão. Por isso o QR
+     precisa do marcador "?de=" no próprio link; é a única forma
+     de distinguir salão de acesso digitado.
+
+     Vale por VISITA, não por página: quem entra pelo Instagram e
+     depois clica para o cardápio passa a ter o nosso próprio
+     site como referência. Sem guardar a origem da primeira
+     página, a segunda apagaria a resposta. */
+  var ORIGEM = (function () {
+    var CH = "stadium.origem";
+    try {
+      var g = window.sessionStorage.getItem(CH);
+      if (g) return g;
+    } catch (e) {}
+
+    var valor = detectarOrigem();
+    try {
+      window.sessionStorage.setItem(CH, valor);
+    } catch (e) {}
+    return valor;
+  })();
+
+  function detectarOrigem() {
+    /* 1. Marcador no link. Mandado por nós, então tem prioridade
+          sobre qualquer palpite. Limpo antes de guardar: o que
+          vem na URL é digitável por qualquer um. */
+    var marca = /[?&]de=([^&#]+)/.exec(window.location.search);
+    if (marca) {
+      var limpo = decodeURIComponent(marca[1])
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "")
+        .slice(0, 24);
+      if (limpo) return limpo;
+    }
+
+    /* 2. Site anterior. */
+    var de = document.referrer || "";
+    if (!de) return "direto";
+
+    var casa;
+    try {
+      casa = new URL(de).hostname.replace(/^www\./, "").toLowerCase();
+    } catch (e) {
+      return "direto";
+    }
+
+    /* Navegação dentro do próprio site não é origem nova. Na
+       prática o sessionStorage já barra isso; fica como rede de
+       segurança para aba aberta em janela nova. */
+    if (casa === window.location.hostname) return "direto";
+
+    var CONHECIDOS = [
+      [/(^|\.)instagram\.com$|^l\.instagram\.com$/, "instagram"],
+      [/(^|\.)facebook\.com$|^l\.facebook\.com$|^lm\.facebook\.com$/, "facebook"],
+      [/(^|\.)google\./, "google"],
+      [/(^|\.)bing\.com$/, "bing"],
+      [/(^|\.)tiktok\.com$/, "tiktok"],
+      [/(^|\.)youtube\.com$|^youtu\.be$/, "youtube"],
+      [/(^|\.)whatsapp\.com$|^wa\.me$/, "whatsapp"],
+      [/(^|\.)linkedin\.com$/, "linkedin"],
+      [/^t\.co$|(^|\.)x\.com$|(^|\.)twitter\.com$/, "x"],
+      [/(^|\.)ifood\.com\.br$/, "ifood"]
+    ];
+
+    for (var i = 0; i < CONHECIDOS.length; i++) {
+      if (CONHECIDOS[i][0].test(casa)) return CONHECIDOS[i][1];
+    }
+
+    /* Site que não conhecemos: guarda o endereço dele. Descobrir
+       que chega gente de um portal de bairro é informação, e
+       jogar tudo em "outros" apagaria justamente essa. */
+    return casa.slice(0, 40);
+  }
+
   /* Tempo ATIVO acumulado desde a última descarga. Pausa não
      conta — o relógio de inatividade já o interrompe, então a
      duração que chega ao banco é tempo de leitura de verdade,
@@ -727,6 +812,12 @@
       return {
         restaurante_id: RESTAURANTE,
         sessao: SESSAO,
+        /* Repetida em toda linha de propósito. Poderia viver só
+           na linha de sessão e ser cruzada depois, mas o destino
+           deste dado é virar planilha achatada para análise — e
+           planilha quer a dimensão em cada linha, senão não dá
+           para filtrar "o que quem veio da mesa olhou". */
+        origem: ORIGEM,
         quando: pacote.quando,
         pagina: pacote.pagina,
         layout: pacote.layout,

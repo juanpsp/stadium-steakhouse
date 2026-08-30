@@ -85,6 +85,18 @@
         <section class="painel-geral">
             <h2 class="painel-geral__titulo">Visão geral</h2>
             <div class="painel-cartoes" data-geral></div>
+
+            <!-- De onde vieram. Fica aqui dentro, e não numa
+                 seção própria, porque vale para a visita inteira
+                 e não para uma página. -->
+            <div class="painel-bloco painel-bloco--dentro">
+                <h3 class="painel-titulo">De onde vieram</h3>
+                <p class="painel-legenda">quem escaneou o QR está no salão; quem veio de rede social, não</p>
+                <table class="painel-tabela">
+                    <thead><tr><th></th><th class="painel-num">visitas</th><th class="painel-num painel-sec">tempo médio</th></tr></thead>
+                    <tbody data-t-origem></tbody>
+                </table>
+            </div>
         </section>
 
         <!-- Daqui para baixo, uma seção por página do site, e o

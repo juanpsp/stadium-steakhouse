@@ -288,6 +288,14 @@
   color: var(--ink-mute);
 }
 
+/* Cabeçalhos vizinhos precisam de folga entre si. Sem isto,
+   "visitas" e "tempo médio" encostam num celular estreito e
+   viram uma palavra só. A célula de dado não tem o problema
+   porque número é curto. */
+.painel-tabela th + th {
+  padding-left: var(--s-4);
+}
+
 /* O cabeçalho herda o alinhamento à direita das colunas de
    número, mas não a cor de preço nem o peso: aqui ele é rótulo,
    não valor. */
@@ -371,4 +379,11 @@
 .painel-nota b {
   color: var(--ink-body);
   font-weight: 700;
+}
+
+/* Bloco que mora DENTRO da caixa de visão geral. Sem margem
+   própria e com fundo branco, para se assentar sobre o bordô
+   diluído em vez de brigar com ele. */
+.painel-bloco--dentro {
+  margin-top: var(--s-3);
 }

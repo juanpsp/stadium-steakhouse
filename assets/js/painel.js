@@ -48,7 +48,32 @@
     return (window.STADIUM && window.STADIUM.ordemCategorias) || null;
   }
 
-  /* ---------- RÓTULOS ----------
+  /* ---------- RÓTULOS ---------- */
+  /* A origem chega como marcador curto e cru — é o que foi
+     escrito no link ou o domínio de quem mandou. Aqui vira frase
+     de gente. O que não estiver na lista aparece como veio: se
+     começar a chegar visita de um portal de bairro, o endereço
+     dele é justamente a informação. */
+  var ORIGENS = {
+    "mesa-barra": "QR da mesa · Barra",
+    "mesa-recreio": "QR da mesa · Recreio",
+    mesa: "QR da mesa",
+    balcao: "QR do balcão",
+    instagram: "Instagram",
+    facebook: "Facebook",
+    whatsapp: "WhatsApp",
+    google: "Google",
+    bing: "Bing",
+    tiktok: "TikTok",
+    youtube: "YouTube",
+    linkedin: "LinkedIn",
+    x: "X (Twitter)",
+    ifood: "iFood",
+    direto: "Direto ou digitado",
+    "sem registro": "Antes desta medição"
+  };
+
+  /* Mesma ideia, para as seções das páginas.
      O nome que veio do banco é o texto que estava na tela na
      hora da medição, e por isso não serve de rótulo: quem navega
      em inglês grava "Starters", e a seção de banners grava o
@@ -261,6 +286,29 @@
       .join("");
   }
 
+  /* Mesma barra de fundo do funil, mas aqui o que se compara é
+     quanta gente veio de cada porta. */
+  function mostrarOrigens(linhas) {
+    var corpo = $("[data-t-origem]");
+    if (!linhas || !linhas.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">nada no período</td></tr>';
+      return;
+    }
+    corpo.innerHTML = linhas
+      .map(function (l) {
+        var pct = Number(l.porcentagem || 0);
+        return (
+          '<tr><td class="painel-barra" style="--pct:' + pct + '%">' +
+          (ORIGENS[l.origem] || l.origem) + "</td>" +
+          "<td class='painel-num'>" + numero(l.sessoes) + "</td>" +
+          "<td class='painel-num painel-sec'>" +
+          (l.tempo_medio_ms > 0 ? duracao(l.tempo_medio_ms) : "—") +
+          "</td></tr>"
+        );
+      })
+      .join("");
+  }
+
   /* ---------- CARGA ---------- */
 
   function carregar(de, ate) {
@@ -278,7 +326,8 @@
       pedir("/rest/v1/rpc/resumo", args),
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "index.html" })),
       pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "cardapio.html" })),
-      pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "unidades.html" }))
+      pedir("/rest/v1/rpc/funil", Object.assign({}, args, { p_pagina: "unidades.html" })),
+      pedir("/rest/v1/rpc/origens", args)
     ])
       .then(function (r) {
         var geral = (r[0] && r[0][0]) || {};
@@ -298,6 +347,7 @@
         mostrarFunil("[data-t-home]", r[2], ORDEM_HOME);
         mostrarFunil("[data-t-categoria]", r[3], ordemCardapio());
         mostrarFunil("[data-t-unidades]", r[4], ORDEM_UNIDADES);
+        mostrarOrigens(r[5]);
 
         $("[data-resumo]").textContent =
           de.toLocaleDateString("pt-BR") + " a " +
