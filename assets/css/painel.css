@@ -480,11 +480,15 @@
      Quem decide o valor é o JS, pelo número de dias — ver lá. */
   gap: var(--folga, 3px);
   height: 130px;
+  /* Folga em cima para o rótulo da barra mais alta não ser
+     cortado pela borda do bloco. */
+  padding-top: 16px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--border-strong);
 }
 
 .painel-grafico__col {
+  position: relative;
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -510,15 +514,27 @@
 }
 
 /* Rótulo direto só na maior barra. Número em cima de toda barra
-   vira tabela ruim disfarçada de gráfico. */
+   vira tabela ruim disfarçada de gráfico.
+
+   Fora do fluxo, ancorado no topo da barra pelo "bottom" que o JS
+   calcula. Dentro do fluxo ele roubava altura da coluna e a maior
+   barra desenhava menor que as vizinhas — o gráfico mentia.
+
+   O "left/right" negativo deixa o texto passar da largura da
+   coluna sem empurrar nada; ele só aparece quando há poucas
+   barras, então não colide. */
 .painel-grafico__valor {
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  margin-bottom: 3px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 11px;
   color: var(--ink-mute);
   text-align: center;
-  margin-bottom: 3px;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 .painel-grafico__eixo {

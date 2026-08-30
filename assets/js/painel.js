@@ -107,6 +107,15 @@
   var horaAte = null;
   var pratoSerie = null;
 
+  /* Cada carga leva um número. Resposta que chega depois de uma
+     carga mais nova é descartada.
+
+     Sem isto, clicar em "30 dias" enquanto os 7 ainda estão no ar
+     deixa as duas respostas em voo, e quem pinta a tela é a que
+     chegar por último — o chip mostra 30 e o gráfico mostra 7.
+     Foi o que apareceu no uso real. */
+  var carga = 0;
+
   var DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
   /* O Postgres devolve 0 para domingo. Semana de restaurante se
      lê de segunda a domingo, então a ordem de exibição é outra. */
@@ -114,6 +123,29 @@
 
   function $(s) {
     return document.querySelector(s);
+  }
+
+  /* ---------- ESCAPE ----------
+     Obrigatório em TODO texto que vira HTML aqui, e não só no que
+     parece perigoso.
+
+     O termo de busca é escrito por qualquer visitante anônimo do
+     cardápio e fica guardado no banco. Sem escapar, alguém digita
+     uma tag na busca e ela EXECUTA quando a equipe abre o painel
+     — dentro da sessão autenticada, com acesso ao crachá que está
+     no sessionStorage. Roubo de acesso completo, disparado por um
+     campo de busca de cardápio. Testado: executa mesmo.
+
+     Os outros campos hoje vêm de dados nossos, mas são escapados
+     igual: a regra "escapa tudo" sobrevive a quem mexer nisto
+     depois; "escapa o que é perigoso" depende de lembrar qual é. */
+  function escapar(t) {
+    return String(t === null || t === undefined ? "" : t)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function cabecalhos(comCracha) {
@@ -204,9 +236,9 @@
 
   function cartao(rotulo, valor, apoio) {
     return (
-      '<div class="painel-cartao"><p class="painel-cartao__rotulo">' + rotulo +
-      '</p><p class="painel-cartao__valor">' + valor + "</p>" +
-      (apoio ? '<p class="painel-cartao__apoio">' + apoio + "</p>" : "") +
+      '<div class="painel-cartao"><p class="painel-cartao__rotulo">' + escapar(rotulo) +
+      '</p><p class="painel-cartao__valor">' + escapar(valor) + "</p>" +
+      (apoio ? '<p class="painel-cartao__apoio">' + escapar(apoio) + "</p>" : "") +
       "</div>"
     );
   }
@@ -251,7 +283,7 @@
         var v = coluna === "cliques" ? numero(l.cliques) + "x" : duracao(l.tempo_ms);
         return (
           "<tr><td class='painel-pos'>" + (i + 1) + "</td><td>" +
-          (l.nome || l.chave) + "</td><td class='painel-num'>" + v + "</td></tr>"
+          escapar(l.nome || l.chave) + "</td><td class='painel-num'>" + v + "</td></tr>"
         );
       })
       .join("");
@@ -283,7 +315,7 @@
              três linhas e a tabela virava sopa. Assim a barra
              ocupa espaço zero e fica onde o olho já está. */
           '<tr><td class="painel-barra" style="--pct:' + pct + '%">' +
-          rotulo(l.chave, l.nome) + "</td>" +
+          escapar(rotulo(l.chave, l.nome)) + "</td>" +
           "<td class='painel-num'>" + pct.toFixed(0) + "%</td>" +
           /* Traço, e não "0s": zero aqui não é tempo medido, é
              ninguém tendo parado. Escrito como número, pareceria
@@ -309,7 +341,7 @@
         var pct = Number(l.porcentagem || 0);
         return (
           '<tr><td class="painel-barra" style="--pct:' + pct + '%">' +
-          (ORIGENS[l.origem] || l.origem) + "</td>" +
+          escapar(ORIGENS[l.origem] || l.origem) + "</td>" +
           "<td class='painel-num'>" + numero(l.sessoes) + "</td>" +
           "<td class='painel-num painel-sec'>" +
           (l.tempo_medio_ms > 0 ? duracao(l.tempo_medio_ms) : "—") +
@@ -342,7 +374,7 @@
     corpo.innerHTML = linhas
       .map(function (l) {
         return (
-          "<tr><td>" + rotuloAcao(l.chave, l.nome) + "</td>" +
+          "<tr><td>" + escapar(rotuloAcao(l.chave, l.nome)) + "</td>" +
           "<td class='painel-num'>" + numero(l.vezes) + "x</td>" +
           "<td class='painel-num painel-sec'>" + numero(l.sessoes) + "</td></tr>"
         );
@@ -365,7 +397,7 @@
         var vazia = Number(l.resultados) === 0;
         return (
           "<tr" + (vazia ? ' class="painel-alerta"' : "") + "><td>" +
-          l.termo + "</td>" +
+          escapar(l.termo) + "</td>" +
           "<td class='painel-num'>" + numero(l.vezes) + "x</td>" +
           "<td class='painel-num painel-sec'>" +
           (vazia ? "nada" : numero(l.resultados) + " pratos") +
@@ -405,7 +437,7 @@
         return (
           '<tr' + (v ? "" : ' class="painel-apagado"') + '>' +
           '<td class="painel-barra" style="--pct:' + pct + '%">' +
-          rotuloDe(c) + "</td>" +
+          escapar(rotuloDe(c)) + "</td>" +
           "<td class='painel-num'>" + numero(v) + "</td></tr>"
         );
       })
@@ -442,9 +474,9 @@
 
     var html = "";
     ordem.forEach(function (cat) {
-      html += '<optgroup label="' + (rot["container-" + cat] || cat) + '">';
+      html += '<optgroup label="' + escapar(rot["container-" + cat] || cat) + '">';
       porCat[cat].forEach(function (p) {
-        html += '<option value="' + p.id + '">' + p.nome + "</option>";
+        html += '<option value="' + escapar(p.id) + '">' + escapar(p.nome) + "</option>";
       });
       html += "</optgroup>";
     });
@@ -529,13 +561,20 @@
              de 2px: o texto transborda por cima das vizinhas e
              atravessa o pico. Nesse caso o total já está no
              título e o detalhe fica na dica do mouse. */
+          /* O rótulo sai do fluxo e é ancorado no TOPO da barra
+             (mesma altura em "bottom"). Dentro do fluxo ele
+             ocupava ~20px da coluna e encurtava justamente a
+             barra que estava marcando: a maior desenhava MENOR
+             que as vizinhas e o gráfico dizia o contrário do
+             dado. */
           var rotulo =
             cabeRotulo && v && v === maior
-              ? '<span class="painel-grafico__valor">' + duracao(v) + "</span>"
+              ? '<span class="painel-grafico__valor" style="bottom:' + alt + '%">' +
+                duracao(v) + "</span>"
               : "";
 
           return (
-            '<div class="painel-grafico__col" title="' + titulo + '">' +
+            '<div class="painel-grafico__col" title="' + escapar(titulo) + '">' +
             rotulo +
             '<span class="painel-grafico__barra" style="height:' + alt + '%"></span>' +
             "</div>"
@@ -558,6 +597,7 @@
      dela. É o que responde "mudou depois do reajuste". */
   function carregarSerie() {
     if (!pratoSerie || !periodo) return;
+    var minhaCarga = carga;
     var largura = periodo.ate.getTime() - periodo.de.getTime();
     var base = {
       p_restaurante: restaurante.id,
@@ -577,9 +617,11 @@
       }))
     ])
       .then(function (r) {
+        if (minhaCarga !== carga) return;
         desenharSerie(r[0] || [], r[1] || []);
       })
       ["catch"](function () {
+        if (minhaCarga !== carga) return;
         $("[data-serie-resumo]").textContent = "não consegui carregar";
       });
   }
@@ -588,6 +630,7 @@
 
   function carregar(de, ate) {
     periodo = { de: de, ate: ate };
+    var minhaCarga = ++carga;
     $("[data-resumo]").textContent = "carregando…";
 
     var args = {
@@ -597,6 +640,12 @@
       p_hora_de: horaDe,
       p_hora_ate: horaAte
     };
+
+    /* Fora do Promise.all das outras oito de propósito: se
+       qualquer uma delas falhar, o "catch" comum engoliria o
+       gráfico junto e ele ficaria mostrando o período anterior
+       sem avisar ninguém. */
+    carregarSerie();
 
     Promise.all([
       pedir("/rest/v1/rpc/visao_geral", args),
@@ -610,6 +659,7 @@
       pedir("/rest/v1/rpc/por_hora", args)
     ])
       .then(function (r) {
+        if (minhaCarga !== carga) return; /* já tem pedido mais novo */
         var geral = (r[0] && r[0][0]) || {};
         var resumo = r[1] || [];
         mostrarGeral(geral);
@@ -630,8 +680,6 @@
         mostrarOrigens(r[5]);
         mostrarAcoes(r[6]);
         mostrarBuscas(r[7]);
-
-        carregarSerie();
 
         var dist = r[8] || [];
         mostrarDistribuicao(
@@ -655,6 +703,7 @@
             : " · das " + horaDe + "h às " + horaAte + "h59");
       })
       ["catch"](function (e) {
+        if (minhaCarga !== carga) return;
         if (e.message === "sessao") {
           $("[data-resumo]").textContent = "sessão expirada — entre de novo";
           setTimeout(sair, 1500);
