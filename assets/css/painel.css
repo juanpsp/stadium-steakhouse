@@ -551,3 +551,95 @@
   color: var(--ink-mute);
   font-variant-numeric: tabular-nums;
 }
+
+/* ---------- BAIXAR ---------- */
+
+.painel-baixar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.painel-baixar__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.painel-baixar__botoes button[disabled] {
+  opacity: 0.4;
+}
+
+/* ---------- IMPRESSÃO ----------
+   O PDF sai daqui. Não há biblioteca de PDF no projeto: gerar um
+   em JavaScript custaria centenas de KB para produzir tipografia
+   pior que a do próprio navegador. A caixa de impressão tem
+   "Salvar como PDF" em todos eles, e o texto sai vetorial.
+
+   O que muda aqui não é enfeite: some tudo que é controle (não
+   se clica num papel), o fundo vira branco para não gastar tinta,
+   e nenhum bloco pode ser partido no meio por uma quebra de
+   página — tabela cortada ao meio é relatório ilegível. */
+
+@media print {
+  .topbar,
+  .painel-periodo,
+  .painel-baixar__botoes,
+  .painel-escolha,
+  .painel-entrada {
+    display: none !important;
+  }
+
+  body,
+  .painel-bloco,
+  .painel-cartao,
+  .painel-geral {
+    background: #fff !important;
+    color: #000;
+    border-color: #ccc !important;
+  }
+
+  .painel {
+    padding: 0;
+  }
+
+  /* Um bloco por vez, inteiro. */
+  .painel-bloco,
+  .painel-cartao,
+  .painel-geral {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .painel-secao__titulo {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* A barra de fundo do funil não sobrevive à impressão sem isto:
+     os navegadores descartam cor de fundo por padrão para poupar
+     tinta, e a comparação visual iria junto. */
+  .painel-barra,
+  .painel-grafico__barra,
+  .painel-cartao__valor {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Sem o seletor visível, o papel precisa dizer por escrito qual
+     categoria e qual prato estão na tabela. */
+  .painel-so-impressao {
+    display: block !important;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: var(--s-3);
+  }
+}
+
+/* Na tela quem responde isso é o próprio seletor. */
+.painel-so-impressao {
+  display: none;
+}

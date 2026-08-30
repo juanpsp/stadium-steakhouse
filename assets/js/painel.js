@@ -124,6 +124,12 @@
      Foi o que apareceu no uso real. */
   var carga = 0;
 
+  /* Tudo que a última carga trouxe, guardado inteiro. O relatório
+     sai daqui e não de uma nova ida ao servidor: assim o arquivo
+     baixado é exatamente o que está na tela, sem chance de os dois
+     discordarem por causa de uma visita que entrou no meio. */
+  var ultimoPacote = null;
+
   var DIAS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
   /* O Postgres devolve 0 para domingo. Semana de restaurante se
      lê de segunda a domingo, então a ordem de exibição é outra. */
@@ -621,6 +627,12 @@
       })
       .join("");
 
+    /* No papel o seletor não existe, então o nome da categoria
+       precisa estar escrito. */
+    var opc = $("[data-categoria-atencao]");
+    $("[data-impresso-categoria]").textContent =
+      "Categoria: " + (opc && opc.selectedOptions[0] ? opc.selectedOptions[0].textContent : categoriaAtencao);
+
     $("[data-categoria-nota]").textContent =
       media > 0
         ? "média entre os " + vistos + " pratos que apareceram: " +
@@ -679,6 +691,14 @@
     var caixa = $("[data-serie-grafico]");
     var resumo = $("[data-serie-resumo]");
 
+    /* Antes de qualquer saída antecipada: prato sem dado nenhum
+       também precisa ser nomeado no papel, senão o PDF mostra uma
+       tabela vazia sem dizer de quê. */
+    var opcP = $("[data-prato-serie]");
+    $("[data-impresso-prato]").textContent =
+      "Prato: " +
+      (opcP && opcP.selectedOptions[0] ? opcP.selectedOptions[0].textContent : "");
+
     var total = 0;
     var maior = 0;
     atual.forEach(function (d) {
@@ -711,6 +731,7 @@
       texto += " · não tinha nada no período anterior";
     }
     resumo.textContent = texto;
+
 
     var DIAS_CURTOS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
 
@@ -885,6 +906,25 @@
 
         mostrarLista("[data-t-aparelho]", r[9], APARELHOS, "aparelho");
 
+        ultimoPacote = {
+          de: de,
+          ate: ate,
+          horaDe: horaDe,
+          horaAte: horaAte,
+          geral: geral,
+          resumo: resumo,
+          funilHome: r[2] || [],
+          funilCardapio: r[3] || [],
+          funilUnidades: r[4] || [],
+          origens: r[5] || [],
+          acoes: r[6] || [],
+          buscas: r[7] || [],
+          distribuicao: dist,
+          aparelhos: r[9] || []
+        };
+        $("[data-baixar-ia]").disabled = false;
+        $("[data-baixar-pdf]").disabled = false;
+
         $("[data-resumo]").textContent =
           de.toLocaleDateString("pt-BR") + " a " +
           new Date(ate.getTime() - 1).toLocaleDateString("pt-BR") +
@@ -901,6 +941,280 @@
         }
         $("[data-resumo]").textContent = "não consegui carregar";
       });
+  }
+
+  /* ---------- RELATÓRIO ----------
+     Dois arquivos para dois leitores, e eles não são o mesmo
+     arquivo com roupa diferente.
+
+     PARA A IA: JSON, não PDF nem planilha.
+
+     PDF é o pior formato possível para máquina — o texto sai
+     embaralhado na extração, tabela vira sopa de palavras e boa
+     parte do que se lê descreve layout, não dado. Planilha só
+     serve para UMA tabela, e aqui são oito recortes do mesmo
+     período; caberiam oito arquivos e a relação entre eles se
+     perderia no caminho.
+
+     E o que muda a qualidade da resposta não é o formato: é o
+     DICIONÁRIO que vai junto. Número solto faz qualquer modelo
+     inventar significado — vai ler tempo como intenção de
+     compra, comparar prato do topo com prato do fim da página,
+     tratar alcance e atenção como sinônimos. O bloco
+     "leia_primeiro" existe para impedir cada um desses erros,
+     inclusive dizendo o que o dado NÃO prova.
+
+     PARA GENTE: PDF pela impressão do navegador.
+
+     Sem biblioteca. Gerar PDF em JavaScript exigiria carregar
+     centenas de KB para produzir tipografia pior que a do
+     próprio navegador. A folha de impressão esconde o que é
+     controle e deixa passar o que é conteúdo; "Salvar como PDF"
+     na caixa de impressão faz o resto, com texto vetorial. */
+
+  function baixarArquivo(nome, conteudo, tipo) {
+    var url = URL.createObjectURL(new Blob([conteudo], { type: tipo }));
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = nome;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    /* Sem isto o blob fica presa na memória até a aba fechar. */
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  /* Montada com os componentes locais, não com toISOString: o
+     fim do período é 23h59 no Rio, que em UTC já é o dia
+     seguinte. O arquivo dizia terminar um dia depois do que a
+     tela mostrava. */
+  function soData(d) {
+    return (
+      d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0")
+    );
+  }
+
+  /* O catálogo vai junto do dado medido, e é ele que torna o
+     cruzamento com o sistema de vendas possível: id, nome exato
+     do cardápio, categoria e preço são as colunas por onde uma
+     linha de venda pode ser casada com uma linha de atenção. Sem
+     isso a IA recebe dois arquivos que não conversam. */
+  function catalogo() {
+    var lista = (window.STADIUM && window.STADIUM.cardapio) || [];
+    var rot = (window.STADIUM && window.STADIUM.rotuloCategorias) || {};
+    return lista.map(function (p) {
+      return {
+        id: String(p.id),
+        nome: p.nome,
+        categoria: rot["container-" + p.categoria] || p.categoria,
+        preco_reais: precoDoPrato(p)
+      };
+    });
+  }
+
+  function montarRelatorio() {
+    var P = ultimoPacote;
+    if (!P) return null;
+
+    var porPrato = {};
+    var porVoltas = {};
+    var porClique = {};
+    P.resumo.forEach(function (l) {
+      if (l.tipo === "prato") {
+        porPrato[l.chave] = Number(l.tempo_ms || 0);
+        porVoltas[l.chave] = Number(l.paradas || 0);
+      } else if (l.tipo === "clique") {
+        porClique[l.chave] = Number(l.cliques || 0);
+      }
+    });
+
+    var pratos = catalogo().map(function (c) {
+      return {
+        id: c.id,
+        nome: c.nome,
+        categoria: c.categoria,
+        preco_reais: c.preco_reais,
+        atencao_ms: porPrato[c.id] || 0,
+        voltas: porVoltas[c.id] || 0,
+        cliques_detalhes: porClique[c.id] || 0
+      };
+    });
+
+    function funil(linhas) {
+      return linhas.map(function (l) {
+        return {
+          bloco: l.chave,
+          nome: rotulo(l.chave, l.nome),
+          visitas_que_chegaram: Number(l.sessoes || 0),
+          porcentagem_que_chegou: Number(l.porcentagem || 0),
+          atencao_media_ms: Number(l.tempo_medio_ms || 0)
+        };
+      });
+    }
+
+    function eixo(nome) {
+      return P.distribuicao
+        .filter(function (l) { return l.eixo === nome; })
+        .map(function (l) {
+          return { chave: Number(l.chave), visitas: Number(l.visitas || 0) };
+        });
+    }
+
+    return {
+      leia_primeiro: {
+        o_que_e_este_arquivo:
+          "Medição de ATENÇÃO no cardápio digital do restaurante Stadium " +
+          "Steakhouse. Não é dado de venda: ninguém compra por este site. " +
+          "Descreve o que as pessoas olharam, por quanto tempo e até onde " +
+          "desceram, antes de pedir.",
+
+        para_que_serve:
+          "Foi feito para ser cruzado com o relatório de vendas do " +
+          "restaurante. O elo entre os dois é o prato: use id quando o " +
+          "sistema de vendas tiver o mesmo identificador, e nome quando não " +
+          "tiver. O campo nome é exatamente como está escrito no cardápio.",
+
+        o_que_cada_medida_significa: {
+          atencao_ms:
+            "Tempo em que o item ficou de fato na tela, em milissegundos. Não " +
+            "é tempo de aba aberta: o relógio para quando a pessoa fica 15s " +
+            "sem rolar nem tocar, e quando ela sai da aba.",
+          voltas:
+            "Quantas vezes separadas a pessoa voltou ao MESMO prato na mesma " +
+            "visita. É sinal de indecisão. 47s em 6 voltas e 47s numa volta só " +
+            "são comportamentos diferentes: o primeiro é alguém comparando.",
+          cliques_detalhes:
+            "Quantas vezes abriram os detalhes do prato. É escolha, não acaso, " +
+            "mas tem dois sentidos opostos: interesse ou descrição ruim. " +
+            "Cruzado com atencao_ms eles se separam — muito tempo e muito " +
+            "clique é interesse; pouco tempo e muito clique é descrição que " +
+            "não explica o prato.",
+          porcentagem_que_chegou:
+            "De cada 100 visitas àquela página, quantas ROLARAM até o bloco. " +
+            "Chegar é diferente de parar: alcance alto com atenção baixa é " +
+            "gente passando reto, não sucesso.",
+          visita:
+            "Uma aba aberta. A mesma pessoa voltando amanhã conta de novo; a " +
+            "mesma pessoa indo da home ao cardápio conta uma vez só.",
+          origem:
+            "De onde a visita veio. mesa-barra e mesa-recreio são QR codes nas " +
+            "mesas: essa pessoa está DENTRO do restaurante, sentada, prestes a " +
+            "pedir. Instagram, google e afins são gente de fora, em outro " +
+            "momento de decisão. Tratar os dois como iguais invalida qualquer " +
+            "conclusão."
+        },
+
+        cuidados_obrigatorios: [
+          "ATENÇÃO NÃO É INTENÇÃO DE COMPRA. Um prato pode reter olhos por " +
+            "curiosidade, por preço alto, por foto boa ou por nome estranho.",
+          "POSIÇÃO CONTAMINA TUDO. Prato no começo da página é visto por " +
+            "todos, independente de qualidade. Compare pratos da MESMA " +
+            "categoria, que estão lado a lado na página. Comparar categorias " +
+            "entre si mede posição, não prato.",
+          "PREÇO EXPLICA POUCO NESTE CARDÁPIO. Dezessete hambúrgueres custam o " +
+            "mesmo valor, e as cinco massas também. Onde o preço varia muito " +
+            "dentro de uma categoria (Aquecimentos, de R$ 10 a R$ 220) é " +
+            "porque ela mistura entrada com prato de dividir.",
+          "atencao_ms IGUAL A ZERO não quer dizer prato ruim: pode ser prato " +
+            "que ninguém chegou a ver. Separe não interessou de não apareceu " +
+            "antes de recomendar tirar algo do cardápio.",
+          "VOLUME PEQUENO NÃO CONCLUI NADA. Confira visitas no resumo antes de " +
+            "afirmar qualquer coisa; com poucas dezenas, diferença é ruído.",
+          "AS FOTOS DOS PRATOS AINDA SÃO PROVISÓRIAS nesta fase do projeto, " +
+            "então diferença de atenção entre pratos pode vir da foto genérica " +
+            "e não do prato."
+        ],
+
+        o_que_este_arquivo_nao_tem:
+          "Não tem venda, não tem faturamento e não identifica ninguém. Sem " +
+          "nome, e-mail, telefone ou rastro entre visitas — a contagem morre " +
+          "quando a aba fecha."
+      },
+
+      gerado_em: new Date().toISOString(),
+      restaurante: restaurante ? restaurante.nome : null,
+
+      periodo: {
+        de: soData(P.de),
+        ate: soData(new Date(P.ate.getTime() - 1)),
+        fuso: "America/Sao_Paulo",
+        recorte_de_horario:
+          P.horaDe === null ? null : { das: P.horaDe, ate: P.horaAte }
+      },
+
+      resumo: {
+        visitas: Number(P.geral.visitas || 0),
+        tempo_total_ms: Number(P.geral.tempo_total_ms || 0),
+        tempo_medio_por_visita_ms: Number(P.geral.tempo_medio_ms || 0),
+        visitas_home: Number(P.geral.visitas_home || 0),
+        visitas_cardapio: Number(P.geral.visitas_cardapio || 0),
+        visitas_unidades: Number(P.geral.visitas_unidades || 0),
+        cliques_em_detalhes: Number(P.geral.cliques || 0),
+        pratos_com_alguma_atencao: Number(P.geral.pratos_olhados || 0),
+        pratos_no_cardapio: catalogo().length
+      },
+
+      de_onde_vieram: P.origens.map(function (l) {
+        return {
+          origem: l.origem,
+          visitas: Number(l.sessoes || 0),
+          porcentagem: Number(l.porcentagem || 0),
+          tempo_medio_ms: Number(l.tempo_medio_ms || 0)
+        };
+      }),
+
+      aparelhos: P.aparelhos.map(function (l) {
+        return {
+          aparelho: l.aparelho,
+          visitas: Number(l.sessoes || 0),
+          porcentagem: Number(l.porcentagem || 0),
+          tempo_medio_ms: Number(l.tempo_medio_ms || 0)
+        };
+      }),
+
+      visitas_por_hora_do_dia: eixo("hora"),
+      visitas_por_dia_da_semana: eixo("dia"),
+
+      alcance_home: funil(P.funilHome),
+      alcance_cardapio: funil(P.funilCardapio),
+      alcance_unidades: funil(P.funilUnidades),
+
+      pratos: pratos,
+
+      buscas: P.buscas.map(function (l) {
+        return {
+          termo: l.termo,
+          vezes: Number(l.vezes || 0),
+          pessoas: Number(l.pessoas || 0),
+          pratos_encontrados: Number(l.resultados || 0),
+          nota:
+            Number(l.resultados) === 0
+              ? "Sem resultado: ou o prato não existe, ou existe com outro nome."
+              : null
+        };
+      }),
+
+      acoes_de_intencao: P.acoes.map(function (l) {
+        return {
+          acao: l.chave,
+          descricao: rotuloAcao(l.chave, l.nome),
+          vezes: Number(l.vezes || 0),
+          pessoas: Number(l.sessoes || 0)
+        };
+      })
+    };
+  }
+
+  function baixarParaIA() {
+    var r = montarRelatorio();
+    if (!r) return;
+    baixarArquivo(
+      "stadium-atencao-" + r.periodo.de + "-a-" + r.periodo.ate + ".json",
+      JSON.stringify(r, null, 2),
+      "application/json;charset=utf-8"
+    );
   }
 
   /* ---------- PERÍODO ---------- */
@@ -954,6 +1268,14 @@
 
   function ligarPeriodo() {
     ligarHoras();
+
+    $("[data-baixar-ia]").addEventListener("click", baixarParaIA);
+    /* A caixa de impressão do navegador tem "Salvar como PDF" em
+       todos eles. Quem desenha o documento é a folha de impressão
+       no CSS, não este clique. */
+    $("[data-baixar-pdf]").addEventListener("click", function () {
+      window.print();
+    });
     document.querySelectorAll("[data-dias]").forEach(function (b) {
       b.addEventListener("click", function () {
         var p = ultimosDias(Number(b.getAttribute("data-dias")));

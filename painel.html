@@ -82,7 +82,17 @@
             </span>
         </div>
 
-        <p class="painel-resumo" data-resumo></p>
+        <div class="painel-baixar">
+            <p class="painel-resumo" data-resumo></p>
+            <div class="painel-baixar__botoes">
+                <button class="painel-chip" type="button" data-baixar-pdf disabled>
+                    Baixar PDF · para ler
+                </button>
+                <button class="painel-chip" type="button" data-baixar-ia disabled>
+                    Baixar JSON · para a IA
+                </button>
+            </div>
+        </div>
 
         <!-- GERAL — a caixa que separa o global do detalhe.
              Fica em superfície própria porque responde outra
@@ -157,6 +167,7 @@
                 <p class="painel-legenda">tempo de atenção por dia, e a variação contra o período anterior de mesmo tamanho</p>
 
                 <select class="painel-escolha" data-prato-serie></select>
+                <p class="painel-so-impressao" data-impresso-prato></p>
 
                 <p class="painel-destaque" data-serie-resumo></p>
                 <div class="painel-grafico" data-serie-grafico></div>
@@ -185,6 +196,7 @@
                 </p>
 
                 <select class="painel-escolha" data-categoria-atencao></select>
+                <p class="painel-so-impressao" data-impresso-categoria></p>
 
                 <table class="painel-tabela">
                     <thead><tr><th></th><th class="painel-num">preço</th><th class="painel-num">tempo</th><th class="painel-num painel-sec">vs vizinhos</th></tr></thead>
