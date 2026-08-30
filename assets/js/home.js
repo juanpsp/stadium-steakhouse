@@ -99,8 +99,29 @@
       return melhor;
     }
 
+    /* Guardado para avisar só quando o slide MUDA, e não a cada
+       pixel de rolagem do trilho. */
+    var ultimoIndice = -1;
+
     function sincronizar() {
       var atual = indiceVisivel();
+
+      /* Avisa quem estiver ouvindo. Vai por evento e não por
+         chamada direta para este arquivo seguir funcionando
+         sozinho: sem o metricas.js carregado ninguém escuta e
+         nada quebra.
+
+         Quem decide se o slide CONTA é o outro lado — o carrossel
+         gira mesmo com a pessoa lendo o cardápio lá embaixo, e
+         contar isso seria mentira. */
+      if (atual !== ultimoIndice) {
+        ultimoIndice = atual;
+        document.dispatchEvent(
+          new CustomEvent("stadium:carrossel", {
+            detail: { raiz: raiz, indice: atual, total: itens().length }
+          })
+        );
+      }
 
       if (pontos) {
         Array.prototype.slice.call(pontos.children).forEach(function (p, i) {

@@ -903,6 +903,29 @@
     });
   }
 
+  /* O carrossel é circular e a promoção de cada posição muda com
+     o tempo, então o rótulo é a POSIÇÃO. "1º banner" continua
+     querendo dizer a mesma coisa daqui a seis meses; o nome da
+     promoção, não. */
+  function mostrarBanners(linhas) {
+    var corpo = $("[data-t-banners]");
+    if (!linhas || !linhas.length) {
+      corpo.innerHTML = '<tr><td class="painel-vazio">nada no período</td></tr>';
+      return;
+    }
+    corpo.innerHTML = linhas
+      .map(function (l) {
+        var pct = Number(l.porcentagem || 0);
+        return (
+          '<tr><td class="painel-barra" style="--pct:' + pct + '%">' +
+          numero(l.posicao) + "º banner</td>" +
+          "<td class='painel-num painel-sec'>" + numero(l.sessoes) + "</td>" +
+          "<td class='painel-num'>" + pct.toFixed(0) + "%</td></tr>"
+        );
+      })
+      .join("");
+  }
+
   /* ---------- CARGA ---------- */
 
   function carregar(de, ate) {
@@ -934,7 +957,8 @@
       pedir("/rest/v1/rpc/acoes", args),
       pedir("/rest/v1/rpc/buscas", args),
       pedir("/rest/v1/rpc/por_hora", args),
-      pedir("/rest/v1/rpc/aparelhos", args)
+      pedir("/rest/v1/rpc/aparelhos", args),
+      pedir("/rest/v1/rpc/banners", args)
     ])
       .then(function (r) {
         if (minhaCarga !== carga) return; /* já tem pedido mais novo */
@@ -980,6 +1004,7 @@
         );
 
         mostrarLista("[data-t-aparelho]", r[9], APARELHOS, "aparelho");
+        mostrarBanners(r[10] || []);
 
         ultimoPacote = {
           de: de,
@@ -995,7 +1020,8 @@
           acoes: r[6] || [],
           buscas: r[7] || [],
           distribuicao: dist,
-          aparelhos: r[9] || []
+          aparelhos: r[9] || [],
+          banners: r[10] || []
         };
         prepararCapa();
         $("[data-baixar-ia]").disabled = false;
@@ -1252,6 +1278,14 @@
 
       visitas_por_hora_do_dia: eixo("hora"),
       visitas_por_dia_da_semana: eixo("dia"),
+
+      alcance_carrossel: (P.banners || []).map(function (l) {
+        return {
+          posicao: Number(l.posicao),
+          visitas_que_viram: Number(l.sessoes || 0),
+          porcentagem_que_viu: Number(l.porcentagem || 0)
+        };
+      }),
 
       alcance_home: funil(P.funilHome),
       alcance_cardapio: funil(P.funilCardapio),

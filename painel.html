@@ -234,7 +234,19 @@
         <section class="painel-secao">
             <h2 class="painel-secao__titulo"><span>Home</span></h2>
 
+            <!-- O carrossel gira sozinho a cada 8s, então chegar ao
+                 quarto banner exige ficar quase meio minuto parado
+                 ali em cima. -->
             <div class="painel-bloco">
+                <h3 class="painel-titulo">Até onde chegam no carrossel</h3>
+                <p class="painel-legenda">% de quem abriu a home e viu cada banner. Só conta com o carrossel na tela — ele continua girando quando a pessoa já rolou para longe, e isso não vale.</p>
+                <table class="painel-tabela">
+                    <thead><tr><th></th><th></th><th class="painel-num">viram</th></tr></thead>
+                    <tbody data-t-banners></tbody>
+                </table>
+            </div>
+
+            <div class="painel-bloco painel-bloco--depois">
                 <h3 class="painel-titulo">Até onde descem</h3>
                 <p class="painel-legenda">% de quem abriu a home e chegou a ver cada faixa</p>
                 <table class="painel-tabela"><thead><tr><th></th><th class="painel-num">chegaram</th><th class="painel-num painel-sec">pararam</th></tr></thead><tbody data-t-home></tbody></table>

@@ -516,6 +516,61 @@
     cliques[id].n += 1;
   }
 
+  /* ---------- BANNERS DO CARROSSEL ----------
+     Quantas pessoas chegam a ver o segundo banner, o terceiro, o
+     quarto. Todo mundo vê o primeiro; a partir daí é preciso
+     ficar parado ali oito segundos para cada um seguinte.
+
+     A ARMADILHA. O carrossel continua girando enquanto a pessoa
+     lê o cardápio lá embaixo — ele não sabe que saiu da tela.
+     Contar essas passagens diria que todo mundo viu os quatro
+     banners, o que é exatamente o contrário da verdade.
+
+     Por isso o slide só conta quando a faixa do carrossel está
+     de fato na tela, com metade dela visível, e a visita não
+     está pausada. É a mesma régua do card de prato.
+
+     A chave é a POSIÇÃO, não o banner: a pergunta é quantos
+     chegam ao segundo, e a resposta tem que continuar
+     comparável quando a promoção da vez mudar. */
+  var bannersVistos = {};
+
+  function marcarBanner(indice) {
+    if (encerrada || pausado) return;
+    var faixa = document.querySelector("[data-banners]");
+    if (!faixa) return;
+    if (fracaoVisivel(faixa) < VISIVEL) return;
+
+    var chave = "banner-" + (Number(indice) + 1);
+    if (bannersVistos[chave]) return;
+    bannersVistos[chave] = { posicao: Number(indice) + 1 };
+  }
+
+  /* O evento cobre cada troca de slide; a conferência de dois em
+     dois segundos cobre o estado inicial e o caso de alguém
+     deslizar rápido demais entre duas trocas. */
+  function conferirBanner() {
+    var faixa = document.querySelector("[data-banners]");
+    if (!faixa) return;
+    var pontos = faixa.querySelectorAll(".banners__dot");
+    for (var i = 0; i < pontos.length; i++) {
+      if (pontos[i].getAttribute("aria-current") === "true") {
+        marcarBanner(i);
+        return;
+      }
+    }
+  }
+
+  function novosBanners() {
+    var saida = {};
+    Object.keys(bannersVistos).forEach(function (c) {
+      if (bannersVistos[c].enviado) return;
+      saida[c] = { posicao: bannersVistos[c].posicao };
+      bannersVistos[c].enviado = true;
+    });
+    return saida;
+  }
+
   /* ---------- AÇÕES DE INTENÇÃO ----------
      Pedir rota e ligar para a loja. É o sinal mais forte que este
      site consegue produzir sem checkout: rolagem e tempo dizem
@@ -714,6 +769,7 @@
     if (pausado || encerrada) return;
 
     marcarAlcance();
+    conferirBanner();
 
     if (pratos.ligado) {
       conferir(
@@ -1021,6 +1077,14 @@
       saida.push(linha("busca", chave, b.termo, 0, 0, b.n, b.resultados));
     });
 
+    /* Marca, como o alcance: quem conta é a existência da
+       linha, não um tempo. */
+    Object.keys(pacote.banners || {}).forEach(function (chave) {
+      saida.push(
+        linha("banner", chave, chave, 0, 0, 0, undefined, 0)
+      );
+    });
+
     /* Uma linha por descarga com o tempo ativo. E a base de
        "quantas visitas" e "quanto dura uma visita". */
     if (pacote.ativo_ms > 500) {
@@ -1111,6 +1175,7 @@
          sessão; reenviar a cada descarga encheria o banco de
          linha repetida para não mudar conta nenhuma. */
       alcance: novasAlcancadas(),
+      banners: novosBanners(),
       /* Tempo ativo desde a ultima descarga. Somando as linhas de
          uma sessao tem-se a duracao real da visita — ja sem as
          pausas, porque o tempo parado nunca entrou na conta. */
@@ -1317,6 +1382,12 @@
     /* O cardápio avisa a cada 140ms de digitação. Esta folga
        maior é o que separa a palavra terminada do caminho até
        ela: sem ela, "batata" chegaria como seis registros. */
+    document.addEventListener("stadium:carrossel", function (evento) {
+      var d = evento.detail || {};
+      if (!d.raiz || !d.raiz.hasAttribute("data-banners")) return;
+      marcarBanner(d.indice);
+    });
+
     document.addEventListener("stadium:busca", function (evento) {
       var d = evento.detail || {};
       clearTimeout(relogioBusca);
