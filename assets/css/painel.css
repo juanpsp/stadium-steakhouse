@@ -619,13 +619,27 @@
      o cartão, que são pequenos. Tabela longa parte, e o
      cabeçalho dela se repete na página seguinte, que é como
      relatório impresso sempre funcionou. */
+  /* O que desperdiçava página era a CAIXA da visão geral, que
+     sozinha é maior que uma folha: proibida de partir, ela pulava
+     inteira e deixava o pé da anterior em branco. Ela pode
+     partir; os cartões dentro dela, não. */
   .painel-geral,
-  .painel-bloco,
   .painel-secao {
     break-inside: auto;
     page-break-inside: auto;
   }
 
+  /* O bloco volta a ser indivisível, e é isto que mantém o título
+     colado no conteúdo dele. "break-after: avoid" no título não
+     resolvia: é preferência, não garantia — o navegador a ignora
+     quando o que vem depois não cabe no resto da página, e era
+     justamente o caso. Foi assim que "ACOMPANHAR PRATOS" ficou
+     sozinho no pé de uma folha com a tabela na seguinte.
+
+     Bloco maior que uma folha continua partindo, porque não há
+     alternativa: o navegador o joga para o começo da próxima e
+     parte de lá. O título vai junto, que é o que importa. */
+  .painel-bloco,
   .painel-cartao,
   .painel-tabela tr,
   .painel-grafico,
