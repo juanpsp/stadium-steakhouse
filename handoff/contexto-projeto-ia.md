@@ -456,8 +456,54 @@ Regras para essas respostas:
 
 # PARTE 8 — OS TRÊS ARQUIVOS DE MEMÓRIA
 
-O modelo **não aprende com o uso**: os pesos não mudam. O que
-melhora com o tempo é o que se entrega junto dele.
+## Antes: como funciona o "aprendizado" aqui
+
+**O modelo não muda.** Nada do que se conversa com ele altera
+coisa alguma; não existe treinamento acontecendo. No mês que vem
+ele chega exatamente igual, sem lembrar da Stadium.
+
+Pense nele como **um consultor excelente com amnésia total**.
+Todo mês entra na sala alguém brilhante que nunca viu o
+restaurante. Com uma pasta contendo tudo que já aconteceu, ele
+trabalha como quem está lá há um ano. Sem a pasta, começa do
+zero.
+
+**A pasta é o produto. O consultor é alugado.**
+
+E a pasta é melhor que memória de verdade, por quatro motivos
+que importam ao negócio:
+
+| | Memória em arquivo | Modelo treinado |
+|---|---|---|
+| Dá para **ler** o que ele sabe | sim, é texto | não |
+| Dá para **corrigir** um erro | edita a linha | retreina tudo |
+| Dá para **provar** de onde veio a conclusão | sim | não |
+| Sobrevive à troca de IA | sim | não |
+
+O último é o decisivo: se aparecer um modelo melhor, troca-se o
+modelo e leva-se a pasta. Doze meses de decisões da Stadium
+continuam valendo.
+
+**No primeiro mês o relatório será genérico, e isso deve ser dito
+ao cliente.** O valor aparece a partir do terceiro ou quarto,
+quando já há histórico para comparar.
+
+## Qual modelo usar
+
+**Claude Opus 5** (`claude-opus-5`) — 1M de contexto, o mais
+capaz para raciocínio. A análise É o produto; economizar no
+modelo aqui é economizar no produto.
+
+Custo estimado por relatório mensal, via API: cerca de US$ 3
+(entrada ~40 mil tokens, mais a sessão de perguntas). Contra uma
+mensalidade de R$ 400 a 700, é irrelevante.
+
+**Mas para começar, não use API.** Um plano pago do Claude no
+navegador, colando os arquivos, resolve: zero código, zero
+infraestrutura, custo fixo. A API só passa a valer quando isto
+virar produto para vários clientes e precisar ser automatizado.
+
+## Os três arquivos
 
 ## `de-para.json` — memória dos casamentos
 
