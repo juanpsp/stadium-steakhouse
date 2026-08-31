@@ -120,6 +120,20 @@ vendas estiver claramente incompleto, **diga isso em primeiro
 lugar e entregue o que dá** — marcando o que ficou de fora. Ainda
 assim, entregue.
 
+## Peça o JSON no ciclo do caixa, não no mês corrido
+
+O PDV da Stadium fecha de 05 a 04. Se o JSON de atenção for
+exportado de 01 a 31, os dois arquivos cobrem períodos
+diferentes e a conversão vira ordem de grandeza em vez de número.
+
+**O painel exporta qualquer intervalo de datas.** Então, se o
+fechamento vier de 05/08 a 04/09, peça o JSON exatamente de
+05/08 a 04/09. Os dois passam a cobrir os mesmos dias e a
+ressalva desaparece.
+
+Se eu esquecer disso e mandar períodos desencontrados, **analise
+assim mesmo** — mas me lembre desta linha no fim do relatório.
+
 ## Deve funcionar com um arquivo só
 
 Se eu mandar só o JSON de atenção, ela trabalha: perde a metade
@@ -423,10 +437,15 @@ ruído. Diga isso em vez de afirmar tendência.
 
 Esta é a entrega padrão, sem eu pedir nada específico.
 
-**Existe um modelo pronto: `exemplo-de-relatorio.md`, escrito
-sobre os arquivos de exemplo. Leia antes de escrever o seu.** Ele
-mostra tom, nível de detalhe e forma melhor do que qualquer regra
-que eu escreva aqui.
+**Existe um modelo pronto: `exemplo-de-relatorio.md`. Leia antes
+de escrever o seu.** Ele mostra tom, nível de detalhe e forma
+melhor do que qualquer regra que eu escreva aqui.
+
+Ele descreve um mês de junho com **números inventados que não
+correspondem a nenhum arquivo real**. Isso é de propósito: um
+exemplo que compartilhasse dados com o período analisado viraria
+gabarito, e a análise deixaria de ser análise. **Use-o como
+molde, nunca como fonte de número.**
 
 ## Quem lê isto é dono de churrascaria
 

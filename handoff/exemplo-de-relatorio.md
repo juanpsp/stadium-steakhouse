@@ -1,318 +1,290 @@
 # EXEMPLO DE RELATÓRIO — é assim que a saída deve parecer
 
-> Este arquivo não é dado. É o **modelo da entrega**, escrito a
-> partir dos dois arquivos de exemplo de julho/2026. Serve para
-> mostrar tom, nível de detalhe e forma — não para ser copiado.
+> **Este arquivo não é dado, e os números dele são inventados.**
+> É o modelo da entrega: serve para mostrar tom, nível de detalhe
+> e forma.
+>
+> Ele descreve um mês de **junho** que não corresponde a nenhum
+> arquivo que você vá analisar. Isso é de propósito — um exemplo
+> que compartilhasse dados com o período analisado viraria
+> gabarito, e a análise deixaria de ser análise.
 >
 > Repare no que ele **não** tem: nenhum id de prato, nenhum nome
-> de campo do JSON, nenhum jargão. Quem lê é dono de
-> churrascaria, não programador.
+> de campo do JSON, nenhum milissegundo, nenhum jargão. Quem lê é
+> dono de churrascaria.
 >
-> E repare no que ele **tem**: comparação entre pratos vizinhos,
-> número ao lado de cada afirmação, e uma ação concreta em cada
-> achado.
+> E no que ele **tem**: prato comparado com o vizinho de
+> categoria, número ao lado de cada afirmação, e uma ação
+> concreta com valor esperado e forma de conferir.
 
 ---
 
-# Stadium Steakhouse · Barra · Julho de 2026
+# Stadium Steakhouse · Barra · Junho de 2026
 
-**340 pessoas abriram o cardápio. R$ 155.266 em vendas.**
+**287 pessoas abriram o cardápio. R$ 128.400 em vendas.**
 
 ---
 
-## Antes de tudo: duas coisas que você precisa confirmar
+## Antes de tudo: duas coisas para você confirmar
 
-**1. O "rodízio executivo do almoço" está no cardápio digital com
-outro nome?** São R$ 13.332 — 8,6% do mês, e 100% no almoço.
-Tratei como algo do salão, fora do cardápio. Se for um prato que
-está lá, ele vira o **terceiro maior faturamento da casa** e o
-ranking abaixo muda.
+**1. "Executivo do dia" é um prato do cardápio com outro nome?**
+São R$ 9.870 — 7,7% do mês, todos no almoço. Tratei como
+promoção de salão, fora do cardápio. **Se for um prato de lá, ele
+entra no ranking e muda a leitura das massas**, que é a seção
+mais importante deste relatório.
 
-**2. A picanha do caixa é a "Picanha Nacional di Chile" ou a
-"Picanha"?** O cardápio tem as duas, ambas a R$ 119,90, e o
-caixa traz uma linha só. Coloquei tudo na Nacional di Chile. Se
-forem separadas, o número dela cai pela metade — mas a conclusão
-sobre horário, que é a mais importante, continua valendo.
+**2. "Frango grelhado" é o Kahn Chicken ou o Banks Chicken?**
+O caixa traz uma linha só; o cardápio tem os dois. Coloquei no
+Kahn, que é o mais barato. Se for o Banks, muda só o número dele
+— nenhuma conclusão depende disso.
 
-*As outras dúvidas que eu resolvi sozinho estão marcadas no texto
-com parênteses em itálico. Nenhuma delas muda conclusão.*
+*As outras dúvidas eu resolvi sozinho e marquei no texto com
+parênteses em itálico.*
 
 ---
 
 ## O essencial
 
-Julho foi bom: **R$ 155 mil e ticket médio de R$ 386 por mesa.**
-As carnes sustentam a casa e o Stadium Wings continua sendo o
-melhor produto do cardápio.
+Junho fechou em **R$ 128.400, ticket médio de R$ 341 por mesa** —
+movimento parecido com maio.
 
-Mas três coisas estão custando dinheiro agora:
+Três coisas estão custando dinheiro agora:
 
-**O hambúrguer Holand é o mais olhado da categoria e o menos
-vendido.** 185 pessoas pararam nele; 14 compraram. Todos os
-hambúrgueres custam os mesmos R$ 59,90, então preço não explica.
+**A Pasta Canavarro é a mais olhada das massas e a que menos
+vende.** 164 pessoas pararam nela; 11 compraram. As cinco massas
+custam os mesmos R$ 79,90, então preço não explica.
 
-**O Fenômeno está na categoria errada.** É um prato de R$ 219,90
-para dividir, colocado no meio das entradas. 168 pessoas
-olharam, 61 abriram a descrição, **6 compraram**.
+**O Salmão prende as pessoas e não fecha.** 71 pessoas abriram a
+descrição dele — o maior número do cardápio — e 9 compraram.
+Elas leram e desistiram *depois* de ler.
 
-**Quem procura "massas" não acha.** 32 pessoas digitaram "pastas"
-ou "macarrão" na busca e receberam nada. As massas venderam
-R$ 8.070 no mês — vendem apesar da busca, não por causa dela.
+**Ninguém chega no Kids.** Só 9% de quem abre o cardápio alcança
+a categoria infantil. Numa casa que se vende como lugar de
+família, isso é dinheiro parado no fim da página.
 
-**Se você fizer uma coisa esta semana:** troque a foto do Holand.
-É o teste mais barato do relatório e o resultado aparece em 30
-dias.
+**Se você fizer uma coisa esta semana:** troque a foto da Pasta
+Canavarro. Custo zero e o resultado aparece em 30 dias.
 
 ---
 
-## As entradas — onde está o dinheiro parado
+## As massas — o caso mais claro do mês
 
-Cinco pratos da mesma categoria, lado a lado na página. Por isso
-dá para compará-los: quem olha um, olha os outros.
-
-| Prato | Olharam | Venderam | Para cada 10 que olharam |
-|---|---|---|---|
-| Pão de Alho | 38 | **214** | 56 compraram |
-| Stadium Wings | 231 | 168 | 7 compraram |
-| Carpaccio | 121 | 44 | 4 compraram |
-| **Pastel** | 142 | 17 | **1 comprou** |
-| **Fenômeno** | 168 | **6** | **menos de 1** |
-
-### O Fenômeno não é um prato ruim. Está no lugar errado.
-
-R$ 219,90 é preço de prato para quatro pessoas dividirem. Ele
-está entre o Pão de Alho de R$ 10,50 e o Carpaccio de R$ 69,90 —
-quem chega ali está escolhendo o que comer **enquanto espera**, e
-encontra um prato que custa mais que o jantar inteiro.
-
-A prova de que é posição e não produto: **61 pessoas abriram a
-descrição dele**, o segundo maior número do cardápio. O prato
-desperta interesse. Só que na hora de pedir uma entrada, ele não
-é uma entrada.
-
-**Faça:** mova o Fenômeno para Compartilhados, onde está a
-Maravilha (R$ 229,90, 31 vendas). Se ele converter como a
-Maravilha, são 25 vendas a mais por mês — **R$ 5.500**.
-
-### O Pastel perde as pessoas na descrição
-
-**78 pessoas abriram os detalhes do Pastel — o maior número do
-cardápio inteiro.** E 17 compraram.
-
-Isso é diferente do Fenômeno. Aqui as pessoas se interessaram,
-foram ler o que vem no prato, e desistiram **depois de ler**.
-Quando o problema é preço ou foto, elas desistem antes de abrir.
-
-**Faça:** leia a descrição do Pastel como se fosse cliente. Ela
-diz o sabor? A quantidade? Se são seis unidades pequenas por
-R$ 65,90 e isso não está claro, o cliente lê e acha caro.
-
-### O Pão de Alho quase não é visto e é o mais vendido da casa
-
-38 pessoas olharam; 214 pediram. Ou seja: **quase ninguém pede o
-Pão de Alho por causa do cardápio.** Ele é pedido por hábito, ou
-sugerido pelo garçom.
-
-Isso **não** quer dizer que subir ele de posição multiplicaria as
-vendas — ele já vende sem o cardápio. Registro aqui porque é o
-tipo de coisa que engana: pela conversão ele parece o campeão
-absoluto, e na verdade ele só não depende da página.
-
----
-
-## Os hambúrgueres — o caso mais claro do mês
-
-Os 17 custam exatamente R$ 59,90. Mesma categoria, mesma página,
-mesmo preço. Então a diferença entre eles **só pode** estar no
+As cinco custam exatamente R$ 79,90. Mesma categoria, mesma
+página, mesmo preço. A diferença entre elas **só pode** estar no
 nome, na foto ou na descrição.
 
-| Hambúrguer | Olharam | Venderam | Para cada 10 |
+| Massa | Olharam | Venderam | Para cada 10 que olharam |
 |---|---|---|---|
-| La Furia | 69 | 28 | 4 |
-| Brazuca | 154 | 52 | 3 |
-| **Holand** | **185** | **14** | **menos de 1** |
+| Pasta Formaggio | 88 | 74 | 8 compraram |
+| Penne Meazza | 96 | 61 | 6 compraram |
+| Pasta Rossi | 112 | 48 | 4 compraram |
+| Pasta Piola | 121 | 39 | 3 compraram |
+| **Pasta Canavarro** | **164** | **11** | **menos de 1** |
 
-O Holand é o **mais olhado** e o **menos vendido**. O La Furia é
-visto por um terço das pessoas e vende o dobro.
+A Canavarro é a **mais olhada** e a **menos vendida**. A Formaggio
+é vista por metade das pessoas e vende **sete vezes mais**.
 
-Não há explicação de preço. Não há explicação de posição — o
-Holand aparece antes, e é justamente por isso que é o mais visto.
-Sobra apresentação.
+Não há explicação de preço — são idênticos. Não há explicação de
+posição: a Canavarro é a primeira da lista, e é justamente por
+isso que é a mais vista. Sobra a apresentação.
 
-**Faça:** compare a foto e a descrição do Holand com as do La
-Furia, lado a lado. Depois troque a do Holand e espere um mês. Se
-a conversão dele chegar à do Brazuca, são **38 hambúrgueres a
-mais por mês, R$ 2.276**.
+**Faça:** abra as duas lado a lado no celular. Compare foto,
+nome e descrição. Depois troque a da Canavarro e espere um mês.
+Se ela chegar à conversão da Piola, são **38 pratos a mais por
+mês, R$ 3.036**.
+
+**Como conferir:** a linha dela nesta mesma tabela, em julho.
 
 ---
 
-## As carnes — uma fora da curva
+## O Salmão perde as pessoas na descrição
 
-| Corte | Olharam | Venderam | Para cada 10 |
-|---|---|---|---|
-| Filé Mignon | 107 | 96 | 9 |
-| Picanha Nacional | 197 | 143 | 7 |
-| Fraldinha | 112 | 74 | 7 |
-| **Sirloin** | 119 | 38 | **3** |
+**71 pessoas abriram os detalhes do Salmão Nacional de Santiago —
+o maior número do cardápio inteiro.** Nove compraram.
 
-Filé, picanha e fraldinha convertem parecido. O Sirloin é olhado
-tanto quanto a fraldinha e vende **metade**.
+Isso é diferente da Canavarro, e a diferença importa:
 
-Aqui eu não tenho evidência para dizer o motivo: pode ser o
-corte ser menos conhecido, pode ser a descrição não explicar o
-que é. **É a pergunta que eu levaria para o garçom** — ele sabe
-o que o cliente pergunta antes de decidir.
+- Quando o problema é **foto ou preço**, a pessoa desiste **antes**
+  de abrir os detalhes
+- Quando ela **abre e mesmo assim não pede**, o problema está no
+  que ela leu
+
+O Salmão custa R$ 98,90, o mais caro da categoria. É o preço mais
+alto do cardápio fora das carnes, e a descrição precisa justificar
+isso — dizer o tamanho da porção, o acompanhamento, de onde vem o
+peixe.
+
+**Faça:** leia a descrição do Salmão como se fosse cliente
+decidindo gastar R$ 98,90. Se ela não responder "o que exatamente
+eu recebo por esse valor", reescreva.
+
+**Como conferir:** os cliques em detalhes devem **cair** e as
+vendas subir. Se os dois caírem, a nova descrição afastou gente
+antes — e aí o problema virou outro.
 
 ---
 
-## A picanha é escolhida no almoço e comida à noite
+## O frango que ninguém vê vende bem
+
+| Prato | Olharam | Venderam | Para cada 10 |
+|---|---|---|---|
+| Casillas Chicken | 34 | 47 | 14 compraram |
+| Kahn Chicken | 96 | 52 | 5 compraram |
+| Sole Filet | 74 | 21 | 3 compraram |
+| Salmão | 118 | 9 | menos de 1 |
+
+O Casillas vende **mais do que o número de pessoas que o viram no
+cardápio** — ou seja, ele é pedido sem passar pela página, por
+hábito ou por indicação do garçom.
+
+Isso **não** significa que subi-lo de posição multiplicaria as
+vendas: ele já vende sem o cardápio. Registro porque engana — pela
+conversão ele parece o campeão absoluto, e na verdade ele só não
+depende da página.
+
+---
+
+## As sobremesas são olhadas à noite e vendidas no almoço
 
 | | Almoço | Jantar | Noite |
 |---|---|---|---|
-| **Olham** | **58%** | 27% | 4% |
-| **Compram** | 14% | 55% | 31% |
+| **Olham** | 18% | 31% | **51%** |
+| **Compram** | **44%** | 39% | 17% |
 
-Mais da metade da atenção à picanha acontece no almoço. Mais da
-metade das vendas, à noite.
+Metade da atenção às sobremesas acontece depois das 23h; quase
+metade das vendas, no almoço.
 
 Duas leituras cabem, e as duas dão o que fazer:
 
-- **Gente decidindo de dia o que vai jantar.** Se for isso, o
-  cardápio está trabalhando com horas de antecedência, e vale
-  colocar a picanha no destaque do almoço.
-- **O almoço não converte.** Quem olha no almoço acha caro para
-  a hora, e come outra coisa. Se for isso, um corte menor de
-  picanha no almoço captura essa demanda.
+- **Quem janta tarde olha e não pede.** Se for isso, a sobremesa
+  está sendo oferecida tarde demais, quando a pessoa já está
+  saciada — vale o garçom oferecer antes de tirar o prato.
+- **Quem almoça pede sem consultar.** Aí a atenção da noite é
+  curiosidade, e o cardápio não é o canal de venda de sobremesa.
 
-**Faça:** pergunte ao caixa se aparece gente pedindo picanha no
-almoço e desistindo. A resposta separa as duas.
+**Faça:** pergunte aos garçons do jantar se oferecem sobremesa
+antes ou depois de recolher o prato principal. A resposta separa
+as duas.
 
 ---
 
-## O cardápio esconde as massas de quem procura
+## Metade das pessoas nunca chega no fim do cardápio
 
-**32 pessoas buscaram "pastas" ou "macarrão" e o cardápio
-respondeu que não tem nada.** As massas estão lá, e venderam
-101 pratos, R$ 8.070 no mês.
-
-Outras buscas sem resposta:
-
-| Procuraram | Vezes |
+| Categoria | Quantos chegaram |
 |---|---|
-| pastas | 23 |
-| vegetariano | 19 |
-| porção pequena | 14 |
-| sem glúten | 11 |
-| macarrão | 9 |
+| Aquecimentos | 100% |
+| Bebidas | 88% |
+| Carnes | 74% |
+| Compartilhados | 61% |
+| Frango e peixes | 48% |
+| Massas | 39% |
+| **Kids** | **9%** |
+| Saladas | 14% |
+| Sobremesas | 22% |
 
-"Pastas" e "macarrão" são conserto de cardápio — o prato existe
-e a busca não acha. **De graça, e resolve hoje.**
+**A categoria Kids é alcançada por 9 pessoas em cada 100.**
 
-"Vegetariano" e "sem glúten" são outra conversa: 30 pessoas
-procuraram algo que a casa talvez não tenha. Isso é decisão de
-menu, não de site.
+Numa casa que se apresenta como lugar de família — com espaço
+kids e monitor — o cardápio infantil está enterrado onde quase
+ninguém chega. Não é que as crianças não comam: é que quem decide
+não vê a opção.
+
+**Faça:** suba o Kids para logo depois das Carnes. Quem está
+escolhendo o prato principal da família é exatamente quem precisa
+ver o infantil naquele momento.
+
+**Como conferir:** o alcance da categoria nesta tabela, em julho.
+Se subir de 9% para algo perto de 50% e as vendas não mexerem, o
+problema não era exposição — e aí a gente sabe.
 
 ---
 
-## A home está perdendo gente antes do cardápio
+## O cardápio esconde o que as pessoas procuram
 
-| Faixa | Chegaram | Pararam |
+**41 pessoas buscaram "doce" ou "sobremesa" e receberam nada** —
+porque a categoria se chama "Prorrogação".
+
+| Procuraram | Vezes | Achou? |
 |---|---|---|
-| Banners do topo | 100% | 14s |
-| Craque da semana | 64% | 10s |
-| **Delivery** | **55%** | **1 segundo** |
-| Nosso time | 39% | 7s |
-| Nossas unidades | 33% | 6s |
+| doce | 24 | nada |
+| sobremesa | 17 | nada |
+| sem lactose | 12 | nada |
+| kids | 8 | nada |
+| infantil | 6 | nada |
 
-**Metade das pessoas passa pela faixa de delivery e não para nem
-um segundo.** Ela ocupa espaço no meio do caminho sem entregar
-nada.
+Os nomes temáticos são a identidade da casa e não devem sair. Mas
+**quem tem fome digita a palavra comum**, não o nome de fantasia.
 
-E o carrossel do topo tem quatro banners:
+**Faça:** adicione palavras-chave escondidas aos pratos —
+"sobremesa" e "doce" nas sete da Prorrogação; "kids" e "infantil"
+nas cinco do Dente de Leite. O nome na tela continua o mesmo; só
+a busca passa a encontrar.
 
-| Banner | Quantos viram |
-|---|---|
-| 1º | 100% |
-| 2º | 43% |
-| 3º | **14%** |
-| 4º | **4%** |
+Isso é conserto de meia hora e **resolve 55 buscas perdidas por
+mês**.
 
-O quarto banner é visto por 4 pessoas em cada 100. **Qualquer
-promoção colocada ali fala com ninguém.** Se tiver promoção boa,
-ela precisa estar no primeiro ou no segundo.
+"Sem lactose" é outra conversa: 12 pessoas procuraram algo que a
+casa talvez não tenha. Isso é decisão de menu.
 
 ---
 
 ## Duas coisas que apareceram e não são sobre o cardápio
 
-**O cliente lê um preço e paga outro.** O cardápio digital mostra
-o Chope Caneca a R$ 12,90; o caixa cobrou R$ 14,90 e R$ 15,90. O
-refrigerante está R$ 9,40 no cardápio e R$ 10,90 no caixa.
-Corrigir o cardápio é rápido e evita discussão na mesa.
+**O cliente lê um preço e paga outro.** O cardápio mostra o
+Milkshake a R$ 29,90; o caixa cobrou R$ 32,90. Corrigir é rápido
+e evita discussão na mesa.
 
-**A Barra puxa muito mais que o Recreio.** 38 pessoas pediram
-rota para a Barra contra 17 para o Recreio; 29 quiseram ligar
-contra 11. Mais que o dobro nos dois casos — e vale saber se é
-porque a Barra é mais procurada, ou porque o QR code do Recreio
-está em menos mesas.
+**O QR code do Recreio está rendendo menos.** 71 leituras contra
+118 da Barra, e a Barra tem menos mesas. Vale conferir se os
+adesivos do Recreio estão em todas as mesas e ainda legíveis.
 
 ---
 
-## Três ações para agosto
+## Três ações para julho
 
-**1. Trocar a foto do hambúrguer Holand.**
-Custo zero, uma foto. Se ele chegar à conversão do Brazuca:
-**+R$ 2.276/mês**. Como conferir: a conversão dele no relatório
-de agosto.
+**1. Trocar a foto da Pasta Canavarro.**
+Custo zero. Se chegar à conversão da Piola: **+R$ 3.036/mês**.
+Confere na tabela das massas, em julho.
 
-**2. Mover o Fenômeno para Compartilhados.**
-Cinco minutos de edição. Se converter como a Maravilha:
-**+R$ 5.500/mês**. Como conferir: vendas dele em agosto contra
-as 6 de julho.
+**2. Subir a categoria Kids para depois das Carnes.**
+Cinco minutos de edição. Hoje 9% das pessoas chegam nela.
+Confere no alcance por categoria, em julho.
 
-**3. Fazer a busca encontrar as massas.**
-Adicionar "massa", "macarrão" e "pasta" como palavras-chave dos
-cinco pratos. Como conferir: as buscas por esses termos devem
-sair da lista de "sem resultado" em agosto.
+**3. Adicionar "sobremesa", "doce", "kids" e "infantil" como
+palavras-chave.**
+Meia hora. Resolve 55 buscas perdidas por mês. Confere: esses
+termos devem sumir da lista de buscas sem resultado.
 
 ---
 
 ## O que eu não posso afirmar
 
 - **Conversão está subestimada.** O fechamento é só da Barra, mas
-  a atenção inclui o Recreio e 151 visitas de fora do
-  restaurante. Os números relativos entre pratos valem; os
-  absolutos, não.
-- **Os períodos não coincidem.** O cardápio cobre 1 a 31 de
-  julho; o caixa, 5 de julho a 4 de agosto. Sobrepõem-se 27 dias
-  — 87%. Comparei por dia, mas 4 dias de cada lado ficaram fora.
-- **21% do faturamento não é do cardápio** (couvert, taxa de
-  serviço, rodízio). O ranking acima cobre os outros 79%.
-- **102 pratos não têm linha no caixa**, incluindo a categoria
-  Frango e peixes inteira e 13 dos 17 hambúrgueres. Isso é
-  implausível para um mês: o arquivo de vendas parece estar
-  filtrado nos mais vendidos. **Não conclua que esses pratos não
-  vendem** — eles não estão no arquivo.
-- **Não dá para analisar por dia da semana.** O fechamento não
-  traz a data da venda, só três faixas de horário.
+  a atenção inclui o Recreio e 98 visitas de fora do restaurante.
+  Os números **relativos entre pratos** valem; os absolutos, não.
+- **Os períodos não coincidem exatamente.** O cardápio cobre 1 a
+  30 de junho; o caixa, 5 de junho a 4 de julho. Sobrepõem-se 26
+  dias, 87%. Comparei por dia.
+- **18% do faturamento não é do cardápio** (couvert, taxa de
+  serviço, executivo do dia). O ranking cobre os outros 82%.
 - **As fotos dos pratos ainda são provisórias** e várias se
-  repetem entre pratos diferentes. Onde eu apontei foto como
-  causa, é hipótese a testar.
+  repetem entre pratos diferentes. Onde apontei foto como causa,
+  é hipótese a testar — não conclusão.
+- **Sobremesa por horário tem volume baixo** (73 vendas no mês).
+  A diferença entre almoço e noite é grande o bastante para
+  merecer a pergunta, mas não para fechar conclusão.
 
 ---
 
 ## O que eu preciso saber para o próximo mês
 
-1. O "rodízio executivo" é prato do cardápio ou promoção de
-   salão?
-2. A picanha do caixa é qual das duas do cardápio?
-3. O PDV consegue exportar **com a data da venda**? Só isso já
-   destrava toda a análise de dia da semana e a previsão de
-   movimento.
-4. Existe fechamento do Recreio? Sem ele, a conversão continuará
-   sendo ordem de grandeza, não número.
-5. O export de vendas é do mês inteiro ou só dos mais vendidos?
+1. "Executivo do dia" é prato do cardápio ou promoção de salão?
+2. O PDV consegue exportar **com a data da venda**? Só isso
+   destrava análise por dia da semana e previsão de movimento.
+3. Existe fechamento do Recreio?
+4. O export de vendas é do mês inteiro ou só dos mais vendidos?
 
 ---
 
-*Relatório de julho de 2026 · Stadium Steakhouse, unidade Barra*
+*Junho de 2026 · Stadium Steakhouse, unidade Barra · números
+fictícios, usados apenas como modelo de formato*
