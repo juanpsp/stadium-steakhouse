@@ -958,7 +958,15 @@
       pedir("/rest/v1/rpc/buscas", args),
       pedir("/rest/v1/rpc/por_hora", args),
       pedir("/rest/v1/rpc/aparelhos", args),
-      pedir("/rest/v1/rpc/banners", args)
+      pedir("/rest/v1/rpc/banners", args),
+      /* Sem o recorte de hora de propósito: este bloco É a
+         divisão por horário, e filtrá-lo pela hora escolhida
+         devolveria só a faixa escolhida. */
+      pedir("/rest/v1/rpc/pratos_por_faixa", {
+        p_restaurante: restaurante.id,
+        p_de: de.toISOString(),
+        p_ate: ate.toISOString()
+      })
     ])
       .then(function (r) {
         if (minhaCarga !== carga) return; /* já tem pedido mais novo */
@@ -1021,7 +1029,8 @@
           buscas: r[7] || [],
           distribuicao: dist,
           aparelhos: r[9] || [],
-          banners: r[10] || []
+          banners: r[10] || [],
+          porFaixa: r[11] || []
         };
         prepararCapa();
         $("[data-baixar-ia]").disabled = false;
@@ -1212,6 +1221,13 @@
           visita:
             "Uma aba aberta. A mesma pessoa voltando amanhã conta de novo; a " +
             "mesma pessoa indo da home ao cardápio conta uma vez só.",
+          pratos_por_faixa_do_dia:
+            "O mesmo prato, dividido pelo momento do dia em que foi olhado: " +
+            "almoco (11h-14h), tarde (15h-17h), jantar (18h-22h), noite " +
+            "(23h-2h) e fora do expediente. Serve para cruzar com a hora da " +
+            "venda: se a atenção a um prato se concentra às 19h e a venda dele " +
+            "acontece às 20h, o site está antecipando o pedido. Só aparecem " +
+            "pratos que receberam alguma atenção.",
           origem:
             "De onde a visita veio. mesa-barra e mesa-recreio são QR codes nas " +
             "mesas: essa pessoa está DENTRO do restaurante, sentada, prestes a " +
@@ -1304,6 +1320,21 @@
       alcance_unidades: funil(P.funilUnidades),
 
       pratos: pratos,
+
+      /* Em que momento do dia cada prato é olhado. Responde
+         perguntas do tipo "que horário olham mais a picanha", que
+         a distribuição global de visitas por hora não responde:
+         aquela é do site inteiro, esta é por prato. Cruzada com a
+         hora da venda, mostra se a atenção antecede o pedido. */
+      pratos_por_faixa_do_dia: (P.porFaixa || []).map(function (l) {
+        return {
+          id: l.chave,
+          nome: nomeDoPrato(l.chave),
+          faixa: l.faixa,
+          pessoas_que_viram: Number(l.pessoas || 0),
+          atencao_ms: Number(l.atencao_ms || 0)
+        };
+      }),
 
       buscas: P.buscas.map(function (l) {
         return {
