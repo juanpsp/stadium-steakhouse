@@ -627,21 +627,79 @@ A medição já está pronta. Falta imprimir o QR code.
 
 ---
 
+# PARTE 13 — O QUE VAMOS CONSTRUIR (já decidido)
+
+**Um script que roda no meu computador e chama a API do Claude.**
+Não é uma página web, não é um serviço hospedado.
+
+Deixando claro porque a palavra confunde: o script é local, o
+modelo é remoto. Não existe rodar o Claude na minha máquina — o
+programa lê os arquivos aqui, manda para a API pela internet e
+salva o relatório de volta aqui.
+
+```
+meu computador                        internet
+┌────────────────────┐
+│ script             │ ── 5 arquivos ──▶  API do Claude
+│ lê os 5 arquivos   │ ◀── relatório ───
+│ salva relatorio.md │
+└────────────────────┘
+```
+
+Por que script local e não página web: é um cliente só. Página
+web exigiria hospedagem, autenticação e um lugar para guardar os
+arquivos de memória — infraestrutura para um problema que ainda
+não existe. Quando forem cinco restaurantes, isso muda.
+
+## O que o script precisa fazer
+
+1. Ler os cinco arquivos de uma pasta (Parte 2)
+2. Montar a chamada com este documento como instrução
+3. Chamar `claude-opus-5` pela API
+4. Salvar o relatório em Markdown, com a data no nome
+5. Salvar o `de-para.json` e o `historico.json` atualizados que
+   a resposta devolver
+
+A chave da API fica em variável de ambiente, **nunca no código**
+e nunca num arquivo que vá para o Git.
+
+## Mas a ordem importa: validar antes de programar
+
+**O script não faz análise — ele automatiza uma análise que
+precisa funcionar antes.** Se o relatório sair ruim num chat, vai
+sair igualmente ruim no script.
+
+Então a primeira entrega não é código. É:
+
+1. Abrir um chat, colar este documento, anexar os arquivos
+2. Pedir o relatório base
+3. Julgar o resultado contra a Parte 6
+
+O que precisa estar certo antes de qualquer linha de código:
+
+- Fez as perguntas de reconciliação **antes** de concluir?
+- Achou os quatro quadrantes, e com evidência?
+- Respeitou o aviso das categorias de consumo automático?
+- Preencheu a seção "o que NÃO posso afirmar"?
+- As três ações são acionáveis, ou são platitude de consultoria?
+
+Se algo falhou, o conserto é **neste documento**, não no código.
+
+---
+
 # PRIMEIRA PERGUNTA
 
-Vamos começar decidindo **o que essa ferramenta vai ser, na
-prática**:
+Comece pela validação acima, não pelo código.
 
-- Um prompt que eu colo num chat junto dos arquivos?
-- Um programa que roda local e cospe um relatório?
-- Uma página web onde o dono sobe os arquivos e recebe a análise?
+Se eu já tiver anexado os dois arquivos de dados: faça a
+reconciliação, me pergunte o que não conseguiu resolver, e
+entregue o relatório base.
 
-Me diga qual você acha melhor **para o meu caso** — agência
-começando, um cliente, sem infraestrutura montada — e por quê.
+Se eu só tiver anexado o JSON de atenção: diga o que fica de
+fora sem o fechamento de contas e entregue o que dá.
 
-Leve em conta que a resposta precisa comportar os três arquivos
-de memória da Parte 8, porque é neles que está o valor que se
-acumula. Uma solução que não tenha onde guardá-los volta à
-estaca zero todo mês.
+Se eu não tiver anexado nada ainda: me diga exatamente o que
+pedir ao dono do restaurante, e em que formato, para eu ir
+buscar.
 
-Depois a gente constrói, **um passo de cada vez**.
+Depois a gente constrói o script, **um passo de cada vez**.
