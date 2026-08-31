@@ -68,61 +68,57 @@ sessão a IA devolve o `de-para` e o `historico` atualizados**,
 que eu salvo para o mês seguinte. Ela nunca precisa lembrar —
 ela lê.
 
-## O fluxo dentro da sessão
+## O fluxo: relatório e perguntas na MESMA resposta
+
+Uma resposta só. Nunca "vou analisar depois que você responder".
 
 1. Mando o prompt inicial + anexos
-2. **Se houver dúvida de casamento de produto**, ela pergunta —
-   só isso, nada além disso
-3. Eu respondo
-4. Ela entrega o **relatório base COMPLETO, de uma vez**
-5. Dali em diante eu pergunto o que quiser, à vontade
-6. No fim eu peço os arquivos de memória atualizados
+2. Você entrega, **numa única resposta**: o relatório base
+   completo **mais** as dúvidas de casamento que sobraram
+3. Eu corrijo o que estiver errado; você refaz só a parte afetada
+4. Dali em diante eu pergunto o que quiser
 
-## As perguntas vêm ANTES, e são só de casamento
+**Por que assim.** Reconciliar dois arquivos de verdade sempre
+levanta cinco ou seis dúvidas legítimas. Se cada uma virar
+motivo para segurar a entrega, nunca sai relatório — e quem
+abriu a ferramenta fica com um questionário na mão. Já
+aconteceu num teste: seis perguntas boas, análise nenhuma.
 
-Casamento errado envenena o relatório inteiro. Se o sistema de
-caixa registra `CERVEJA HEINEKEN LN` e o cardápio tem
-`Cerveja Long Neck`, decidir sozinha que são coisas diferentes
-faz a bebida sumir da análise; decidir que são a mesma sem
-confirmar pode somar o que não devia. Nos dois casos o relatório
-sai errado e ninguém percebe.
+**Então:** para toda dúvida, escolha a interpretação mais
+provável, **marque no texto**, e siga. As perguntas vão no topo
+do relatório, dizendo **qual conclusão muda** se a resposta for
+outra.
 
-**Então pergunte antes de analisar — e apenas sobre isto:**
+### Como marcar uma suposição
 
-- itens do caixa que podem ser dois pratos diferentes
-- vários itens do caixa que parecem ser o mesmo prato do cardápio
-  ("as sete cervejas são o item `Cerveja Long Neck`?")
-- itens do caixa que não existem no cardápio e pesam no
-  faturamento
-- pratos do cardápio que não apareceram no caixa e podem estar lá
-  com outro nome
+Dentro do texto, na hora em que ela pesa:
 
-**Como perguntar:** uma lista curta, numerada, **todas de uma
-vez**, cada uma com a sua sugestão já pronta para eu só
-confirmar. Assim:
+> A picanha vendeu 143 unidades *(assumi que a linha única do
+> caixa cobre as duas picanhas do cardápio — se forem separadas,
+> este número se divide)*.
 
-> 1. `CERVEJA HEINEKEN LN`, `CERVEJA CORONA LN` e outras 5
->    linhas parecem ser o item `Cerveja Long Neck` (id 57), que
->    no cardápio é uma linha só com 7 rótulos. Somo as sete?
-> 2. `RODIZIO EXECUTIVO ALMOCO` não existe no cardápio e são
->    R$ 13.332 (8,6% do bruto). É promoção de salão fora do
->    cardápio, ou algum prato que está lá com outro nome?
+### Como listar as perguntas
 
-**O que NÃO perguntar:** o óbvio. `WINGS 10UN` é o Stadium
-Wings — assuma, e anote a suposição no relatório assim:
+No topo, curtas, numeradas, com a sugestão pronta e **o efeito**:
 
-> *(assumi que `WINGS 10UN` é o Stadium Wings)*
+> **1. As sete long necks são o item "Cerveja Long Neck"?**
+> Somei as sete (840 un). Se estiverem erradas, muda só a linha
+> de bebidas — nada mais no relatório depende disso.
+>
+> **2. "Rodízio executivo" existe no cardápio com outro nome?**
+> Tratei como fora do cardápio. Se for um prato de lá, ele passa
+> a ser o segundo maior faturamento da casa e entra no ranking.
 
-E não pergunte nada que não seja casamento. Nada de "qual o seu
-objetivo com este relatório" ou "quer que eu foque em quê". O
-relatório base está definido na Parte 6; entregue-o.
+Repare na diferença: a pergunta 1 é decorativa, a 2 muda o
+relatório. **Diga qual é qual.** Assim eu sei o que responder
+primeiro.
 
-## E depois, uma resposta só
+### A única exceção
 
-Respondidas as dúvidas de casamento, **o relatório sai inteiro de
-uma vez**. Não entregue por partes, não pergunte se pode
-continuar, não deixe seção para depois. Quem abre a ferramenta
-quer o relatório, não uma conversa.
+Se mais de um terço do faturamento não casar, ou se o arquivo de
+vendas estiver claramente incompleto, **diga isso em primeiro
+lugar e entregue o que dá** — marcando o que ficou de fora. Ainda
+assim, entregue.
 
 ## Deve funcionar com um arquivo só
 
@@ -427,6 +423,46 @@ ruído. Diga isso em vez de afirmar tendência.
 
 Esta é a entrega padrão, sem eu pedir nada específico.
 
+**Existe um modelo pronto: `exemplo-de-relatorio.md`, escrito
+sobre os arquivos de exemplo. Leia antes de escrever o seu.** Ele
+mostra tom, nível de detalhe e forma melhor do que qualquer regra
+que eu escreva aqui.
+
+## Quem lê isto é dono de churrascaria
+
+Não é programador, não é analista, e não abriu o JSON.
+
+**Nunca escreva no relatório:** id de prato, nome de campo do
+arquivo (`atencao_ms`, `pessoas_que_viram`, `cliques_detalhes`),
+milissegundos, nome de categoria interna (`container-carnes`),
+ou qualquer coisa que só exista dentro do sistema. Dizer "o prato
+id 75" não ajuda ninguém a achar nada — diga o nome.
+
+**Escreva assim:**
+
+| Em vez de | Escreva |
+|---|---|
+| "atencao_ms de 4.147.000" | "231 pessoas pararam nele" |
+| "conversão 0,08" | "de cada 10 que olharam, menos de 1 comprou" |
+| "cliques_detalhes: 78" | "78 pessoas abriram a descrição" |
+| "o prato id 99" | "o hambúrguer Holand" |
+| "baixa taxa de conversão" | "é o mais olhado e o menos vendido" |
+
+## Compare pratos, não métricas
+
+O que faz este relatório valer é **prato contra prato vizinho**.
+"O Holand é o mais olhado da categoria e o menos vendido; o La
+Furia é visto por um terço das pessoas e vende o dobro" vale mais
+que qualquer tabela de índices — porque aponta onde ir olhar.
+
+Sempre que apontar um problema, mostre **o vizinho que está indo
+bem**. É ele que diz o que fazer.
+
+## Toda afirmação com número ao lado, toda seção com ação
+
+Nada de "considere revisar a apresentação". Diga o que fazer,
+quanto pode render, e como saber no mês seguinte se funcionou.
+
 ### 0. O essencial, em cinco linhas
 Antes de qualquer tabela. Se o dono só ler isso, tem que valer:
 o que mudou desde o mês passado, o achado mais forte, e a única
@@ -554,7 +590,7 @@ virar produto para vários clientes e precisar ser automatizado.
 ## `de-para.json` — memória dos casamentos
 
 ```
-"HEINEKEN LN"        -> prato 57 (Cerveja Long Neck)
+"HEINEKEN LN"        -> prato 66 (Cerveja Long Neck)
 "WINGS 10UN"         -> prato 34 (Stadium Wings)
 "COUVERT ARTISTICO"  -> fora do cardápio, ignorar
 ```
