@@ -1122,11 +1122,13 @@
 
     var porPrato = {};
     var porVoltas = {};
+    var porPessoas = {};
     var porClique = {};
     P.resumo.forEach(function (l) {
       if (l.tipo === "prato") {
         porPrato[l.chave] = Number(l.tempo_ms || 0);
         porVoltas[l.chave] = Number(l.paradas || 0);
+        porPessoas[l.chave] = Number(l.pessoas || 0);
       } else if (l.tipo === "clique") {
         porClique[l.chave] = Number(l.cliques || 0);
       }
@@ -1139,6 +1141,10 @@
         categoria: c.categoria,
         preco_reais: c.preco_reais,
         atencao_ms: porPrato[c.id] || 0,
+        /* O denominador de qualquer conta de conversão. Sem ele,
+           só existe tempo total — e tempo total confunde "muita
+           gente olhando pouco" com "pouca gente olhando muito". */
+        pessoas_que_viram: porPessoas[c.id] || 0,
         voltas: porVoltas[c.id] || 0,
         cliques_detalhes: porClique[c.id] || 0
       };
@@ -1183,6 +1189,12 @@
             "Tempo em que o item ficou de fato na tela, em milissegundos. Não " +
             "é tempo de aba aberta: o relógio para quando a pessoa fica 15s " +
             "sem rolar nem tocar, e quando ela sai da aba.",
+          pessoas_que_viram:
+            "Quantas visitas distintas chegaram a ver este prato. É o " +
+            "denominador de qualquer conta de conversão: vendas divididas por " +
+            "ISTO, nunca por atencao_ms. E é o que separa 'muita gente olhando " +
+            "pouco' de 'pouca gente olhando muito' — 195s em 10 pessoas e 97s " +
+            "em 3 parecem opostos pelo total e se invertem por pessoa.",
           voltas:
             "Quantas vezes separadas a pessoa voltou ao MESMO prato na mesma " +
             "visita. É sinal de indecisão. 47s em 6 voltas e 47s numa volta só " +
