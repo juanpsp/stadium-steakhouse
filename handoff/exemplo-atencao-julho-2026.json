@@ -1,0 +1,1876 @@
+{
+  "leia_primeiro": {
+    "o_que_e_este_arquivo": "Medição de ATENÇÃO no cardápio digital do restaurante Stadium Steakhouse. Não é dado de venda: ninguém compra por este site. Descreve o que as pessoas olharam, por quanto tempo e até onde desceram, antes de pedir.",
+    "para_que_serve": "Foi feito para ser cruzado com o relatório de vendas do restaurante. O elo entre os dois é o prato: use id quando o sistema de vendas tiver o mesmo identificador, e nome quando não tiver. O campo nome é exatamente como está escrito no cardápio.",
+    "o_que_cada_medida_significa": {
+      "atencao_ms": "Tempo em que o item ficou de fato na tela, em milissegundos. Não é tempo de aba aberta: o relógio para quando a pessoa fica 15s sem rolar nem tocar, e quando ela sai da aba.",
+      "pessoas_que_viram": "Quantas visitas distintas chegaram a ver este prato. É o denominador de qualquer conta de conversão: vendas divididas por ISTO, nunca por atencao_ms.",
+      "voltas": "Quantas vezes separadas a pessoa voltou ao MESMO prato na mesma visita. É sinal de indecisão.",
+      "cliques_detalhes": "Quantas vezes abriram os detalhes do prato. É escolha, não acaso, mas tem dois sentidos opostos: interesse ou descrição ruim.",
+      "pratos_por_faixa_do_dia": "O mesmo prato, dividido pelo momento do dia em que foi olhado: almoco (11h-14h), tarde (15h-17h), jantar (18h-22h), noite (23h-2h).",
+      "porcentagem_que_chegou": "De cada 100 visitas àquela página, quantas ROLARAM até o bloco. Chegar é diferente de parar.",
+      "origem": "De onde a visita veio. mesa-barra e mesa-recreio são QR codes nas mesas: essa pessoa está DENTRO do restaurante, sentada, prestes a pedir."
+    },
+    "cuidados_obrigatorios": [
+      "ATENÇÃO NÃO É INTENÇÃO DE COMPRA.",
+      "POSIÇÃO CONTAMINA TUDO. Compare pratos da MESMA categoria.",
+      "PREÇO EXPLICA POUCO NESTE CARDÁPIO. Dezessete hambúrgueres custam o mesmo valor.",
+      "atencao_ms IGUAL A ZERO não quer dizer prato ruim: pode ser prato que ninguém chegou a ver.",
+      "VOLUME PEQUENO NÃO CONCLUI NADA.",
+      "AS FOTOS DOS PRATOS AINDA SÃO PROVISÓRIAS nesta fase do projeto."
+    ],
+    "o_que_este_arquivo_nao_tem": "Não tem venda, não tem faturamento e não identifica ninguém."
+  },
+  "gerado_em": "2026-08-02T09:14:00.000Z",
+  "restaurante": "Stadium Steakhouse",
+  "periodo": {
+    "de": "2026-07-01",
+    "ate": "2026-07-31",
+    "fuso": "America/Sao_Paulo",
+    "recorte_de_horario": null
+  },
+  "resumo": {
+    "visitas": 340,
+    "tempo_total_ms": 41870000,
+    "tempo_medio_por_visita_ms": 123147,
+    "visitas_home": 214,
+    "visitas_cardapio": 198,
+    "visitas_unidades": 87,
+    "cliques_em_detalhes": 512,
+    "pratos_com_alguma_atencao": 128,
+    "pratos_no_cardapio": 129
+  },
+  "de_onde_vieram": [
+    {
+      "origem": "mesa-barra",
+      "visitas": 118,
+      "porcentagem": 34.7,
+      "tempo_medio_ms": 186000
+    },
+    {
+      "origem": "mesa-recreio",
+      "visitas": 71,
+      "porcentagem": 20.9,
+      "tempo_medio_ms": 171000
+    },
+    {
+      "origem": "instagram",
+      "visitas": 74,
+      "porcentagem": 21.8,
+      "tempo_medio_ms": 61000
+    },
+    {
+      "origem": "google",
+      "visitas": 49,
+      "porcentagem": 14.4,
+      "tempo_medio_ms": 74000
+    },
+    {
+      "origem": "direto",
+      "visitas": 28,
+      "porcentagem": 8.2,
+      "tempo_medio_ms": 52000
+    }
+  ],
+  "aparelhos": [
+    {
+      "aparelho": "celular",
+      "visitas": 326,
+      "porcentagem": 95.9,
+      "tempo_medio_ms": 127000
+    },
+    {
+      "aparelho": "computador",
+      "visitas": 11,
+      "porcentagem": 3.2,
+      "tempo_medio_ms": 88000
+    },
+    {
+      "aparelho": "tablet",
+      "visitas": 3,
+      "porcentagem": 0.9,
+      "tempo_medio_ms": 94000
+    }
+  ],
+  "visitas_por_hora_do_dia": [
+    {
+      "chave": 11,
+      "visitas": 14
+    },
+    {
+      "chave": 12,
+      "visitas": 41
+    },
+    {
+      "chave": 13,
+      "visitas": 38
+    },
+    {
+      "chave": 14,
+      "visitas": 19
+    },
+    {
+      "chave": 15,
+      "visitas": 8
+    },
+    {
+      "chave": 16,
+      "visitas": 6
+    },
+    {
+      "chave": 17,
+      "visitas": 11
+    },
+    {
+      "chave": 18,
+      "visitas": 27
+    },
+    {
+      "chave": 19,
+      "visitas": 52
+    },
+    {
+      "chave": 20,
+      "visitas": 61
+    },
+    {
+      "chave": 21,
+      "visitas": 34
+    },
+    {
+      "chave": 22,
+      "visitas": 18
+    },
+    {
+      "chave": 23,
+      "visitas": 9
+    },
+    {
+      "chave": 0,
+      "visitas": 2
+    }
+  ],
+  "visitas_por_dia_da_semana": [
+    {
+      "chave": 0,
+      "visitas": 62
+    },
+    {
+      "chave": 1,
+      "visitas": 21
+    },
+    {
+      "chave": 2,
+      "visitas": 24
+    },
+    {
+      "chave": 3,
+      "visitas": 33
+    },
+    {
+      "chave": 4,
+      "visitas": 41
+    },
+    {
+      "chave": 5,
+      "visitas": 79
+    },
+    {
+      "chave": 6,
+      "visitas": 80
+    }
+  ],
+  "alcance_carrossel": [
+    {
+      "posicao": 1,
+      "visitas_que_viram": 214,
+      "porcentagem_que_viu": 100
+    },
+    {
+      "posicao": 2,
+      "visitas_que_viram": 92,
+      "porcentagem_que_viu": 43
+    },
+    {
+      "posicao": 3,
+      "visitas_que_viram": 31,
+      "porcentagem_que_viu": 14.5
+    },
+    {
+      "posicao": 4,
+      "visitas_que_viram": 9,
+      "porcentagem_que_viu": 4.2
+    }
+  ],
+  "alcance_home": [
+    {
+      "bloco": "banners",
+      "nome": "Banners do topo",
+      "visitas_que_chegaram": 214,
+      "porcentagem_que_chegou": 100,
+      "atencao_media_ms": 14200
+    },
+    {
+      "bloco": "destaque",
+      "nome": "Craque da semana",
+      "visitas_que_chegaram": 137,
+      "porcentagem_que_chegou": 64,
+      "atencao_media_ms": 9800
+    },
+    {
+      "bloco": "delivery",
+      "nome": "Delivery",
+      "visitas_que_chegaram": 118,
+      "porcentagem_que_chegou": 55.1,
+      "atencao_media_ms": 900
+    },
+    {
+      "bloco": "equipe",
+      "nome": "Nosso time",
+      "visitas_que_chegaram": 84,
+      "porcentagem_que_chegou": 39.3,
+      "atencao_media_ms": 7100
+    },
+    {
+      "bloco": "unidades",
+      "nome": "Nossas unidades",
+      "visitas_que_chegaram": 71,
+      "porcentagem_que_chegou": 33.2,
+      "atencao_media_ms": 5600
+    }
+  ],
+  "alcance_cardapio": [
+    {
+      "bloco": "container-aquecimento",
+      "nome": "Aquecimentos",
+      "visitas_que_chegaram": 198,
+      "porcentagem_que_chegou": 100,
+      "atencao_media_ms": 17158
+    },
+    {
+      "bloco": "container-bebidas",
+      "nome": "Bebidas",
+      "visitas_que_chegaram": 176,
+      "porcentagem_que_chegou": 89,
+      "atencao_media_ms": 18198
+    },
+    {
+      "bloco": "container-carnes",
+      "nome": "Carnes",
+      "visitas_que_chegaram": 156,
+      "porcentagem_que_chegou": 79,
+      "atencao_media_ms": 12110
+    },
+    {
+      "bloco": "container-compartilhados",
+      "nome": "Compartilhados",
+      "visitas_que_chegaram": 143,
+      "porcentagem_que_chegou": 72,
+      "atencao_media_ms": 11478
+    },
+    {
+      "bloco": "container-frangosPeixes",
+      "nome": "Frango e peixes",
+      "visitas_que_chegaram": 123,
+      "porcentagem_que_chegou": 62,
+      "atencao_media_ms": 24074
+    },
+    {
+      "bloco": "container-pastas",
+      "nome": "Massas",
+      "visitas_que_chegaram": 111,
+      "porcentagem_que_chegou": 56,
+      "atencao_media_ms": 13951
+    },
+    {
+      "bloco": "container-kids",
+      "nome": "Kids",
+      "visitas_que_chegaram": 91,
+      "porcentagem_que_chegou": 46,
+      "atencao_media_ms": 20066
+    },
+    {
+      "bloco": "container-hamburgueres",
+      "nome": "Burgers",
+      "visitas_que_chegaram": 79,
+      "porcentagem_que_chegou": 40,
+      "atencao_media_ms": 11375
+    },
+    {
+      "bloco": "container-saladas",
+      "nome": "Saladas",
+      "visitas_que_chegaram": 61,
+      "porcentagem_que_chegou": 31,
+      "atencao_media_ms": 29233
+    },
+    {
+      "bloco": "container-prorrogacao",
+      "nome": "Sobremesas",
+      "visitas_que_chegaram": 42,
+      "porcentagem_que_chegou": 21,
+      "atencao_media_ms": 27128
+    },
+    {
+      "bloco": "container-assistencias",
+      "nome": "Acompanhamentos",
+      "visitas_que_chegaram": 24,
+      "porcentagem_que_chegou": 12,
+      "atencao_media_ms": 15066
+    },
+    {
+      "bloco": "container-drinks",
+      "nome": "Drinks",
+      "visitas_que_chegaram": 12,
+      "porcentagem_que_chegou": 6,
+      "atencao_media_ms": 10995
+    }
+  ],
+  "alcance_unidades": [
+    {
+      "bloco": "intro",
+      "nome": "Abertura da página",
+      "visitas_que_chegaram": 87,
+      "porcentagem_que_chegou": 100,
+      "atencao_media_ms": 3100
+    },
+    {
+      "bloco": "unidade-barra",
+      "nome": "Barra",
+      "visitas_que_chegaram": 87,
+      "porcentagem_que_chegou": 100,
+      "atencao_media_ms": 22400
+    },
+    {
+      "bloco": "unidade-recreio",
+      "nome": "Recreio · Praia",
+      "visitas_que_chegaram": 34,
+      "porcentagem_que_chegou": 39.1,
+      "atencao_media_ms": 15900
+    },
+    {
+      "bloco": "reserva",
+      "nome": "Reserve a sua mesa",
+      "visitas_que_chegaram": 29,
+      "porcentagem_que_chegou": 33.3,
+      "atencao_media_ms": 4200
+    }
+  ],
+  "pratos": [
+    {
+      "id": "34",
+      "nome": "Stadium Wings (HDT)",
+      "categoria": "Aquecimentos",
+      "preco_reais": 44.9,
+      "atencao_ms": 4851000,
+      "pessoas_que_viram": 231,
+      "voltas": 439,
+      "cliques_detalhes": 44
+    },
+    {
+      "id": "39",
+      "nome": "Pastel (6 unidades)",
+      "categoria": "Aquecimentos",
+      "preco_reais": 65.9,
+      "atencao_ms": 3408000,
+      "pessoas_que_viram": 142,
+      "voltas": 227,
+      "cliques_detalhes": 78
+    },
+    {
+      "id": "40",
+      "nome": "Fries Team",
+      "categoria": "Aquecimentos",
+      "preco_reais": 69.9,
+      "atencao_ms": 712624,
+      "pessoas_que_viram": 88,
+      "voltas": 119,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "41",
+      "nome": "Carpaccio de Carne",
+      "categoria": "Aquecimentos",
+      "preco_reais": 69.9,
+      "atencao_ms": 1331000,
+      "pessoas_que_viram": 121,
+      "voltas": 157,
+      "cliques_detalhes": 14
+    },
+    {
+      "id": "42",
+      "nome": "Linguiça Artesanal",
+      "categoria": "Aquecimentos",
+      "preco_reais": 69.9,
+      "atencao_ms": 406863,
+      "pessoas_que_viram": 81,
+      "voltas": 84,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "1",
+      "nome": "Pão de Alho",
+      "categoria": "Aquecimentos",
+      "preco_reais": 10.5,
+      "atencao_ms": 190000,
+      "pessoas_que_viram": 38,
+      "voltas": 42,
+      "cliques_detalhes": 3
+    },
+    {
+      "id": "35",
+      "nome": "Ceviche de Salmão",
+      "categoria": "Aquecimentos",
+      "preco_reais": 53.9,
+      "atencao_ms": 641316,
+      "pessoas_que_viram": 78,
+      "voltas": 84,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "36",
+      "nome": "Biro Biro",
+      "categoria": "Aquecimentos",
+      "preco_reais": 59.9,
+      "atencao_ms": 560716,
+      "pessoas_que_viram": 52,
+      "voltas": 56,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "37",
+      "nome": "Juanitos Nachos",
+      "categoria": "Aquecimentos",
+      "preco_reais": 54.9,
+      "atencao_ms": 405432,
+      "pessoas_que_viram": 54,
+      "voltas": 74,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "38",
+      "nome": "Charles Muller Chicken",
+      "categoria": "Aquecimentos",
+      "preco_reais": 59.9,
+      "atencao_ms": 108648,
+      "pessoas_que_viram": 27,
+      "voltas": 37,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "43",
+      "nome": "Jabulonion",
+      "categoria": "Aquecimentos",
+      "preco_reais": 76.9,
+      "atencao_ms": 304612,
+      "pessoas_que_viram": 28,
+      "voltas": 37,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "44",
+      "nome": "Gol de Peixinho",
+      "categoria": "Aquecimentos",
+      "preco_reais": 79.9,
+      "atencao_ms": 78948,
+      "pessoas_que_viram": 17,
+      "voltas": 24,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "45",
+      "nome": "Milla Shrimp",
+      "categoria": "Aquecimentos",
+      "preco_reais": 95.9,
+      "atencao_ms": 54030,
+      "pessoas_que_viram": 10,
+      "voltas": 10,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "46",
+      "nome": "Stadium Ribs",
+      "categoria": "Aquecimentos",
+      "preco_reais": 119.9,
+      "atencao_ms": 79570,
+      "pessoas_que_viram": 10,
+      "voltas": 13,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "47",
+      "nome": "Melbourne Rib",
+      "categoria": "Aquecimentos",
+      "preco_reais": 72.9,
+      "atencao_ms": 88893,
+      "pessoas_que_viram": 17,
+      "voltas": 23,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "48",
+      "nome": "Castelão",
+      "categoria": "Aquecimentos",
+      "preco_reais": 99.9,
+      "atencao_ms": 133784,
+      "pessoas_que_viram": 14,
+      "voltas": 15,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "49",
+      "nome": "Quesadillas",
+      "categoria": "Aquecimentos",
+      "preco_reais": 87.9,
+      "atencao_ms": 58084,
+      "pessoas_que_viram": 13,
+      "voltas": 15,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "50",
+      "nome": "Suarez Mignon",
+      "categoria": "Aquecimentos",
+      "preco_reais": 149.9,
+      "atencao_ms": 55360,
+      "pessoas_que_viram": 10,
+      "voltas": 12,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "51",
+      "nome": "Suarez Mignon 2.0",
+      "categoria": "Aquecimentos",
+      "preco_reais": 159.9,
+      "atencao_ms": 90134,
+      "pessoas_que_viram": 11,
+      "voltas": 15,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "52",
+      "nome": "Fenômeno",
+      "categoria": "Aquecimentos",
+      "preco_reais": 219.9,
+      "atencao_ms": 5376000,
+      "pessoas_que_viram": 168,
+      "voltas": 571,
+      "cliques_detalhes": 61
+    },
+    {
+      "id": "64",
+      "nome": "Chope Caldereta",
+      "categoria": "Bebidas",
+      "preco_reais": 9.9,
+      "atencao_ms": 1621620,
+      "pessoas_que_viram": 154,
+      "voltas": 174,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "65",
+      "nome": "Chope Caneca",
+      "categoria": "Bebidas",
+      "preco_reais": 12.9,
+      "atencao_ms": 55000,
+      "pessoas_que_viram": 22,
+      "voltas": 22,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "66",
+      "nome": "Cerveja Long Neck",
+      "categoria": "Bebidas",
+      "preco_reais": 12.9,
+      "atencao_ms": 81000,
+      "pessoas_que_viram": 27,
+      "voltas": 27,
+      "cliques_detalhes": 1
+    },
+    {
+      "id": "53",
+      "nome": "Água",
+      "categoria": "Bebidas",
+      "preco_reais": 8.5,
+      "atencao_ms": 905968,
+      "pessoas_que_viram": 112,
+      "voltas": 116,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "54",
+      "nome": "Refrigerante Refil",
+      "categoria": "Bebidas",
+      "preco_reais": 17.9,
+      "atencao_ms": 41800,
+      "pessoas_que_viram": 19,
+      "voltas": 19,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "55",
+      "nome": "Refrigerante Lata",
+      "categoria": "Bebidas",
+      "preco_reais": 9.4,
+      "atencao_ms": 257004,
+      "pessoas_que_viram": 59,
+      "voltas": 74,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "56",
+      "nome": "Mate ou Ice Tea Refil",
+      "categoria": "Bebidas",
+      "preco_reais": 17.9,
+      "atencao_ms": 675810,
+      "pessoas_que_viram": 90,
+      "voltas": 111,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "57",
+      "nome": "Limonada Refil",
+      "categoria": "Bebidas",
+      "preco_reais": 17.9,
+      "atencao_ms": 395330,
+      "pessoas_que_viram": 65,
+      "voltas": 85,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "58",
+      "nome": "Água Tônica",
+      "categoria": "Bebidas",
+      "preco_reais": 9.8,
+      "atencao_ms": 535989,
+      "pessoas_que_viram": 53,
+      "voltas": 57,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "59",
+      "nome": "H2O",
+      "categoria": "Bebidas",
+      "preco_reais": 13.9,
+      "atencao_ms": 284856,
+      "pessoas_que_viram": 44,
+      "voltas": 46,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "60",
+      "nome": "Sucos",
+      "categoria": "Bebidas",
+      "preco_reais": 13.9,
+      "atencao_ms": 120432,
+      "pessoas_que_viram": 26,
+      "voltas": 28,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "61",
+      "nome": "Del Valle",
+      "categoria": "Bebidas",
+      "preco_reais": 13.9,
+      "atencao_ms": 116705,
+      "pessoas_que_viram": 17,
+      "voltas": 20,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "62",
+      "nome": "Milk Shake",
+      "categoria": "Bebidas",
+      "preco_reais": 29.9,
+      "atencao_ms": 125925,
+      "pessoas_que_viram": 15,
+      "voltas": 15,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "63",
+      "nome": "Café Expresso",
+      "categoria": "Bebidas",
+      "preco_reais": 8.5,
+      "atencao_ms": 121043,
+      "pessoas_que_viram": 13,
+      "voltas": 16,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "67",
+      "nome": "Filé Mignon",
+      "categoria": "Carnes",
+      "preco_reais": 109.9,
+      "atencao_ms": 908216,
+      "pessoas_que_viram": 107,
+      "voltas": 145,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "68",
+      "nome": "Fraldinha",
+      "categoria": "Carnes",
+      "preco_reais": 99.9,
+      "atencao_ms": 796432,
+      "pessoas_que_viram": 112,
+      "voltas": 142,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "69",
+      "nome": "Sirloin",
+      "categoria": "Carnes",
+      "preco_reais": 94.9,
+      "atencao_ms": 863702,
+      "pessoas_que_viram": 119,
+      "voltas": 154,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "70",
+      "nome": "Strip",
+      "categoria": "Carnes",
+      "preco_reais": 99.9,
+      "atencao_ms": 985632,
+      "pessoas_que_viram": 96,
+      "voltas": 111,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "71",
+      "nome": "Medalhão de Ouro",
+      "categoria": "Carnes",
+      "preco_reais": 95.9,
+      "atencao_ms": 569875,
+      "pessoas_que_viram": 97,
+      "voltas": 111,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "72",
+      "nome": "Filé Maracanã",
+      "categoria": "Carnes",
+      "preco_reais": 109.9,
+      "atencao_ms": 470474,
+      "pessoas_que_viram": 67,
+      "voltas": 84,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "73",
+      "nome": "Ribeye",
+      "categoria": "Carnes",
+      "preco_reais": 119.9,
+      "atencao_ms": 834603,
+      "pessoas_que_viram": 77,
+      "voltas": 96,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "74",
+      "nome": "Picanha",
+      "categoria": "Carnes",
+      "preco_reais": 119.9,
+      "atencao_ms": 460656,
+      "pessoas_que_viram": 56,
+      "voltas": 71,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "75",
+      "nome": "Picanha Nacional di Chile",
+      "categoria": "Carnes",
+      "preco_reais": 119.9,
+      "atencao_ms": 5122000,
+      "pessoas_que_viram": 197,
+      "voltas": 512,
+      "cliques_detalhes": 52
+    },
+    {
+      "id": "76",
+      "nome": "Salmão Nacional de Santiago",
+      "categoria": "Frango e peixes",
+      "preco_reais": 98.9,
+      "atencao_ms": 630480,
+      "pessoas_que_viram": 148,
+      "voltas": 170,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "77",
+      "nome": "Kahn Chicken",
+      "categoria": "Frango e peixes",
+      "preco_reais": 65.9,
+      "atencao_ms": 1036875,
+      "pessoas_que_viram": 125,
+      "voltas": 145,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "78",
+      "nome": "Banks Chicken",
+      "categoria": "Frango e peixes",
+      "preco_reais": 76.9,
+      "atencao_ms": 662100,
+      "pessoas_que_viram": 100,
+      "voltas": 108,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "79",
+      "nome": "Sole Filet",
+      "categoria": "Frango e peixes",
+      "preco_reais": 87.9,
+      "atencao_ms": 822676,
+      "pessoas_que_viram": 86,
+      "voltas": 87,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "80",
+      "nome": "Casillas Chicken",
+      "categoria": "Frango e peixes",
+      "preco_reais": 83.9,
+      "atencao_ms": 587730,
+      "pessoas_que_viram": 110,
+      "voltas": 122,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "81",
+      "nome": "Yashin Chicken Fingers",
+      "categoria": "Frango e peixes",
+      "preco_reais": 65.9,
+      "atencao_ms": 536775,
+      "pessoas_que_viram": 75,
+      "voltas": 89,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "82",
+      "nome": "Tilápia Parc de Princes",
+      "categoria": "Frango e peixes",
+      "preco_reais": 89.9,
+      "atencao_ms": 679484,
+      "pessoas_que_viram": 73,
+      "voltas": 90,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "83",
+      "nome": "Pasta Canavarro",
+      "categoria": "Massas",
+      "preco_reais": 79.9,
+      "atencao_ms": 765585,
+      "pessoas_que_viram": 159,
+      "voltas": 222,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "84",
+      "nome": "Penne Meazza",
+      "categoria": "Massas",
+      "preco_reais": 79.9,
+      "atencao_ms": 794713,
+      "pessoas_que_viram": 151,
+      "voltas": 190,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "85",
+      "nome": "Pasta Formaggio",
+      "categoria": "Massas",
+      "preco_reais": 79.9,
+      "atencao_ms": 621105,
+      "pessoas_que_viram": 141,
+      "voltas": 166,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "86",
+      "nome": "Pasta Piola",
+      "categoria": "Massas",
+      "preco_reais": 79.9,
+      "atencao_ms": 816000,
+      "pessoas_que_viram": 96,
+      "voltas": 111,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "87",
+      "nome": "Pasta Rossi",
+      "categoria": "Massas",
+      "preco_reais": 79.9,
+      "atencao_ms": 643910,
+      "pessoas_que_viram": 95,
+      "voltas": 133,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "88",
+      "nome": "Cheeseburger Infantil",
+      "categoria": "Kids",
+      "preco_reais": 39.9,
+      "atencao_ms": 1877750,
+      "pessoas_que_viram": 175,
+      "voltas": 190,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "89",
+      "nome": "Júnior Fingers",
+      "categoria": "Kids",
+      "preco_reais": 54.9,
+      "atencao_ms": 988470,
+      "pessoas_que_viram": 126,
+      "voltas": 168,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "90",
+      "nome": "Filézinho",
+      "categoria": "Kids",
+      "preco_reais": 62.9,
+      "atencao_ms": 1518480,
+      "pessoas_que_viram": 148,
+      "voltas": 176,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "91",
+      "nome": "Peixinho",
+      "categoria": "Kids",
+      "preco_reais": 54.9,
+      "atencao_ms": 1103884,
+      "pessoas_que_viram": 106,
+      "voltas": 125,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "92",
+      "nome": "Kids Pasta",
+      "categoria": "Kids",
+      "preco_reais": 54.9,
+      "atencao_ms": 0,
+      "pessoas_que_viram": 0,
+      "voltas": 0,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "93",
+      "nome": "Holand",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 866725,
+      "pessoas_que_viram": 185,
+      "voltas": 243,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "94",
+      "nome": "Brazuca",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 725340,
+      "pessoas_que_viram": 154,
+      "voltas": 159,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "95",
+      "nome": "Brocador",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 1149834,
+      "pessoas_que_viram": 147,
+      "voltas": 185,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "96",
+      "nome": "Cheeseburguer",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 861076,
+      "pessoas_que_viram": 122,
+      "voltas": 159,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "97",
+      "nome": "Baggio",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 1271439,
+      "pessoas_que_viram": 117,
+      "voltas": 142,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "98",
+      "nome": "La Furia",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 370254,
+      "pessoas_que_viram": 69,
+      "voltas": 83,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "99",
+      "nome": "Stadium",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 352512,
+      "pessoas_que_viram": 68,
+      "voltas": 81,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "100",
+      "nome": "Love",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 342364,
+      "pessoas_que_viram": 44,
+      "voltas": 52,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "101",
+      "nome": "Juanito",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 565326,
+      "pessoas_que_viram": 57,
+      "voltas": 77,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "102",
+      "nome": "R10",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 406502,
+      "pessoas_que_viram": 46,
+      "voltas": 50,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "103",
+      "nome": "The King Picanha",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 107583,
+      "pessoas_que_viram": 21,
+      "voltas": 24,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "104",
+      "nome": "Camisa 10",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 69091,
+      "pessoas_que_viram": 11,
+      "voltas": 13,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "105",
+      "nome": "Clássico",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 71370,
+      "pessoas_que_viram": 13,
+      "voltas": 14,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "106",
+      "nome": "R9 - Questra Smash",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 124644,
+      "pessoas_que_viram": 12,
+      "voltas": 12,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "107",
+      "nome": "R11 - Tango Smash",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 116292,
+      "pessoas_que_viram": 12,
+      "voltas": 14,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "108",
+      "nome": "R7",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 109072,
+      "pessoas_que_viram": 17,
+      "voltas": 21,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "109",
+      "nome": "Celeste Mignon",
+      "categoria": "Burgers",
+      "preco_reais": 59.9,
+      "atencao_ms": 56719,
+      "pessoas_que_viram": 13,
+      "voltas": 17,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "110",
+      "nome": "Mexican Salad",
+      "categoria": "Saladas",
+      "preco_reais": 79.9,
+      "atencao_ms": 621814,
+      "pessoas_que_viram": 146,
+      "voltas": 167,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "111",
+      "nome": "Stadium Soup",
+      "categoria": "Saladas",
+      "preco_reais": 38.9,
+      "atencao_ms": 858312,
+      "pessoas_que_viram": 156,
+      "voltas": 178,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "112",
+      "nome": "Stadium Salad",
+      "categoria": "Saladas",
+      "preco_reais": 42.9,
+      "atencao_ms": 867054,
+      "pessoas_que_viram": 122,
+      "voltas": 143,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "113",
+      "nome": "Nonna Salad",
+      "categoria": "Saladas",
+      "preco_reais": 53.9,
+      "atencao_ms": 778023,
+      "pessoas_que_viram": 137,
+      "voltas": 155,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "114",
+      "nome": "Grilled Caesar Salad",
+      "categoria": "Saladas",
+      "preco_reais": 72.9,
+      "atencao_ms": 899100,
+      "pessoas_que_viram": 100,
+      "voltas": 118,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "115",
+      "nome": "Taça Stadium",
+      "categoria": "Sobremesas",
+      "preco_reais": 64.9,
+      "atencao_ms": 847360,
+      "pessoas_que_viram": 128,
+      "voltas": 151,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "116",
+      "nome": "Mineirão",
+      "categoria": "Sobremesas",
+      "preco_reais": 39.9,
+      "atencao_ms": 612361,
+      "pessoas_que_viram": 107,
+      "voltas": 107,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "117",
+      "nome": "Tríplice Coroa",
+      "categoria": "Sobremesas",
+      "preco_reais": 35.9,
+      "atencao_ms": 823485,
+      "pessoas_que_viram": 123,
+      "voltas": 135,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "118",
+      "nome": "Milkshake",
+      "categoria": "Sobremesas",
+      "preco_reais": 29.9,
+      "atencao_ms": 812020,
+      "pessoas_que_viram": 110,
+      "voltas": 144,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "119",
+      "nome": "Golden Goal",
+      "categoria": "Sobremesas",
+      "preco_reais": 46.9,
+      "atencao_ms": 721278,
+      "pessoas_que_viram": 111,
+      "voltas": 146,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "120",
+      "nome": "Cheesecake",
+      "categoria": "Sobremesas",
+      "preco_reais": 27.9,
+      "atencao_ms": 296743,
+      "pessoas_que_viram": 67,
+      "voltas": 77,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "121",
+      "nome": "Stadium Brownie",
+      "categoria": "Sobremesas",
+      "preco_reais": 46.9,
+      "atencao_ms": 316950,
+      "pessoas_que_viram": 50,
+      "voltas": 53,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "122",
+      "nome": "Arroz El Loco",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 1126752,
+      "pessoas_que_viram": 132,
+      "voltas": 134,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "123",
+      "nome": "Brócolis no Vapor",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 807185,
+      "pessoas_que_viram": 115,
+      "voltas": 128,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "124",
+      "nome": "Mashed Potato",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 1099603,
+      "pessoas_que_viram": 113,
+      "voltas": 134,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "125",
+      "nome": "Arroz de Cereais",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 879944,
+      "pessoas_que_viram": 104,
+      "voltas": 118,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "126",
+      "nome": "Legumes no Vapor",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 1035825,
+      "pessoas_que_viram": 105,
+      "voltas": 144,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "127",
+      "nome": "Batata Frita Homemade",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 938378,
+      "pessoas_que_viram": 97,
+      "voltas": 109,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "128",
+      "nome": "Arroz de Brócolis",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 839962,
+      "pessoas_que_viram": 86,
+      "voltas": 104,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "129",
+      "nome": "Batata Frita",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 408408,
+      "pessoas_que_viram": 68,
+      "voltas": 89,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "130",
+      "nome": "Batata Biro Biro",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 462096,
+      "pessoas_que_viram": 48,
+      "voltas": 51,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "131",
+      "nome": "Arroz Stadium",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 354915,
+      "pessoas_que_viram": 33,
+      "voltas": 36,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "132",
+      "nome": "Farofa de Ovos",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 295164,
+      "pessoas_que_viram": 27,
+      "voltas": 31,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "133",
+      "nome": "Salada Coleslaw",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 132735,
+      "pessoas_que_viram": 15,
+      "voltas": 20,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "134",
+      "nome": "Feijão Stadium",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 97835,
+      "pessoas_que_viram": 17,
+      "voltas": 23,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "135",
+      "nome": "Arroz Branco",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 50468,
+      "pessoas_que_viram": 11,
+      "voltas": 15,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "136",
+      "nome": "Stadium Salad",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 57772,
+      "pessoas_que_viram": 11,
+      "voltas": 14,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "137",
+      "nome": "Cebola Grelhada",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 55090,
+      "pessoas_que_viram": 10,
+      "voltas": 13,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "138",
+      "nome": "Arroz Cremoso",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 72800,
+      "pessoas_que_viram": 16,
+      "voltas": 17,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "139",
+      "nome": "Caesar Salad",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 97410,
+      "pessoas_que_viram": 17,
+      "voltas": 20,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "140",
+      "nome": "Stadium Potato",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 97524,
+      "pessoas_que_viram": 14,
+      "voltas": 15,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "141",
+      "nome": "Vinagrete",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 56964,
+      "pessoas_que_viram": 12,
+      "voltas": 14,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "142",
+      "nome": "Chimichurri",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 59292,
+      "pessoas_que_viram": 12,
+      "voltas": 13,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "143",
+      "nome": "Pico de Gallo",
+      "categoria": "Acompanhamentos",
+      "preco_reais": null,
+      "atencao_ms": 68102,
+      "pessoas_que_viram": 17,
+      "voltas": 20,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "144",
+      "nome": "Acompanhamento Extra",
+      "categoria": "Acompanhamentos",
+      "preco_reais": 28.9,
+      "atencao_ms": 123960,
+      "pessoas_que_viram": 15,
+      "voltas": 18,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "145",
+      "nome": "Molho Extra",
+      "categoria": "Acompanhamentos",
+      "preco_reais": 9.9,
+      "atencao_ms": 86377,
+      "pessoas_que_viram": 17,
+      "voltas": 18,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "146",
+      "nome": "Feijão ou Arroz Branco",
+      "categoria": "Acompanhamentos",
+      "preco_reais": 22.9,
+      "atencao_ms": 70064,
+      "pessoas_que_viram": 16,
+      "voltas": 20,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "147",
+      "nome": "Sex on the Beach",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 1114365,
+      "pessoas_que_viram": 105,
+      "voltas": 122,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "148",
+      "nome": "Stadium Mojito",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 776112,
+      "pessoas_que_viram": 152,
+      "voltas": 198,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "149",
+      "nome": "Blonde",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 427960,
+      "pessoas_que_viram": 104,
+      "voltas": 105,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "150",
+      "nome": "Whisky",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 746016,
+      "pessoas_que_viram": 76,
+      "voltas": 85,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "151",
+      "nome": "Bourbon",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 894996,
+      "pessoas_que_viram": 108,
+      "voltas": 118,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "152",
+      "nome": "12 Anos",
+      "categoria": "Drinks",
+      "preco_reais": 39.9,
+      "atencao_ms": 358215,
+      "pessoas_que_viram": 65,
+      "voltas": 82,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "153",
+      "nome": "Beckenbauer Redfruits",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 420640,
+      "pessoas_que_viram": 80,
+      "voltas": 97,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "154",
+      "nome": "Stadium Evolution",
+      "categoria": "Drinks",
+      "preco_reais": 36.9,
+      "atencao_ms": 252460,
+      "pessoas_que_viram": 52,
+      "voltas": 53,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "155",
+      "nome": "Clericot",
+      "categoria": "Drinks",
+      "preco_reais": 39.9,
+      "atencao_ms": 177264,
+      "pessoas_que_viram": 36,
+      "voltas": 36,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "156",
+      "nome": "Clericot Jarra",
+      "categoria": "Drinks",
+      "preco_reais": 125.9,
+      "atencao_ms": 121950,
+      "pessoas_que_viram": 30,
+      "voltas": 34,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "157",
+      "nome": "Maravilha",
+      "categoria": "Compartilhados",
+      "preco_reais": 229.9,
+      "atencao_ms": 2784000,
+      "pessoas_que_viram": 96,
+      "voltas": 278,
+      "cliques_detalhes": 37
+    },
+    {
+      "id": "158",
+      "nome": "Dinamite",
+      "categoria": "Compartilhados",
+      "preco_reais": 249.9,
+      "atencao_ms": 839792,
+      "pessoas_que_viram": 146,
+      "voltas": 189,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "159",
+      "nome": "Rio 40 Graus",
+      "categoria": "Compartilhados",
+      "preco_reais": 249.9,
+      "atencao_ms": 923571,
+      "pessoas_que_viram": 99,
+      "voltas": 117,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "160",
+      "nome": "Furacão",
+      "categoria": "Compartilhados",
+      "preco_reais": 249.9,
+      "atencao_ms": 826800,
+      "pessoas_que_viram": 106,
+      "voltas": 124,
+      "cliques_detalhes": 0
+    },
+    {
+      "id": "161",
+      "nome": "Patada Atômica",
+      "categoria": "Compartilhados",
+      "preco_reais": 259.9,
+      "atencao_ms": 528804,
+      "pessoas_que_viram": 111,
+      "voltas": 141,
+      "cliques_detalhes": 0
+    }
+  ],
+  "pratos_por_faixa_do_dia": [
+    {
+      "id": "75",
+      "nome": "Picanha Nacional di Chile",
+      "faixa": "almoco",
+      "pessoas_que_viram": 114,
+      "atencao_ms": 2970760
+    },
+    {
+      "id": "75",
+      "nome": "Picanha Nacional di Chile",
+      "faixa": "tarde",
+      "pessoas_que_viram": 22,
+      "atencao_ms": 563420
+    },
+    {
+      "id": "75",
+      "nome": "Picanha Nacional di Chile",
+      "faixa": "jantar",
+      "pessoas_que_viram": 53,
+      "atencao_ms": 1382940
+    },
+    {
+      "id": "75",
+      "nome": "Picanha Nacional di Chile",
+      "faixa": "noite",
+      "pessoas_que_viram": 8,
+      "atencao_ms": 204880
+    },
+    {
+      "id": "34",
+      "nome": "Stadium Wings (HDT)",
+      "faixa": "almoco",
+      "pessoas_que_viram": 42,
+      "atencao_ms": 873180
+    },
+    {
+      "id": "34",
+      "nome": "Stadium Wings (HDT)",
+      "faixa": "tarde",
+      "pessoas_que_viram": 21,
+      "atencao_ms": 436590
+    },
+    {
+      "id": "34",
+      "nome": "Stadium Wings (HDT)",
+      "faixa": "jantar",
+      "pessoas_que_viram": 111,
+      "atencao_ms": 2328480
+    },
+    {
+      "id": "34",
+      "nome": "Stadium Wings (HDT)",
+      "faixa": "noite",
+      "pessoas_que_viram": 58,
+      "atencao_ms": 1212750
+    },
+    {
+      "id": "52",
+      "nome": "Fenômeno",
+      "faixa": "almoco",
+      "pessoas_que_viram": 15,
+      "atencao_ms": 483840
+    },
+    {
+      "id": "52",
+      "nome": "Fenômeno",
+      "faixa": "tarde",
+      "pessoas_que_viram": 10,
+      "atencao_ms": 322560
+    },
+    {
+      "id": "52",
+      "nome": "Fenômeno",
+      "faixa": "jantar",
+      "pessoas_que_viram": 74,
+      "atencao_ms": 2365440
+    },
+    {
+      "id": "52",
+      "nome": "Fenômeno",
+      "faixa": "noite",
+      "pessoas_que_viram": 69,
+      "atencao_ms": 2204160
+    },
+    {
+      "id": "39",
+      "nome": "Pastel (6 unidades)",
+      "faixa": "almoco",
+      "pessoas_que_viram": 44,
+      "atencao_ms": 1056480
+    },
+    {
+      "id": "39",
+      "nome": "Pastel (6 unidades)",
+      "faixa": "tarde",
+      "pessoas_que_viram": 20,
+      "atencao_ms": 477120
+    },
+    {
+      "id": "39",
+      "nome": "Pastel (6 unidades)",
+      "faixa": "jantar",
+      "pessoas_que_viram": 60,
+      "atencao_ms": 1431360
+    },
+    {
+      "id": "39",
+      "nome": "Pastel (6 unidades)",
+      "faixa": "noite",
+      "pessoas_que_viram": 18,
+      "atencao_ms": 443040
+    },
+    {
+      "id": "157",
+      "nome": "Maravilha",
+      "faixa": "almoco",
+      "pessoas_que_viram": 7,
+      "atencao_ms": 194880
+    },
+    {
+      "id": "157",
+      "nome": "Maravilha",
+      "faixa": "tarde",
+      "pessoas_que_viram": 5,
+      "atencao_ms": 139200
+    },
+    {
+      "id": "157",
+      "nome": "Maravilha",
+      "faixa": "jantar",
+      "pessoas_que_viram": 37,
+      "atencao_ms": 1085760
+    },
+    {
+      "id": "157",
+      "nome": "Maravilha",
+      "faixa": "noite",
+      "pessoas_que_viram": 47,
+      "atencao_ms": 1364160
+    }
+  ],
+  "buscas": [
+    {
+      "termo": "pastas",
+      "vezes": 23,
+      "pessoas": 21,
+      "pratos_encontrados": 0,
+      "nota": "Sem resultado: ou o prato não existe, ou existe com outro nome."
+    },
+    {
+      "termo": "vegetariano",
+      "vezes": 19,
+      "pessoas": 18,
+      "pratos_encontrados": 0,
+      "nota": "Sem resultado: ou o prato não existe, ou existe com outro nome."
+    },
+    {
+      "termo": "porcao pequena",
+      "vezes": 14,
+      "pessoas": 13,
+      "pratos_encontrados": 0,
+      "nota": "Sem resultado: ou o prato não existe, ou existe com outro nome."
+    },
+    {
+      "termo": "sem gluten",
+      "vezes": 11,
+      "pessoas": 11,
+      "pratos_encontrados": 0,
+      "nota": "Sem resultado: ou o prato não existe, ou existe com outro nome."
+    },
+    {
+      "termo": "macarrao",
+      "vezes": 9,
+      "pessoas": 9,
+      "pratos_encontrados": 0,
+      "nota": "Sem resultado: ou o prato não existe, ou existe com outro nome."
+    },
+    {
+      "termo": "picanha",
+      "vezes": 47,
+      "pessoas": 41,
+      "pratos_encontrados": 7,
+      "nota": null
+    },
+    {
+      "termo": "camarao",
+      "vezes": 22,
+      "pessoas": 20,
+      "pratos_encontrados": 12,
+      "nota": null
+    },
+    {
+      "termo": "sobremesa",
+      "vezes": 16,
+      "pessoas": 15,
+      "pratos_encontrados": 11,
+      "nota": null
+    }
+  ],
+  "acoes_de_intencao": [
+    {
+      "acao": "ligar-barra",
+      "descricao": "Ligar para a Barra",
+      "vezes": 34,
+      "pessoas": 29
+    },
+    {
+      "acao": "chegar-barra",
+      "descricao": "Traçar rota até a Barra",
+      "vezes": 41,
+      "pessoas": 38
+    },
+    {
+      "acao": "ligar-recreio",
+      "descricao": "Ligar para o Recreio",
+      "vezes": 12,
+      "pessoas": 11
+    },
+    {
+      "acao": "chegar-recreio",
+      "descricao": "Traçar rota até o Recreio",
+      "vezes": 18,
+      "pessoas": 17
+    }
+  ]
+}

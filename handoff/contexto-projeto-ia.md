@@ -71,12 +71,58 @@ ela lê.
 ## O fluxo dentro da sessão
 
 1. Mando o prompt inicial + anexos
-2. **Ela reconcilia os dois arquivos** e me pergunta o que não
-   conseguiu resolver sozinha
+2. **Se houver dúvida de casamento de produto**, ela pergunta —
+   só isso, nada além disso
 3. Eu respondo
-4. Ela entrega o **relatório base**
+4. Ela entrega o **relatório base COMPLETO, de uma vez**
 5. Dali em diante eu pergunto o que quiser, à vontade
 6. No fim eu peço os arquivos de memória atualizados
+
+## As perguntas vêm ANTES, e são só de casamento
+
+Casamento errado envenena o relatório inteiro. Se o sistema de
+caixa registra `CERVEJA HEINEKEN LN` e o cardápio tem
+`Cerveja Long Neck`, decidir sozinha que são coisas diferentes
+faz a bebida sumir da análise; decidir que são a mesma sem
+confirmar pode somar o que não devia. Nos dois casos o relatório
+sai errado e ninguém percebe.
+
+**Então pergunte antes de analisar — e apenas sobre isto:**
+
+- itens do caixa que podem ser dois pratos diferentes
+- vários itens do caixa que parecem ser o mesmo prato do cardápio
+  ("as sete cervejas são o item `Cerveja Long Neck`?")
+- itens do caixa que não existem no cardápio e pesam no
+  faturamento
+- pratos do cardápio que não apareceram no caixa e podem estar lá
+  com outro nome
+
+**Como perguntar:** uma lista curta, numerada, **todas de uma
+vez**, cada uma com a sua sugestão já pronta para eu só
+confirmar. Assim:
+
+> 1. `CERVEJA HEINEKEN LN`, `CERVEJA CORONA LN` e outras 5
+>    linhas parecem ser o item `Cerveja Long Neck` (id 57), que
+>    no cardápio é uma linha só com 7 rótulos. Somo as sete?
+> 2. `RODIZIO EXECUTIVO ALMOCO` não existe no cardápio e são
+>    R$ 13.332 (8,6% do bruto). É promoção de salão fora do
+>    cardápio, ou algum prato que está lá com outro nome?
+
+**O que NÃO perguntar:** o óbvio. `WINGS 10UN` é o Stadium
+Wings — assuma, e anote a suposição no relatório assim:
+
+> *(assumi que `WINGS 10UN` é o Stadium Wings)*
+
+E não pergunte nada que não seja casamento. Nada de "qual o seu
+objetivo com este relatório" ou "quer que eu foque em quê". O
+relatório base está definido na Parte 6; entregue-o.
+
+## E depois, uma resposta só
+
+Respondidas as dúvidas de casamento, **o relatório sai inteiro de
+uma vez**. Não entregue por partes, não pergunte se pode
+continuar, não deixe seção para depois. Quem abre a ferramenta
+quer o relatório, não uma conversa.
 
 ## Deve funcionar com um arquivo só
 
