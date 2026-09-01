@@ -1,24 +1,3 @@
-# EXEMPLO DE RELATÓRIO — é assim que a saída deve parecer
-
-> **Este arquivo não é dado, e os números dele são inventados.**
-> É o modelo da entrega: serve para mostrar tom, nível de detalhe
-> e forma.
->
-> Ele descreve um mês de **junho** que não corresponde a nenhum
-> arquivo que você vá analisar. Isso é de propósito — um exemplo
-> que compartilhasse dados com o período analisado viraria
-> gabarito, e a análise deixaria de ser análise.
->
-> Repare no que ele **não** tem: nenhum id de prato, nenhum nome
-> de campo do JSON, nenhum milissegundo, nenhum jargão. Quem lê é
-> dono de churrascaria.
->
-> E no que ele **tem**: prato comparado com o vizinho de
-> categoria, número ao lado de cada afirmação, e uma ação
-> concreta com valor esperado e forma de conferir.
-
----
-
 # Stadium Steakhouse · Barra · Junho de 2026
 
 **287 pessoas abriram o cardápio. R$ 128.400 em vendas.**
@@ -289,23 +268,7 @@ termos devem sumir da lista de buscas sem resultado.
 *Junho de 2026 · Stadium Steakhouse, unidade Barra · números
 fictícios, usados apenas como modelo de formato*
 
----
----
-
-# EXEMPLO DO RESUMO EXECUTIVO — o quarto arquivo
-
-> Mesmo mês fictício, mesmos números. O que muda é **quem lê**:
-> este vai para o dono, que é gestor de dinheiro e não analista.
->
-> Compare com o relatório acima e repare no que **sumiu**:
-> nenhuma tabela, nenhum percentual de conversão, nenhuma seção
-> de método, nenhum "como conferir", nenhuma hipótese
-> alternativa. As seis ressalvas viraram uma linha no rodapé.
->
-> O que **ficou**: dinheiro na primeira linha, três problemas
-> com valor ao lado, três ações e duas perguntas. Uma página.
-
----
+===
 
 # Stadium Steakhouse · Barra · Junho
 
