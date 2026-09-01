@@ -1120,7 +1120,17 @@
         id: String(p.id),
         nome: p.nome,
         categoria: rot["container-" + p.categoria] || p.categoria,
-        preco_reais: precoDoPrato(p)
+        preco_reais: precoDoPrato(p),
+        /* Metade do cardápio não tem botão de detalhes. Sem esta
+           marca, "zero cliques" é lido como desinteresse quando na
+           verdade não havia o que clicar — e a separação de
+           hipóteses desaba justamente nos pratos onde ela seria
+           falsa. A regra vem de cardapio.js, que é quem desenha o
+           botão; duplicá-la aqui criaria duas versões. */
+        tem_botao_detalhes:
+          window.STADIUM && window.STADIUM.temDetalhes
+            ? window.STADIUM.temDetalhes(p)
+            : null
       };
     });
   }
@@ -1149,6 +1159,7 @@
         nome: c.nome,
         categoria: c.categoria,
         preco_reais: c.preco_reais,
+        tem_botao_detalhes: c.tem_botao_detalhes,
         atencao_ms: porPrato[c.id] || 0,
         /* O denominador de qualquer conta de conversão. Sem ele,
            só existe tempo total — e tempo total confunde "muita
@@ -1208,6 +1219,15 @@
             "Quantas vezes separadas a pessoa voltou ao MESMO prato na mesma " +
             "visita. É sinal de indecisão. 47s em 6 voltas e 47s numa volta só " +
             "são comportamentos diferentes: o primeiro é alguém comparando.",
+          tem_botao_detalhes:
+            "Se este prato tem botão de detalhes no cardápio. Cerca de um terço " +
+            "não tem — são pratos sem descrição extra, sem opções e sem aviso de " +
+            "alergênico, e o botão some para não abrir uma gaveta vazia. LEIA " +
+            "ISTO ANTES de interpretar cliques_detalhes: num prato com botão, " +
+            "zero cliques quer dizer que ninguém se interessou o bastante para " +
+            "abrir; num prato SEM botão, quer dizer que não havia o que abrir. " +
+            "Nunca conclua desinteresse a partir de zero cliques num prato sem " +
+            "botão, e nunca compare os dois grupos entre si.",
           cliques_detalhes:
             "Quantas vezes abriram os detalhes do prato. É escolha, não acaso, " +
             "mas tem dois sentidos opostos: interesse ou descrição ruim. " +

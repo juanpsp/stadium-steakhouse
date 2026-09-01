@@ -164,6 +164,17 @@
     STADIUM.rotuloCategorias["container-" + c.id] = c.nav.pt;
   });
 
+  /* Quais pratos têm botão de detalhes, por id. O painel usa isto
+     para dizer, no relatório, quando "zero cliques" significa
+     "ninguém abriu" e quando significa "não havia o que abrir". */
+  STADIUM.temDetalhes = function (prato) {
+    var categoria = null;
+    CATEGORIAS.forEach(function (c) {
+      if (c.id === prato.categoria) categoria = c;
+    });
+    return temGaveta(prato, categoria);
+  };
+
   /* =========================================================
      FOTOS PROVISÓRIAS — REMOVER QUANDO AS REAIS CHEGAREM
      =========================================================
@@ -250,6 +261,40 @@
 
   function temVariacoes(prato) {
     return !!(prato.precos && prato.precos.length);
+  }
+
+  /* ---------- QUEM TEM GAVETA ----------
+     Metade do cardápio não tem botão de detalhes: 64 dos 129
+     pratos não têm o que mostrar dentro dele. Isso importa muito
+     além da tela.
+
+     Na análise de dados, "zero cliques em detalhes" tem dois
+     significados opostos. Num prato COM botão quer dizer que
+     ninguém se interessou o bastante para abrir. Num prato SEM
+     botão quer dizer que não havia o que abrir — e tratar os dois
+     como a mesma coisa faz qualquer conclusão sobre interesse
+     desabar, justamente nos 64 pratos onde ela seria falsa.
+
+     A regra mora aqui e é usada pelos dois lados: por quem
+     desenha o card e por quem exporta o relatório. Duplicada, as
+     duas versões divergiriam no primeiro prato novo. */
+  function temGaveta(prato, categoria) {
+    var enxuto = !!(categoria && categoria.semFoto);
+    if (temVariacoes(prato)) return true;
+    if (prato.serve_pt) return true;
+    for (var i = 1; i <= 6; i++) {
+      if (prato["extra" + i + "_pt"]) return true;
+    }
+    if (prato.alergenicos && prato.alergenicos.length) return true;
+    /* No card enxuto a descrição é o conteúdo do botão.
+
+       Olha o campo em português direto, e não porSufixo: o painel
+       chama esta função e não carrega o i18n, então porSufixo
+       explodiria lá. Conferido: nenhum prato tem campo em outro
+       idioma sem o equivalente em português, então a resposta é a
+       mesma nos três. */
+    if (enxuto && prato.descricao_pt) return true;
+    return false;
   }
 
   function menorPreco(prato) {
@@ -467,8 +512,7 @@
        O alergênico entra nesta conta: um prato que só tenha o
        aviso ainda precisa do botão, senão o aviso ficaria dentro
        de uma gaveta que ninguém consegue abrir. */
-    var temAlerta = !!(prato.alergenicos && prato.alergenicos.length);
-    if (!tabela && !lista.children.length && !descricaoEscondida && !temAlerta) {
+    if (!temGaveta(prato, categoria)) {
       botao.remove();
       return card;
     }

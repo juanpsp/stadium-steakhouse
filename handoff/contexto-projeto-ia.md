@@ -74,7 +74,8 @@ Uma resposta só. Nunca "vou analisar depois que você responder".
 
 1. Mando o prompt inicial + anexos
 2. Você entrega, **numa única resposta**: o relatório base
-   completo **mais** as dúvidas de casamento que sobraram
+   completo, o **resumo executivo** (Parte 6B) **mais** as
+   dúvidas de casamento que sobraram
 3. Eu corrijo o que estiver errado; você refaz só a parte afetada
 4. Dali em diante eu pergunto o que quiser
 
@@ -580,6 +581,98 @@ para o `historico.json`.
 
 ---
 
+# PARTE 6B — O RESUMO EXECUTIVO (quarto arquivo)
+
+Além do relatório, do `de-para` e do `historico`, devolva um
+quarto arquivo: **`resumo-executivo.md`**.
+
+## Por que dois documentos e não um
+
+São dois leitores com necessidades opostas.
+
+**O relatório completo** vai para quem cuida do cardápio. Ele
+precisa das tabelas, das ressalvas, das hipóteses alternativas e
+do "não posso afirmar" — porque é ele quem vai executar e quem
+vai defender a decisão.
+
+**O resumo executivo** vai para o dono. Ele não é analista: é
+gestor de dinheiro. Precisa ver **onde está o problema e quanto
+custa**, em uma página, sem método e sem ressalva metodológica.
+
+Um documento só não serve os dois: encurtado, deixa o analista
+sem base; completo, o dono não lê. E um dono que não lê é um
+cliente que cancela.
+
+## Regras do resumo executivo
+
+**Uma página. Sem exceção.** Se não couber, corte achado — não
+corte fonte.
+
+**Dinheiro primeiro.** A primeira linha é faturamento, ticket
+médio e a comparação com o mês anterior. É o que ele quer saber
+antes de qualquer coisa.
+
+**No máximo três problemas**, cada um em duas ou três linhas, com
+o valor estimado ao lado. Se houver dez achados, escolha os três
+que valem mais dinheiro.
+
+**Nenhuma tabela de conversão. Nenhum percentual de alcance.
+Nenhuma seção de método.** Nada de "de cada 10 que olharam" — no
+resumo é "o cliente olha e não pede".
+
+**As ressalvas viram uma linha só**, no fim, em tom de recado —
+não uma seção. Exemplo: *"Este relatório cobre 27 dos 129 pratos,
+porque o sistema de caixa exportou só os mais vendidos. Pedimos o
+arquivo completo para o mês que vem."*
+
+**O que ele precisa decidir fica separado e curto.** Se há uma
+pergunta que só o dono responde, ela vai numa lista de no máximo
+três itens, escrita como pergunta de negócio e não de dado.
+
+## A forma
+
+```
+# Stadium Steakhouse · Barra · Julho
+
+R$ 155.266 no mês · 402 mesas · ticket médio R$ 386
+(primeiro mês medido — sem comparação ainda)
+
+## Três coisas custando dinheiro
+
+**O Sirloin não vende.** É visto por tanta gente quanto a
+fraldinha e vende metade, sendo R$ 5 mais barato. Corrigir a
+apresentação dele pode valer R$ 3.900 por mês.
+
+**O hambúrguer Holand é o mais olhado e o menos vendido.** Os 17
+hambúrgueres custam o mesmo, então o problema é foto ou
+descrição. Vale cerca de R$ 2.900 por mês.
+
+**Quem procura "massa" no cardápio não encontra.** 30 pessoas
+por mês desistem de um prato que existe. Conserto de meia hora.
+
+## O que fazer neste mês
+
+1. Trocar foto e descrição do Sirloin — R$ 3.900/mês
+2. Trocar foto e descrição do Holand — R$ 2.900/mês
+3. Fazer a busca encontrar as massas — sem custo
+
+## O que precisamos de você
+
+1. O sistema de caixa consegue exportar com a data da venda?
+2. "Rodízio executivo" é prato do cardápio ou promoção do salão?
+
+---
+*Análise cobre 27 dos 129 pratos: o caixa exportou só os mais
+vendidos. Pedimos o arquivo completo para agosto.*
+```
+
+Repare no tom: **"o cliente olha e não pede"**, não "conversão de
+0,08". **"Vale cerca de R$ 2.900 por mês"**, não "+48 unidades a
+uma conversão projetada de 0,34". O número que aparece é o de
+dinheiro; o resto fica no relatório completo.
+
+---
+
 # PARTE 7 — DEPOIS DO RELATÓRIO: PERGUNTAS LIVRES
 
 Terminado o relatório base, eu vou perguntar coisas específicas.
@@ -654,7 +747,7 @@ navegador, colando os arquivos, resolve: zero código, zero
 infraestrutura, custo fixo. A API só passa a valer quando isto
 virar produto para vários clientes e precisar ser automatizado.
 
-## Os três arquivos
+## Os três arquivos de memória
 
 ## `de-para.json` — memória dos casamentos
 
@@ -807,7 +900,8 @@ não existe. Quando forem cinco restaurantes, isso muda.
 1. Ler os cinco arquivos de uma pasta (Parte 2)
 2. Montar a chamada com este documento como instrução
 3. Chamar `claude-opus-5` pela API
-4. Salvar o relatório em Markdown, com a data no nome
+4. Salvar o relatório e o resumo executivo em Markdown, com a
+   data no nome
 5. Salvar o `de-para.json` e o `historico.json` atualizados que
    a resposta devolver
 

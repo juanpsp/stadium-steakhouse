@@ -288,3 +288,68 @@ termos devem sumir da lista de buscas sem resultado.
 
 *Junho de 2026 · Stadium Steakhouse, unidade Barra · números
 fictícios, usados apenas como modelo de formato*
+
+---
+---
+
+# EXEMPLO DO RESUMO EXECUTIVO — o quarto arquivo
+
+> Mesmo mês fictício, mesmos números. O que muda é **quem lê**:
+> este vai para o dono, que é gestor de dinheiro e não analista.
+>
+> Compare com o relatório acima e repare no que **sumiu**:
+> nenhuma tabela, nenhum percentual de conversão, nenhuma seção
+> de método, nenhum "como conferir", nenhuma hipótese
+> alternativa. As seis ressalvas viraram uma linha no rodapé.
+>
+> O que **ficou**: dinheiro na primeira linha, três problemas
+> com valor ao lado, três ações e duas perguntas. Uma página.
+
+---
+
+# Stadium Steakhouse · Barra · Junho
+
+R$ 128.400 no mês · 376 mesas · ticket médio R$ 341
+Movimento parecido com maio.
+
+## Três coisas custando dinheiro
+
+**A massa mais olhada do cardápio é a que menos vende.** A Pasta
+Canavarro para mais gente na frente dela do que qualquer outra
+massa, e quase ninguém pede. As cinco massas custam o mesmo, então
+não é preço — é a foto. **Vale R$ 3.000 por mês.**
+
+**O Salmão perde o cliente na leitura.** É o prato mais aberto do
+cardápio inteiro, e a venda não acompanha. A pessoa lê a descrição
+e desiste — num prato de R$ 98,90, a descrição precisa dizer o que
+ela recebe pelo valor. **Vale cerca de R$ 2.400 por mês.**
+
+**Quase ninguém chega no Kids.** Nove de cada cem pessoas que
+abrem o cardápio alcançam a categoria infantil, porque ela está no
+fim. Numa casa que se vende como lugar de família, isso é dinheiro
+parado.
+
+## O que fazer neste mês
+
+1. Trocar a foto da Pasta Canavarro — R$ 3.000/mês, custo zero
+2. Reescrever a descrição do Salmão — R$ 2.400/mês, custo zero
+3. Subir a categoria Kids no cardápio — cinco minutos
+
+## Dois consertos rápidos
+
+O cardápio mostra o Milkshake a R$ 29,90 e o caixa cobra R$ 32,90
+— o cliente lê um preço e paga outro.
+
+O QR code do Recreio rendeu 71 leituras contra 118 da Barra, com
+mais mesas. Vale conferir se os adesivos estão em todas elas.
+
+## O que precisamos de você
+
+1. "Executivo do dia" é prato do cardápio ou promoção do salão?
+2. O sistema de caixa consegue exportar com a data da venda? É o
+   que destrava saber quais dias da semana rendem mais.
+
+---
+*Análise cobre 82% do faturamento: o caixa exportou rodízio e
+executivo numa linha só. As fotos ainda são provisórias — onde
+apontei foto como causa, é para testar.*
