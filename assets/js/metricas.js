@@ -721,12 +721,32 @@
   }
 
   /* Quanto de um card está dentro da faixa descoberta, de 0 a 1. */
+  /* O denominador é limitado à altura da FAIXA VISÍVEL, e não é
+     detalhe: dividir pela altura do card tem duas consequências
+     ruins, e as duas apareceram no uso.
+
+     A primeira é permanente. Um card mais alto que o dobro da
+     faixa nunca alcança 50% de si mesmo — ainda que ocupe a tela
+     inteira, ele conta como não visto. Para sempre, para todo
+     mundo.
+
+     A segunda é pior porque parece dado. Abrir os detalhes faz o
+     card crescer; a fração cai; a conferência fecha o cronômetro;
+     e quando o card volta a "caber", abre-se uma parada NOVA. O
+     resultado é que abrir a descrição inflava a contagem de
+     voltas, justamente o sinal que serve para separar quem estava
+     em dúvida — e o número mentia para cima onde mais se olhava.
+
+     Com o teto, um card que preenche a tela conta como visto,
+     que é a leitura honesta: ninguém enxerga mais que uma tela
+     de cada vez. */
   function fracaoVisivel(el) {
     var f = faixa();
     var r = el.getBoundingClientRect();
     if (!r.height) return 0;
     var dentro = Math.max(0, Math.min(r.bottom, f.base) - Math.max(r.top, f.topo));
-    return dentro / r.height;
+    var referencia = Math.min(r.height, f.base - f.topo);
+    return referencia > 0 ? dentro / referencia : 0;
   }
 
   /* Uma seção conta quando cruza a faixa central da tela — mesma

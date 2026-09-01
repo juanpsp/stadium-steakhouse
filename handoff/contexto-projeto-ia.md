@@ -287,6 +287,35 @@ Antes de dizer que um prato não vende, **confira se ele tem
 `pessoas_que_viram` > 0**. Se ninguém viu e ninguém comprou, o
 problema é exposição, não produto.
 
+## 4.4b O export pode estar CONSISTENTE e ainda assim ser parcial
+
+Este caso apareceu num teste e não estava previsto: o arquivo de
+vendas fechava sozinho — as linhas somavam exatamente o total e a
+contagem de itens declarados no rodapé — e mesmo assim trazia 27
+dos 129 pratos, com quatro categorias inteiras zeradas.
+
+Um export de "mais vendidos" tem essa cara: internamente
+perfeito, e mudo sobre tudo que ficou de fora.
+
+**Como reconhecer:** categorias inteiras sem nenhuma linha, num
+volume de mesas que torna isso implausível. Uma churrascaria que
+atendeu 400 mesas num mês não vendeu zero frango, zero salada e
+zero prato infantil.
+
+**O que fazer, e é regra:**
+
+1. **Prato ausente é "não sei se vendeu", nunca "não vendeu".**
+   Essa diferença é tudo: a primeira é uma pergunta, a segunda é
+   uma recomendação de tirar do cardápio.
+2. **Nenhuma das três ações do fim pode depender de prato
+   ausente.** Mesmo que ele fosse o achado mais forte.
+3. **Diga o que se perdeu.** Se o prato mais visto do cardápio não
+   está no caixa, isso é a primeira coisa a resolver — e vale
+   dizer que seria o maior achado do mês se a resposta viesse.
+4. **Monte a tabela de cobertura** por categoria: quantos pratos
+   existem, quantos apareceram. É ela que mostra o buraco de
+   relance.
+
 ## 4.5 As datas não vão bater — e isso precisa ser tratado
 
 Vai acontecer de o JSON cobrir **1 a 30 de julho** e o
@@ -406,6 +435,27 @@ lista, número de palavras no nome. Se houver padrão, diga qual
 — e proponha aplicar ao pior colocado como teste do mês.
 
 ## 5.7 Ritmo: dia e hora
+
+**Antes de comparar horário, confira se as faixas coincidem.**
+Elas provavelmente não coincidem. Num teste, o PDV usava
+almoço 11-15h, jantar 18-22h e noite 22-02h — sem nenhuma faixa
+entre 15h e 18h — enquanto o site usa 11-14h, 15-17h, 18-22h e
+23-02h.
+
+Consequências, e as três precisam ser ditas:
+
+- **A comparação vale em bloco grosso**, não hora a hora
+- **Há atenção sem venda correspondente**: o fim de tarde do site
+  não tem faixa no caixa, então aqueles acessos não podem ser
+  cruzados com nada
+- **As bordas se sobrepõem**: "depois das 22h" no caixa inclui a
+  última hora do "jantar" do site
+
+Diga qual faixa usou de cada lado e o que ficou sem par. E se o
+PDV puder exportar com **hora ou data da venda**, peça — resolve
+isto de uma vez.
+
+### O resto do ritmo
 
 - Cruze `visitas_por_dia_da_semana` com o faturamento por dia
 - Cruze `visitas_por_hora_do_dia` com o horário das vendas, se o
