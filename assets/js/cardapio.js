@@ -264,16 +264,15 @@
   }
 
   /* ---------- QUEM TEM GAVETA ----------
-     Metade do cardápio não tem botão de detalhes: 64 dos 129
-     pratos não têm o que mostrar dentro dele. Isso importa muito
-     além da tela.
+     42 dos 129 pratos não têm botão de detalhes, porque não há
+     o que mostrar dentro dele. Isso importa muito além da tela.
 
      Na análise de dados, "zero cliques em detalhes" tem dois
      significados opostos. Num prato COM botão quer dizer que
      ninguém se interessou o bastante para abrir. Num prato SEM
      botão quer dizer que não havia o que abrir — e tratar os dois
      como a mesma coisa faz qualquer conclusão sobre interesse
-     desabar, justamente nos 64 pratos onde ela seria falsa.
+     desabar, justamente nos 42 pratos onde ela seria falsa.
 
      A regra mora aqui e é usada pelos dois lados: por quem
      desenha o card e por quem exporta o relatório. Duplicada, as
