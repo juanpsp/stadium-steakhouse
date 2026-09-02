@@ -310,6 +310,24 @@
        ela. Segue a mesma regra dos cliques — acumula, é enviada,
        e só então zera. */
     this.paradas = {};
+    /* ---------- A MAIOR PARADA ----------
+       "bruto" soma tudo, e a soma mente. Quem parou uma vez por
+       15 segundos e quem passou cinco vezes por 3 chegam ao
+       mesmo 15 — mas o primeiro leu e o segundo não.
+
+       "paradaAtual" acumula a parada que está acontecendo agora;
+       "maiorParada" guarda a maior que já terminou. É a segunda
+       que diz se houve leitura, porque é ela que se compara com
+       o tempo que aquele card leva para ser lido.
+
+       As duas ficam fora de "tempos" pelo mesmo motivo que as
+       paradas: aquele mapa é zerado a cada descarga, e uma
+       parada longa atravessa descargas. A paradaAtual sobrevive
+       inclusive ao envio — senão ler por 25 segundos viraria
+       três paradas de 10, e o número diria passagem onde houve
+       leitura. */
+    this.paradaAtual = {};
+    this.maiorParada = {};
     this.tetoParada = tetoParada;
     this.tetoTotal = tetoTotal;
     this.buscarNome = buscarNome;
@@ -338,7 +356,12 @@
   Medidor.prototype.abrir = function (id, continuacao) {
     if (pausado || encerrada || !this.ligado) return;
     if (this.relogio[id]) return;
-    if (!continuacao) this.paradas[id] = (this.paradas[id] || 0) + 1;
+    if (!continuacao) {
+      this.paradas[id] = (this.paradas[id] || 0) + 1;
+      /* Parada nova começa do zero. Reabertura por descarga não
+         entra aqui — é o mesmo olhar continuando. */
+      this.paradaAtual[id] = 0;
+    }
     /* Registro e cronômetro nascem juntos, sempre. O ranking
        percorre os REGISTROS: cronômetro sem registro conta em
        silêncio e não aparece em lugar nenhum. */
@@ -358,6 +381,16 @@
       r.travado + Math.min(duracao, this.tetoParada),
       this.tetoTotal
     );
+
+    /* Sem teto, de propósito. O teto existe para uma pessoa
+       obcecada não dominar o ranking de atenção; aqui o número
+       serve para escolher onde fica a régua de leitura, e régua
+       calibrada com número cortado sai errada. É a mesma razão
+       pela qual o bruto é guardado ao lado do travado. */
+    this.paradaAtual[id] = (this.paradaAtual[id] || 0) + duracao;
+    if (this.paradaAtual[id] > (this.maiorParada[id] || 0)) {
+      this.maiorParada[id] = this.paradaAtual[id];
+    }
   };
 
   Medidor.prototype.fecharTudo = function () {
@@ -392,7 +425,8 @@
         nome: t.nome,
         travado: t.travado,
         bruto: t.bruto,
-        paradas: self.paradas[id] || 0
+        paradas: self.paradas[id] || 0,
+        maiorParada: self.maiorParada[id] || 0
       };
       if (self.relogio[id] && !pausado) {
         var aberta = agora() - self.relogio[id];
@@ -1040,7 +1074,8 @@
        função em comum o lote misto vinha com formatos
        diferentes e ia inteiro para o lixo — em silêncio, porque
        o envio falha calado de propósito. */
-    function linha(tipo, chave, nome, travado, bruto, cliques, resultados, paradas) {
+    function linha(tipo, chave, nome, travado, bruto, cliques, resultados,
+                   paradas, maiorParada) {
       return {
         restaurante_id: RESTAURANTE,
         sessao: SESSAO,
@@ -1064,7 +1099,11 @@
            porque o PostgREST recusa o lote inteiro se uma linha
            tiver campo que a outra não tem. */
         resultados: resultados === undefined ? null : resultados,
-        paradas: paradas === undefined ? null : paradas
+        paradas: paradas === undefined ? null : paradas,
+        /* Vai em toda linha, como as de cima: uma linha com campo
+           que a outra não tem faz o PostgREST recusar o lote
+           inteiro — e o envio falha calado de propósito. */
+        maior_parada_ms: maiorParada === undefined ? null : Math.round(maiorParada)
       };
     }
 
@@ -1075,7 +1114,8 @@
       Object.keys(mapa || {}).forEach(function (chave) {
         var r = mapa[chave];
         if (!r.travado || r.travado < 100) return;
-        saida.push(linha(tipo, chave, r.nome, r.travado, r.bruto, 0, undefined, r.paradas || 0));
+        saida.push(linha(tipo, chave, r.nome, r.travado, r.bruto, 0, undefined,
+                         r.paradas || 0, r.maiorParada || 0));
       });
     }
 
@@ -1232,6 +1272,13 @@
       m.fecharTudo();
       m.tempos = {};
       m.paradas = {};
+      /* A MAIOR zera; a ATUAL não. Uma parada de 25 segundos
+         atravessa três descargas, e cada uma manda o valor
+         acumulado até ali — 10, depois 20, depois 25. O banco
+         recupera a verdade com max(), nunca com soma. Zerar a
+         atual junto transformaria uma leitura calma em três
+         passagens curtas. */
+      m.maiorParada = {};
       if (!pausado && !encerrada) m.reabrirVisiveis();
     });
   }
