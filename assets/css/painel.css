@@ -814,3 +814,150 @@
 .painel-serie__adicionar[hidden] {
   display: none;
 }
+
+/* ============================================================
+   RÉGUA DE LEITURA
+
+   Único bloco do painel que se ajusta em vez de só mostrar. O
+   gráfico é HTML e não SVG de propósito: viewBox escalado deixa
+   o texto ilegível no celular, e o painel é lido no celular.
+   ============================================================ */
+
+.painel-regua {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.regua-item {
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 14px 16px 12px;
+}
+
+.regua-topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.regua-topo b {
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+
+.regua-selo {
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.regua-selo--ok {
+  color: var(--gold);
+  background-color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+/* "Sem vale claro" não é erro nem alerta: é a resposta honesta
+   de um prato onde todo mundo se comportou igual. Fica apagado,
+   não vermelho. */
+.regua-selo--sem {
+  opacity: .6;
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.regua-info {
+  font-family: var(--font-label);
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  margin: 4px 0 10px;
+}
+
+.regua-conf { font-style: italic; }
+
+/* ---------- o gráfico ---------- */
+
+.regua-grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 72px;
+  padding: 0 1px;
+  border-bottom: 2px solid var(--border-strong);
+}
+
+.regua-barra {
+  flex: 1 1 0;
+  min-height: 0;
+  background-color: var(--border-strong);
+  border-radius: 2px 2px 0 0;
+  transition: background-color .15s;
+}
+
+/* Da régua para a direita é quem leu. A cor separa os dois lados
+   sem precisar de linha vertical, que numa barra de 4px de
+   largura fica em cima da barra e some. */
+.regua-barra--lida { background-color: var(--burgundy); }
+
+.regua-eixo {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-label);
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 3px;
+}
+
+/* ---------- ações ---------- */
+
+.regua-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.regua-acoes label {
+  font-family: var(--font-label);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-meta);
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.regua-acoes input {
+  width: 72px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background-color: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-btn);
+  padding: 5px 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.painel-chip--fraco {
+  border-color: var(--border);
+  opacity: .75;
+}
+
+@media print {
+  .regua-acoes { display: none; }
+}

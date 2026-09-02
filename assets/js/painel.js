@@ -907,6 +907,197 @@
      o tempo, então o rótulo é a POSIÇÃO. "1º banner" continua
      querendo dizer a mesma coisa daqui a seis meses; o nome da
      promoção, não. */
+  /* ---------- RÉGUA DE LEITURA ----------
+     A única parte do painel que se ajusta em vez de só mostrar.
+
+     O banco devolve, por prato, a distribuição das paradas e um
+     corte sugerido — mas só sugere quando existem mesmo duas
+     nuvens. Prato onde todo mundo se comportou igual volta com
+     corte nulo e "sem vale claro", e é assim que tem de ser:
+     partir uma nuvem única ao meio diria que metade leu, sem
+     razão nenhuma.
+
+     A parada usada é a MAIS LONGA da pessoa naquele prato, nunca
+     a soma. Quem passou vinte vezes por meio segundo soma dez e
+     não parou uma vez sequer. */
+
+  var reguas = {};          /* corte já gravado, por prato */
+  var distribuicoes = [];   /* o que o banco devolveu no período */
+
+  function segundos(ms) {
+    if (ms === null || ms === undefined) return "—";
+    return (ms / 1000).toFixed(1).replace(".", ",") + "s";
+  }
+
+  /* Gráfico em HTML e não em SVG: viewBox escalado deixa o texto
+     ilegível no celular, e o painel é lido no celular. */
+  function barrasDaParada(faixas, corte) {
+    if (!faixas) return "";
+    var maior = 0;
+    Object.keys(faixas).forEach(function (s) {
+      if (faixas[s] > maior) maior = faixas[s];
+    });
+    if (!maior) return "";
+
+    var barras = [];
+    for (var i = 0; i <= 20; i++) {
+      var n = faixas[String(i)] || 0;
+      var altura = Math.round((n / maior) * 100);
+      var classe = "regua-barra";
+      if (corte && i * 1000 >= corte) classe += " regua-barra--lida";
+      /* piso de 2% para faixa com gente: barra invisível parece
+         defeito, e zero de verdade continua zero */
+      barras.push(
+        '<div class="' + classe + '" style="height:' +
+        (n ? Math.max(2, altura) : 0) + '%" title="' + i + "s: " +
+        n + ' pessoas"></div>'
+      );
+    }
+    return '<div class="regua-grafico">' + barras.join("") + "</div>" +
+           '<div class="regua-eixo"><span>0s</span><span>10s</span>' +
+           "<span>20s+</span></div>";
+  }
+
+  function mostrarReguas() {
+    var caixa = $("[data-regua]");
+    if (!caixa) return;
+
+    if (!distribuicoes.length) {
+      caixa.innerHTML =
+        '<p class="painel-vazio">nenhum prato com parada medida neste período. ' +
+        "A medição de parada é nova: só entra aqui o que for visto de agora em diante.</p>";
+      return;
+    }
+
+    caixa.innerHTML = distribuicoes
+      .map(function (d) {
+        var gravado = reguas[d.chave];
+        var temGravado = gravado !== undefined;
+        var corte = temGravado ? gravado : d.corte_sugerido_ms;
+
+        var selo = temGravado
+          ? '<span class="regua-selo regua-selo--ok">régua de ' + segundos(gravado) + "</span>"
+          : d.corte_sugerido_ms
+            ? '<span class="regua-selo">sugestão ' + segundos(d.corte_sugerido_ms) + "</span>"
+            : '<span class="regua-selo regua-selo--sem">sem vale claro</span>';
+
+        return (
+          '<div class="regua-item" data-chave="' + escapar(d.chave) + '">' +
+            '<div class="regua-topo"><b>' + escapar(d.nome || d.chave) + "</b>" + selo + "</div>" +
+            '<p class="regua-info">' + d.observacoes + " paradas · mediana " +
+              segundos(d.mediana_ms) +
+              (d.separacao ? " · separação " + escapar(String(d.separacao)) : "") +
+              ' · <span class="regua-conf">' + escapar(d.confianca) + "</span></p>" +
+            barrasDaParada(d.faixas, corte) +
+            '<div class="regua-acoes">' +
+              "<label>corte " +
+                '<input type="number" step="0.5" min="0.5" max="60" ' +
+                'value="' + (corte ? corte / 1000 : "") + '" data-valor></label>' +
+              '<button type="button" class="painel-chip" data-gravar>gravar</button>' +
+              (temGravado
+                ? '<button type="button" class="painel-chip painel-chip--fraco" data-tirar>tirar</button>'
+                : "") +
+            "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function carregarReguas(de, ate) {
+    var args = {
+      p_restaurante: restaurante.id,
+      p_de: de.toISOString(),
+      p_ate: ate.toISOString()
+    };
+    return Promise.all([
+      pedir("/rest/v1/rpc/distribuicao_parada", args),
+      pedir("/rest/v1/corte_leitura?select=chave,corte_ms&restaurante_id=eq." + restaurante.id)
+    ])
+      .then(function (r) {
+        distribuicoes = r[0] || [];
+        reguas = {};
+        (r[1] || []).forEach(function (c) { reguas[c.chave] = c.corte_ms; });
+        mostrarReguas();
+      })
+      .catch(function () {
+        var caixa = $("[data-regua]");
+        if (caixa) {
+          caixa.innerHTML =
+            '<p class="painel-vazio">não deu para carregar a régua agora.</p>';
+        }
+      });
+  }
+
+  /* Delegado no container: os itens são reescritos a cada carga,
+     e ouvinte preso a botão morreria junto com o HTML antigo. */
+  function ligarRegua() {
+    var caixa = $("[data-regua]");
+    if (!caixa) return;
+
+    caixa.addEventListener("click", function (evento) {
+      var alvo = evento.target;
+      var item = alvo.closest && alvo.closest("[data-chave]");
+      if (!item) return;
+      var chave = item.getAttribute("data-chave");
+
+      if (alvo.hasAttribute("data-gravar")) {
+        var campo = item.querySelector("[data-valor]");
+        var seg = parseFloat(String(campo.value).replace(",", "."));
+        if (!(seg > 0) || seg > 60) {
+          campo.focus();
+          return;
+        }
+        var ms = Math.round(seg * 1000);
+        var d = distribuicoes.filter(function (x) { return x.chave === chave; })[0];
+        gravar(chave, ms, d && d.observacoes);
+      }
+
+      if (alvo.hasAttribute("data-tirar")) {
+        apagar(chave);
+      }
+    });
+
+    function gravar(chave, ms, obs) {
+      window
+        .fetch(BANCO + "/rest/v1/corte_leitura?on_conflict=restaurante_id,chave", {
+          method: "POST",
+          headers: Object.assign(cabecalhos(true), {
+            Prefer: "resolution=merge-duplicates"
+          }),
+          body: JSON.stringify({
+            restaurante_id: restaurante.id,
+            chave: chave,
+            corte_ms: ms,
+            origem: "manual",
+            observacoes: obs || null,
+            atualizado_em: new Date().toISOString()
+          })
+        })
+        .then(function (r) {
+          if (!r.ok) throw new Error("gravar");
+          reguas[chave] = ms;
+          mostrarReguas();
+        })
+        .catch(function () {});
+    }
+
+    function apagar(chave) {
+      window
+        .fetch(
+          BANCO + "/rest/v1/corte_leitura?restaurante_id=eq." + restaurante.id +
+            "&chave=eq." + encodeURIComponent(chave),
+          { method: "DELETE", headers: cabecalhos(true) }
+        )
+        .then(function (r) {
+          if (!r.ok) throw new Error("apagar");
+          delete reguas[chave];
+          mostrarReguas();
+        })
+        .catch(function () {});
+    }
+  }
+
   function mostrarBanners(linhas) {
     var corpo = $("[data-t-banners]");
     if (!linhas || !linhas.length) {
@@ -947,6 +1138,10 @@
        sem avisar ninguém. */
     carregarSerie();
 
+    /* Fora do Promise.all pelo mesmo motivo da série: se a régua
+       falhar, o catch comum apagaria o painel inteiro junto. */
+    carregarReguas(de, ate);
+
     Promise.all([
       pedir("/rest/v1/rpc/visao_geral", args),
       pedir("/rest/v1/rpc/resumo", args),
@@ -966,7 +1161,12 @@
         p_restaurante: restaurante.id,
         p_de: de.toISOString(),
         p_ate: ate.toISOString()
-      })
+      }),
+      /* NO FIM de propósito. Inserir no meio empurra o índice de
+         todo mundo que vem depois, e o banners passou a receber
+         as leituras em silêncio — nada quebra, os números só
+         ficam trocados. */
+      pedir("/rest/v1/rpc/leituras", args)
     ])
       .then(function (r) {
         if (minhaCarga !== carga) return; /* já tem pedido mais novo */
@@ -1015,6 +1215,7 @@
         mostrarBanners(r[10] || []);
 
         ultimoPacote = {
+          leituras: r[12] || [],
           de: de,
           ate: ate,
           horaDe: horaDe,
@@ -1153,6 +1354,19 @@
       }
     });
 
+    /* Quantas pessoas PARARAM tempo suficiente para ler, por
+       prato. Fica separado de pessoas_que_viram de propósito:
+       ver é ter passado, ler é ter parado. Um prato pode ser
+       visto por mil e lido por trinta. */
+    var porLeitura = {};
+    var porCorte = {};
+    (P.leituras || []).forEach(function (l) {
+      if (l.leituras !== null && l.leituras !== undefined) {
+        porLeitura[l.chave] = Number(l.leituras);
+      }
+      if (l.corte_ms) porCorte[l.chave] = Number(l.corte_ms);
+    });
+
     var pratos = catalogo().map(function (c) {
       return {
         id: c.id,
@@ -1166,7 +1380,13 @@
            gente olhando pouco" com "pouca gente olhando muito". */
         pessoas_que_viram: porPessoas[c.id] || 0,
         voltas: porVoltas[c.id] || 0,
-        cliques_detalhes: porClique[c.id] || 0
+        cliques_detalhes: porClique[c.id] || 0,
+        /* null e não zero quando a régua daquele prato ainda
+           não foi calibrada. Zero diria "ninguém leu"; null diz
+           "ainda não dá para saber", que é a verdade. */
+        leituras:
+          porLeitura[c.id] === undefined ? null : porLeitura[c.id],
+        regua_de_leitura_ms: porCorte[c.id] || null
       };
     });
 
@@ -1219,6 +1439,23 @@
             "Quantas vezes separadas a pessoa voltou ao MESMO prato na mesma " +
             "visita. É sinal de indecisão. 47s em 6 voltas e 47s numa volta só " +
             "são comportamentos diferentes: o primeiro é alguém comparando.",
+          leituras:
+            "Quantas pessoas PARARAM tempo suficiente para ler este prato. " +
+            "Não confunda com pessoas_que_viram: ver é ter passado pelo card, " +
+            "ler é ter parado nele. Um prato pode ser visto por mil e lido por " +
+            "trinta, e a diferença entre os dois números é o achado. O que " +
+            "conta é a PARADA MAIS LONGA da pessoa, nunca o tempo somado: quem " +
+            "passou vinte vezes por meio segundo soma dez segundos e não parou " +
+            "uma vez sequer. NULO quer dizer que a régua daquele prato ainda " +
+            "não foi calibrada — nulo não é zero, e zero seria mentira.",
+          regua_de_leitura_ms:
+            "Quantos milissegundos de parada contam como leitura NESTE prato. " +
+            "É diferente prato a prato de propósito: um card de três palavras " +
+            "se lê em dois segundos e um de vinte palavras não. Sai da própria " +
+            "distribuição do prato, no vale entre quem passa e quem lê. Prato " +
+            "onde todo mundo se comportou igual não tem vale, e fica sem régua " +
+            "— porque partir um grupo único ao meio diria que metade leu, sem " +
+            "razão nenhuma.",
           tem_botao_detalhes:
             "Se este prato tem botão de detalhes no cardápio. Cerca de um terço " +
             "não tem — são pratos sem descrição extra, sem opções e sem aviso de " +
@@ -1499,6 +1736,7 @@
 
   function ligarPeriodo() {
     ligarHoras();
+    ligarRegua();
 
     $("[data-baixar-ia]").addEventListener("click", baixarParaIA);
     /* A caixa de impressão do navegador tem "Salvar como PDF" em

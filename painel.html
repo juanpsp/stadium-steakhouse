@@ -274,6 +274,37 @@
             </div>
         </section>
 
+        <!-- RÉGUA DE LEITURA — a única seção que se ajusta, e não
+             só se lê. O resto do painel mostra o que aconteceu;
+             aqui se decide quantos segundos de parada contam como
+             leitura, prato a prato.
+
+             Fica no fim de propósito: só faz sentido depois de
+             haver tráfego, e antes disso mostra "sem vale claro"
+             em tudo. -->
+        <section class="painel-secao" data-secao-regua>
+            <h2 class="painel-secao__titulo"><span>Régua de leitura</span></h2>
+
+            <div class="painel-bloco">
+                <h3 class="painel-titulo">Quanto tempo conta como leitura</h3>
+                <p class="painel-legenda">
+                    o gráfico mostra em quantos segundos as pessoas param em cada prato;
+                    onde há duas nuvens, a de quem passa e a de quem lê, o corte fica no vale
+                </p>
+                <div class="painel-regua" data-regua>
+                    <p class="painel-vazio">carregando…</p>
+                </div>
+            </div>
+        </section>
+
+        <p class="painel-nota">
+            <b>Leitura</b> não é tempo somado: é a <b>parada mais longa</b> da pessoa naquele
+            prato. Quem passou vinte vezes por meio segundo soma dez segundos e não leu nada.
+            A régua de cada prato sai do próprio prato — um card de três palavras se lê em
+            dois segundos, um de vinte não. <b>Sem vale claro</b> quer dizer que todo mundo se
+            comportou igual ali: não há dois grupos para separar, e inventar um corte diria
+            que metade leu, sem razão nenhuma.
+        </p>
         <p class="painel-nota">
             <b>Visita</b> é uma aba aberta: se a mesma pessoa voltar amanhã, conta de novo;
             se abrir home, cardápio e unidades na mesma navegação, conta uma vez só — por isso as três fatias de visita não somam 100%.
